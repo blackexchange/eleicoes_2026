@@ -46,6 +46,12 @@ def generate_integrated_dashboard():
                 
                 CAST(SUM(CASE WHEN DS_ESTADO_CIVIL = 'CASADO' THEN QT_ELEITORES ELSE 0 END) AS BIGINT) AS ELEITORES_CASADOS,
                 ROUND(SUM(CASE WHEN DS_ESTADO_CIVIL = 'CASADO' THEN QT_ELEITORES ELSE 0 END) * 100.0 / SUM(QT_ELEITORES), 2) AS PCT_CASADOS,
+
+                CAST(SUM(CASE WHEN DS_ESTADO_CIVIL = 'DIVORCIADO' THEN QT_ELEITORES ELSE 0 END) AS BIGINT) AS ELEITORES_DIVORCIADOS,
+                ROUND(SUM(CASE WHEN DS_ESTADO_CIVIL = 'DIVORCIADO' THEN QT_ELEITORES ELSE 0 END) * 100.0 / SUM(QT_ELEITORES), 2) AS PCT_DIVORCIADOS,
+
+                CAST(SUM(CASE WHEN DS_ESTADO_CIVIL LIKE 'VI%' THEN QT_ELEITORES ELSE 0 END) AS BIGINT) AS ELEITORES_VIUVOS,
+                ROUND(SUM(CASE WHEN DS_ESTADO_CIVIL LIKE 'VI%' THEN QT_ELEITORES ELSE 0 END) * 100.0 / SUM(QT_ELEITORES), 2) AS PCT_VIUVOS,
                 
                 CAST(SUM(CASE WHEN DS_ESTADO_CIVIL IN ('DIVORCIADO', 'SEPARADO JUDICIALMENTE') OR DS_ESTADO_CIVIL LIKE 'VI%' THEN QT_ELEITORES ELSE 0 END) AS BIGINT) AS ELEITORES_DIV_SEP_VIUVO,
                 ROUND(SUM(CASE WHEN DS_ESTADO_CIVIL IN ('DIVORCIADO', 'SEPARADO JUDICIALMENTE') OR DS_ESTADO_CIVIL LIKE 'VI%' THEN QT_ELEITORES ELSE 0 END) * 100.0 / SUM(QT_ELEITORES), 2) AS PCT_DIV_SEP_VIUVO,
@@ -136,6 +142,8 @@ def generate_integrated_dashboard():
             -- Estado Civil
             d.PCT_SOLTEIROS,
             d.PCT_CASADOS,
+            d.PCT_DIVORCIADOS,
+            d.PCT_VIUVOS,
             d.PCT_DIV_SEP_VIUVO,
 
             -- Faixas Etárias (Idade)
@@ -274,15 +282,15 @@ def gerar_dashboard_integrado_html(geo_json_str, df, output_path):
         </div>
 
         <div class="stats-grid">
-            <div class="stat-card">
+            <div class="stat-card" onclick="setMetric('PCT_LULA')" style="cursor:pointer;" title="Clique para filtrar por Lula">
                 <div class="val" style="color:#ef4444;">{pct_lula}%</div>
                 <div class="lbl">🔴 Lula ({total_lula:,})</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" onclick="setMetric('PCT_BOLSONARO')" style="cursor:pointer;" title="Clique para filtrar por Flávio Bolsonaro">
                 <div class="val" style="color:#3b82f6;">{pct_bols}%</div>
                 <div class="lbl">🔵 Flávio ({total_bols:,})</div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card" onclick="setMetric('PCT_OUTROS')" style="cursor:pointer;" title="Clique para filtrar por Outros / 3ª Via">
                 <div class="val" style="color:#94a3b8;">{pct_outros}%</div>
                 <div class="lbl">⚪ Outros ({total_outros:,})</div>
             </div>
@@ -310,7 +318,9 @@ def gerar_dashboard_integrado_html(geo_json_str, df, output_path):
                 <optgroup label="💍 ESTADO CIVIL">
                     <option value="PCT_SOLTEIROS">👤 Solteiros (%)</option>
                     <option value="PCT_CASADOS">💍 Casados (%)</option>
-                    <option value="PCT_DIV_SEP_VIUVO">💔 Divorciados / Separados / Viúvos (%)</option>
+                    <option value="PCT_DIVORCIADOS">💔 Divorciados (%)</option>
+                    <option value="PCT_VIUVOS">🖤 Viúvos (%)</option>
+                    <option value="PCT_DIV_SEP_VIUVO">🥀 Divorciados + Sep. + Viúvos (%)</option>
                 </optgroup>
                 <optgroup label="🎂 IDADE (FAIXAS ETÁRIAS)">
                     <option value="PCT_JOVENS_16_24">⚡ Jovens (16 a 24 anos) (%)</option>
@@ -434,8 +444,20 @@ def gerar_dashboard_integrado_html(geo_json_str, df, output_path):
                 colors: ['#e5f5e0', '#a1d99b', '#74c476', '#31a354', '#006d2c'],
                 format: v => v.toFixed(1) + '%'
             }},
+            'PCT_DIVORCIADOS': {{
+                title: '💔 Divorciados (%)',
+                grades: [1.5, 2.5, 3.5, 4.5, 6.0],
+                colors: ['#fef0d9', '#fdcc8a', '#fc8d59', '#e34a33', '#b30000'],
+                format: v => v.toFixed(1) + '%'
+            }},
+            'PCT_VIUVOS': {{
+                title: '🖤 Viúvos (%)',
+                grades: [1.5, 2.0, 2.5, 3.0, 4.0],
+                colors: ['#f7f7f7', '#cccccc', '#969696', '#636363', '#252525'],
+                format: v => v.toFixed(1) + '%'
+            }},
             'PCT_DIV_SEP_VIUVO': {{
-                title: '💔 Divorciados / Separados / Viúvos (%)',
+                title: '🥀 Divorciados + Sep. + Viúvos (%)',
                 grades: [4, 6, 8, 10, 13],
                 colors: ['#f1eef6', '#d7b5d8', '#df65b0', '#dd1c77', '#980043'],
                 format: v => v.toFixed(1) + '%'
@@ -519,7 +541,8 @@ def gerar_dashboard_integrado_html(geo_json_str, df, output_path):
 
                 <div class="section-title">👥 GÊNERO & ESTADO CIVIL</div>
                 👩 <b>Mulheres:</b> ${{p.PCT_FEM}}% | 👨 <b>Homens:</b> ${{p.PCT_MASC}}%<br>
-                👤 <b>Solteiros:</b> ${{p.PCT_SOLTEIROS}}% | 💍 <b>Casados:</b> ${{p.PCT_CASADOS}}% | 💔 <b>Div/Sep/Viúvos:</b> ${{p.PCT_DIV_SEP_VIUVO}}%<br>
+                👤 <b>Solteiros:</b> ${{p.PCT_SOLTEIROS}}% | 💍 <b>Casados:</b> ${{p.PCT_CASADOS}}%<br>
+                💔 <b>Divorciados:</b> ${{p.PCT_DIVORCIADOS}}% | 🖤 <b>Viúvos:</b> ${{p.PCT_VIUVOS}}%<br>
 
                 <div class="section-title">🎂 FAIXAS ETÁRIAS (IDADE)</div>
                 ⚡ <b>16-24 anos:</b> ${{p.PCT_JOVENS_16_24}}% | 💼 <b>25-39 anos:</b> ${{p.PCT_ADULTOS_25_39}}%<br>
@@ -575,6 +598,11 @@ def gerar_dashboard_integrado_html(geo_json_str, df, output_path):
                 return div;
             }};
             legendControl.addTo(map);
+        }}
+
+        function setMetric(m) {{
+            document.getElementById('metricSelect').value = m;
+            updateMap();
         }}
 
         document.getElementById('metricSelect').addEventListener('change', updateMap);
@@ -659,8 +687,14 @@ def gerar_dashboard_3d_integrado_html(geo_json_str, df, output_path):
         <div id="panel">
             <span class="badge">3D ELEVAÇÃO GPU & COROPLÉTICO</span>
             <h2>Bahia 2026: Presidente 3D</h2>
-            <p>Selecione a métrica abaixo para transformar a elevação e cores dos 417 municípios em tempo real.</p>
+            <p>Selecione a métrica abaixo ou use os botões rápidos para visualizar a elevação e cores dos 417 municípios.</p>
             
+            <div style="display:flex;gap:6px;margin:10px 0;">
+                <button onclick="set3DMetric('PCT_LULA')" style="flex:1;background:#450a0a;color:#f87171;border:1px solid #ef4444;border-radius:6px;padding:7px;font-weight:700;font-size:0.75rem;cursor:pointer;">🔴 Lula</button>
+                <button onclick="set3DMetric('PCT_BOLSONARO')" style="flex:1;background:#172554;color:#60a5fa;border:1px solid #3b82f6;border-radius:6px;padding:7px;font-weight:700;font-size:0.75rem;cursor:pointer;">🔵 Flávio</button>
+                <button onclick="set3DMetric('PCT_OUTROS')" style="flex:1;background:#1e293b;color:#cbd5e1;border:1px solid #64748b;border-radius:6px;padding:7px;font-weight:700;font-size:0.75rem;cursor:pointer;">⚪ Outros</button>
+            </div>
+
             <select id="metricSelect">
                 <optgroup label="🗳️ VOTAÇÃO PRESIDENTE (1º TURNO)">
                     <option value="PCT_LULA" selected>🔴 Lula Presidente (% Votos)</option>
@@ -681,7 +715,9 @@ def gerar_dashboard_3d_integrado_html(geo_json_str, df, output_path):
                 <optgroup label="💍 ESTADO CIVIL">
                     <option value="PCT_SOLTEIROS">👤 Solteiros (%)</option>
                     <option value="PCT_CASADOS">💍 Casados (%)</option>
-                    <option value="PCT_DIV_SEP_VIUVO">💔 Divorciados / Separados / Viúvos (%)</option>
+                    <option value="PCT_DIVORCIADOS">💔 Divorciados (%)</option>
+                    <option value="PCT_VIUVOS">🖤 Viúvos (%)</option>
+                    <option value="PCT_DIV_SEP_VIUVO">🥀 Divorciados + Sep. + Viúvos (%)</option>
                 </optgroup>
                 <optgroup label="🎂 IDADE (FAIXAS ETÁRIAS)">
                     <option value="PCT_JOVENS_16_24">⚡ Jovens (16 a 24 anos) (%)</option>
@@ -876,8 +912,34 @@ def gerar_dashboard_3d_integrado_html(geo_json_str, df, output_path):
                 },
                 getElevation: v => v * 3000
             },
+            'PCT_DIVORCIADOS': {
+                name: '💔 Divorciados (%)',
+                colors: ['#fef0d9', '#fdcc8a', '#fc8d59', '#e34a33', '#b30000'],
+                minLbl: '1.5%', midLbl: '3.0%', maxLbl: '6.0%+',
+                getColor: v => {
+                    if (v >= 5.0) return [179, 0, 0, 245];
+                    if (v >= 4.0) return [227, 74, 51, 235];
+                    if (v >= 3.0) return [252, 141, 89, 220];
+                    if (v >= 2.0) return [253, 204, 138, 210];
+                    return [254, 240, 217, 190];
+                },
+                getElevation: v => v * 15000
+            },
+            'PCT_VIUVOS': {
+                name: '🖤 Viúvos (%)',
+                colors: ['#f7f7f7', '#cccccc', '#969696', '#636363', '#252525'],
+                minLbl: '1.5%', midLbl: '2.5%', maxLbl: '4.5%+',
+                getColor: v => {
+                    if (v >= 3.5) return [37, 37, 37, 245];
+                    if (v >= 2.8) return [99, 99, 99, 235];
+                    if (v >= 2.2) return [150, 150, 150, 220];
+                    if (v >= 1.7) return [204, 204, 204, 210];
+                    return [247, 247, 247, 190];
+                },
+                getElevation: v => v * 20000
+            },
             'PCT_DIV_SEP_VIUVO': {
-                name: '💔 Divorciados / Separados / Viúvos (%)',
+                name: '🥀 Divorciados + Sep. + Viúvos (%)',
                 colors: ['#f1eef6', '#d7b5d8', '#df65b0', '#dd1c77', '#980043'],
                 minLbl: '3%', midLbl: '7%', maxLbl: '14%+',
                 getColor: v => {
@@ -1051,6 +1113,7 @@ def gerar_dashboard_3d_integrado_html(geo_json_str, df, output_path):
                             💎 <b>Classe A/B (>4 SM):</b> ${p.PCT_RENDA_ACIMA_4SM || 0}% | 💵 <b>Sal. Médio:</b> ${p.SALARIO_MEDIO_SM || 0} SM<br>
                             🎓 <b>Superior:</b> ${p.PCT_SUPERIOR || 0}% | 👩 <b>Mulheres:</b> ${p.PCT_FEM || 0}%<br>
                             👤 <b>Solteiros:</b> ${p.PCT_SOLTEIROS || 0}% | 💍 <b>Casados:</b> ${p.PCT_CASADOS || 0}%<br>
+                            💔 <b>Divorciados:</b> ${p.PCT_DIVORCIADOS || 0}% | 🖤 <b>Viúvos:</b> ${p.PCT_VIUVOS || 0}%<br>
                             ⚡ <b>Jovens (16-24):</b> ${p.PCT_JOVENS_16_24 || 0}% | 👴 <b>Idosos (60+):</b> ${p.PCT_IDOSOS_60_MAIS || 0}%<br>
                             ⚠️ <b>Urnas UE2015:</b> <span style="color:#f59e0b;">${p.PCT_URNAS_UE2015 || 0}%</span> (${p.URNAS_UE2015 || 0}/${p.TOTAL_URNAS || 0} seções)
                         `;
@@ -1090,6 +1153,12 @@ def gerar_dashboard_3d_integrado_html(geo_json_str, df, output_path):
                     deckgl.redraw(true);
                 }
             }
+        }
+
+        function set3DMetric(m) {
+            const selectEl = document.getElementById('metricSelect');
+            if (selectEl) selectEl.value = m;
+            renderMap();
         }
 
         const sel = document.getElementById('metricSelect');
