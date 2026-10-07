@@ -1,0 +1,103 @@
+# ====================================================================
+# Python & Ambientes Virtuais
+# ====================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Ambientes virtuais
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Pytest / Testes / Cobertura
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# ====================================================================
+# Dados Brutos e Arquivos Pesados do TSE (Downloads & Databases)
+# ====================================================================
+# Logs brutos baixados e arquivos compactados do TSE
+data/logs/
+*.zip
+*.7z
+*.tar
+*.gz
+*.rar
+*.logjez
+*.sha512
+
+# Bancos de dados e arquivos colunares volumosos
+*.duckdb
+*.duckdb.wal
+*.parquet
+*.sqlite
+*.db
+
+# CSVs brutos ou intermediários pesados
+data/raw/
+data/processed/*.csv
+data/processed/*.parquet
+data/processed/*.duckdb*
+data/processed/*.kml
+
+# Manter arquivos geojson estruturados pequenos se necessário
+!data/geo/*.geojson
+
+# Manter pastas estruturadas no git
+!data/**/.gitkeep
+
+# ====================================================================
+# IDEs, Editores e Sistema Operacional
+# ====================================================================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs de execução
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ====================================================================
+# Arquivos Temporários de IA / Scratch
+# ====================================================================
+scratch/
+tmp/
+temp/

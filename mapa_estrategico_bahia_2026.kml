@@ -1,0 +1,682 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Plano Estratégico Bahia 2026 - Ranking IRE e Matemática Poética (Neville)</name>
+    <description>Mapeamento e Priorização por Teoria dos Sistemas - Flávio Bolsonaro 22</description>
+    <Placemark>
+      <name>Salvador [IRE: 100.0]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Salvador — Tier 1 - Megapolo Metropolitano</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 100.0 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Máximo: Presença Direta de Flávio, Comícios Centrais e Operação Dia D<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+142,684 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 1,955,479<br/>
+        <b>Votos 22 (1ºT):</b> 391,188 (27.03%)<br/>
+        <b>Votos 13 (1ºT):</b> 944,358 (65.26%)<br/>
+        <b>Terceira Via Disponível:</b> 111,468<br/>
+        <b>Abstenção 1ºT:</b> 393,886 (20.14%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 21-34 anos (Juventude Ativa)<br/>
+        <b>Classe Social Predominante:</b> Classe C e Enclaves A/B (Orla)<br/>
+        <b>Escolaridade Predominante:</b> Médio Completo / Superior<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Mobilização de Classe Média (Orla), Caravanas Bahia Segura e Operação Transporte Anti-Abstenção<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-38.5016,-12.9777,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Feira de Santana [IRE: 85.1]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Feira de Santana — Tier 1 - Megapolo do Interior</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 85.1 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Máximo: Presença Direta de Flávio, Comícios Centrais e Operação Dia D<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+29,272 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 435,631<br/>
+        <b>Votos 22 (1ºT):</b> 121,727 (35.80%)<br/>
+        <b>Votos 13 (1ºT):</b> 194,272 (57.13%)<br/>
+        <b>Terceira Via Disponível:</b> 24,032<br/>
+        <b>Abstenção 1ºT:</b> 74,984 (17.21%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 25-49 anos (Comerciários)<br/>
+        <b>Classe Social Predominante:</b> Classe C e Pequenos Negócios<br/>
+        <b>Escolaridade Predominante:</b> Médio e Técnico Comercial<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Micro-Targeting Evangélico, Articulação com Comércio/Logística e Aliança com Lideranças Locais<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-38.9663,-12.2664,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Lauro de Freitas [IRE: 75.1]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Lauro de Freitas — Tier 1 - Enclave Metropolitano</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 75.1 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Alto: Caravanas de Lideranças Nacionais, Rádio Diária e Micro-Targeting<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+12,676 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 163,871<br/>
+        <b>Votos 22 (1ºT):</b> 39,471 (33.07%)<br/>
+        <b>Votos 13 (1ºT):</b> 70,481 (59.06%)<br/>
+        <b>Terceira Via Disponível:</b> 9,393<br/>
+        <b>Abstenção 1ºT:</b> 37,542 (22.91%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 25-50 anos (Famílias Jovens)<br/>
+        <b>Classe Social Predominante:</b> Classes A e B (Vilas do Atlântico)<br/>
+        <b>Escolaridade Predominante:</b> Superior Completo / Pós<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Vilas do Atlântico / Buraquinho: Mobilização Anti-Abstenção e Pauta Segurança na Orla<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-38.3272,-12.8944,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Luis Eduardo Magalhaes [IRE: 73.6]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Luis Eduardo Magalhaes — Tier 1 - Cidadela do Agronegócio</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 73.6 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Alto: Caravanas de Lideranças Nacionais, Rádio Diária e Micro-Targeting<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+4,275 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 68,000<br/>
+        <b>Votos 22 (1ºT):</b> 31,200 (68.40%)<br/>
+        <b>Votos 13 (1ºT):</b> 13,100 (28.70%)<br/>
+        <b>Terceira Via Disponível:</b> 3,200<br/>
+        <b>Abstenção 1ºT:</b> 12,500 (18.38%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 25-45 anos (Produtores e Jovens)<br/>
+        <b>Classe Social Predominante:</b> Classes A e B de Altíssima Renda<br/>
+        <b>Escolaridade Predominante:</b> Superior (Agronomia) / Técnico<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Cidadela Conservadora: Maximizar Comparecimento (>90%) e Arrecadação de Votos Excedentes<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-45.7958,-12.0969,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Ilheus [IRE: 71.2]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Ilheus — Tier 1 - Polo Litoral Sul</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 71.2 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Alto: Caravanas de Lideranças Nacionais, Rádio Diária e Micro-Targeting<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+9,464 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 141,524<br/>
+        <b>Votos 22 (1ºT):</b> 47,182 (42.94%)<br/>
+        <b>Votos 13 (1ºT):</b> 55,379 (50.40%)<br/>
+        <b>Terceira Via Disponível:</b> 7,315<br/>
+        <b>Abstenção 1ºT:</b> 26,518 (18.74%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 30-60 anos (Turismo/Serviços)<br/>
+        <b>Classe Social Predominante:</b> Classe Média e Produtores Cacau<br/>
+        <b>Escolaridade Predominante:</b> Médio e Superior (UESC)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Porto Sul, FIOL, Agronegócio do Cacau e Turismo. Competição direta voto a voto<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-39.0463,-14.7937,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Camacari [IRE: 68.9]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Camacari — Tier 2 - Cinturão Industrial</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 68.9 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Alto: Caravanas de Lideranças Nacionais, Rádio Diária e Micro-Targeting<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+13,575 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 205,000<br/>
+        <b>Votos 22 (1ºT):</b> 54,800 (32.10%)<br/>
+        <b>Votos 13 (1ºT):</b> 108,000 (63.20%)<br/>
+        <b>Terceira Via Disponível:</b> 8,900<br/>
+        <b>Abstenção 1ºT:</b> 46,000 (22.40%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 20-40 anos (Operários/Técnicos)<br/>
+        <b>Classe Social Predominante:</b> Classe C Industrial e Periferia<br/>
+        <b>Escolaridade Predominante:</b> Médio e Profissionalizante<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Polo Industrial, Reindustrialização, Emprego Jovem e Combate à Violência Urbana<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-38.3242,-12.6975,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Barreiras [IRE: 68.9]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Barreiras — Tier 1 - Capital do Oeste</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 68.9 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Alto: Caravanas de Lideranças Nacionais, Rádio Diária e Micro-Targeting<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+7,500 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 110,000<br/>
+        <b>Votos 22 (1ºT):</b> 37,500 (43.10%)<br/>
+        <b>Votos 13 (1ºT):</b> 44,800 (51.50%)<br/>
+        <b>Terceira Via Disponível:</b> 5,800<br/>
+        <b>Abstenção 1ºT:</b> 21,000 (19.09%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 30-55 anos (Profissionais Agro)<br/>
+        <b>Classe Social Predominante:</b> Classes A/B Agro e C Comercial<br/>
+        <b>Escolaridade Predominante:</b> Superior e Técnico Agrícola<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Virada no Oeste: Conversão Total da 3ª Via e Mobilização com Prefeitos da Região<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-44.9961,-12.1449,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Vitoria da Conquista [IRE: 68.5]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Vitoria da Conquista — Tier 1 - Megapolo do Sudoeste</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 68.5 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Alto: Caravanas de Lideranças Nacionais, Rádio Diária e Micro-Targeting<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+16,500 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 257,000<br/>
+        <b>Votos 22 (1ºT):</b> 62,500 (29.80%)<br/>
+        <b>Votos 13 (1ºT):</b> 138,000 (65.80%)<br/>
+        <b>Terceira Via Disponível:</b> 11,200<br/>
+        <b>Abstenção 1ºT:</b> 54,000 (21.00%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 30-55 anos (Maturidade/Serviços)<br/>
+        <b>Classe Social Predominante:</b> Classe Média Urbana e Médicos<br/>
+        <b>Escolaridade Predominante:</b> Superior e Médio Técnico<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Pacto de Segurança com Ronaldo Caiado, Setor de Saúde/Universitário e Mobilização Urbana<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-40.8394,-14.8661,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Porto Seguro [IRE: 68.3]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Porto Seguro — Tier 2 - Polo Turístico / Extremo Sul</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 68.3 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Alto: Caravanas de Lideranças Nacionais, Rádio Diária e Micro-Targeting<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+8,325 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 108,000<br/>
+        <b>Votos 22 (1ºT):</b> 34,800 (41.20%)<br/>
+        <b>Votos 13 (1ºT):</b> 44,200 (52.30%)<br/>
+        <b>Terceira Via Disponível:</b> 6,300<br/>
+        <b>Abstenção 1ºT:</b> 24,000 (22.22%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 20-45 anos (Turismo/Comércio)<br/>
+        <b>Classe Social Predominante:</b> Classe B Hoteleira e D de Apoio<br/>
+        <b>Escolaridade Predominante:</b> Médio e Técnico em Turismo<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Pauta de Ordem Pública, Apoio à Hotelaria e Pescadores, Diálogo com Trade Turístico<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-39.0647,-16.4498,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Teixeira de Freitas [IRE: 65.3]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Teixeira de Freitas — Tier 2 - Polo do Extremo Sul</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 65.3 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Alto: Caravanas de Lideranças Nacionais, Rádio Diária e Micro-Targeting<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+7,725 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 112,000<br/>
+        <b>Votos 22 (1ºT):</b> 35,200 (39.80%)<br/>
+        <b>Votos 13 (1ºT):</b> 48,500 (54.80%)<br/>
+        <b>Terceira Via Disponível:</b> 5,200<br/>
+        <b>Abstenção 1ºT:</b> 25,500 (22.77%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 25-50 anos (Comércio/Agro)<br/>
+        <b>Classe Social Predominante:</b> Classe C e B (Integrado a ES/MG)<br/>
+        <b>Escolaridade Predominante:</b> Médio e Superior<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Sinergia com Espírito Santo e Minas Gerais, Agropecuária da Carne e Segurança<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-39.7424,-17.5367,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Alagoinhas [IRE: 62.8]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Alagoinhas — Tier 3 - Polo Cervejeiro e Ferroviário</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 62.8 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Médio: Articulação com Prefeitos/Pastores e Mídia Digital Segmentada<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+7,725 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 115,000<br/>
+        <b>Votos 22 (1ºT):</b> 31,200 (34.10%)<br/>
+        <b>Votos 13 (1ºT):</b> 54,800 (60.00%)<br/>
+        <b>Terceira Via Disponível:</b> 5,300<br/>
+        <b>Abstenção 1ºT:</b> 25,000 (21.74%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 20-40 anos (Indústria/Bebidas)<br/>
+        <b>Classe Social Predominante:</b> Classe C Industrial (Cervejeiro)<br/>
+        <b>Escolaridade Predominante:</b> Médio e Técnico Industrial<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Polo Industrial de Bebidas, Segurança no Interior e Diálogo com Juventude Operária<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-38.4192,-12.1356,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Itabuna [IRE: 62.7]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Itabuna — Tier 3 - Centro Regional Sul</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 62.7 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Médio: Articulação com Prefeitos/Pastores e Mídia Digital Segmentada<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+10,200 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 149,000<br/>
+        <b>Votos 22 (1ºT):</b> 38,200 (31.50%)<br/>
+        <b>Votos 13 (1ºT):</b> 77,000 (63.50%)<br/>
+        <b>Terceira Via Disponível:</b> 6,800<br/>
+        <b>Abstenção 1ºT:</b> 34,000 (22.80%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 25-50 anos (Comerciários/Saúde)<br/>
+        <b>Classe Social Predominante:</b> Classe C e D (Bairros Populares)<br/>
+        <b>Escolaridade Predominante:</b> Médio e Superior Incompleto<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Saúde Regional, Apoio ao Comércio e Atração de Votos da Terceira Via<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-39.2789,-14.7876,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Simoes Filho [IRE: 61.5]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Simoes Filho — Tier 3 - Cinturão Logístico RMS</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 61.5 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Médio: Articulação com Prefeitos/Pastores e Mídia Digital Segmentada<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+6,375 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 98,000<br/>
+        <b>Votos 22 (1ºT):</b> 27,400 (33.80%)<br/>
+        <b>Votos 13 (1ºT):</b> 49,200 (60.70%)<br/>
+        <b>Terceira Via Disponível:</b> 4,500<br/>
+        <b>Abstenção 1ºT:</b> 20,000 (20.41%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 18-40 anos (Logística/CIA)<br/>
+        <b>Classe Social Predominante:</b> Classe D e C (Distrito Industrial)<br/>
+        <b>Escolaridade Predominante:</b> Médio e Profissionalizante<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Segurança Pública Urgente (Área Crítica), Redes Evangélicas e Polo Logístico do CIA<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-38.4033,-12.7878,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Jequie [IRE: 61.4]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Jequie — Tier 3 - Centro Regional Sudoeste</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 61.4 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Médio: Articulação com Prefeitos/Pastores e Mídia Digital Segmentada<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+7,650 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 118,000<br/>
+        <b>Votos 22 (1ºT):</b> 32,800 (35.60%)<br/>
+        <b>Votos 13 (1ºT):</b> 54,500 (59.20%)<br/>
+        <b>Terceira Via Disponível:</b> 4,800<br/>
+        <b>Abstenção 1ºT:</b> 27,000 (22.88%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 30-60 anos (Famílias/Comércio)<br/>
+        <b>Classe Social Predominante:</b> Classe C e D (Agropecuária)<br/>
+        <b>Escolaridade Predominante:</b> Médio Completo<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Entroncamento Ferroviário da FIOL, Base Evangélica e Alianças com Deputados Locais<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-40.0833,-13.8578,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Santo Antonio de Jesus [IRE: 60.5]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Santo Antonio de Jesus — Tier 3 - Capital do Recôncavo</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 60.5 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Médio: Articulação com Prefeitos/Pastores e Mídia Digital Segmentada<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+5,265 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 82,000<br/>
+        <b>Votos 22 (1ºT):</b> 24,800 (38.50%)<br/>
+        <b>Votos 13 (1ºT):</b> 36,100 (56.10%)<br/>
+        <b>Terceira Via Disponível:</b> 3,500<br/>
+        <b>Abstenção 1ºT:</b> 17,600 (21.46%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 25-50 anos (Comércio Produtivo)<br/>
+        <b>Classe Social Predominante:</b> Classe C e B (Varejo Recôncavo)<br/>
+        <b>Escolaridade Predominante:</b> Médio e Superior<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Articulação com Comércio Varejista, Ponte Salvador-Itaparica e Líderes Cristãos<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-39.2611,-12.9692,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Juazeiro [IRE: 60.1]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Juazeiro — Tier 2 - Polo do São Francisco</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 60.1 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Médio: Articulação com Prefeitos/Pastores e Mídia Digital Segmentada<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+9,900 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 158,000<br/>
+        <b>Votos 22 (1ºT):</b> 36,500 (28.50%)<br/>
+        <b>Votos 13 (1ºT):</b> 86,000 (67.10%)<br/>
+        <b>Terceira Via Disponível:</b> 6,200<br/>
+        <b>Abstenção 1ºT:</b> 35,000 (22.15%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 20-45 anos (Trabalhadores Rurais)<br/>
+        <b>Classe Social Predominante:</b> Classe C Irrigada e D Vulnerável<br/>
+        <b>Escolaridade Predominante:</b> Fundamental e Médio<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Sinergia com Petrolina (PE), Fruticultura Irrigada, Transposição e Obras Federais<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-40.5036,-9.4132,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Eunapolis [IRE: 58.2]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Eunapolis — Tier 3 - Polo da Celulose</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 58.2 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Médio: Articulação com Prefeitos/Pastores e Mídia Digital Segmentada<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+5,550 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 86,000<br/>
+        <b>Votos 22 (1ºT):</b> 25,100 (37.20%)<br/>
+        <b>Votos 13 (1ºT):</b> 38,700 (57.30%)<br/>
+        <b>Terceira Via Disponível:</b> 3,700<br/>
+        <b>Abstenção 1ºT:</b> 18,500 (21.51%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 25-50 anos (Operários/Florestal)<br/>
+        <b>Classe Social Predominante:</b> Classe C e Transporte de Madeira<br/>
+        <b>Escolaridade Predominante:</b> Médio e Técnico Florestal<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Complexo da Celulose (Veracel), Produtores de Eucalipto e Pauta de Segurança Rural<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-39.5847,-16.3778,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Brumado [IRE: 57.3]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Brumado — Tier 4 - Polo Mineral do Sertão</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 57.3 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Médio: Articulação com Prefeitos/Pastores e Mídia Digital Segmentada<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+3,405 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 54,000<br/>
+        <b>Votos 22 (1ºT):</b> 19,400 (44.80%)<br/>
+        <b>Votos 13 (1ºT):</b> 21,500 (49.70%)<br/>
+        <b>Terceira Via Disponível:</b> 2,400<br/>
+        <b>Abstenção 1ºT:</b> 10,700 (19.81%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 25-55 anos (Mineração/FIOL)<br/>
+        <b>Classe Social Predominante:</b> Classe C e B (Magnesita/FIOL)<br/>
+        <b>Escolaridade Predominante:</b> Médio e Técnico Mineração<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Virada Simbólica: Empate Técnico, Infraestrutura Mineral da FIOL e Força Conservadora<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-41.6653,-14.2036,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Candeias [IRE: 55.1]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Candeias — Tier 4 - Polo Portuário de Aratu</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 55.1 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Médio: Articulação com Prefeitos/Pastores e Mídia Digital Segmentada<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+4,395 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 65,000<br/>
+        <b>Votos 22 (1ºT):</b> 18,200 (33.50%)<br/>
+        <b>Votos 13 (1ºT):</b> 32,900 (60.50%)<br/>
+        <b>Terceira Via Disponível:</b> 3,300<br/>
+        <b>Abstenção 1ºT:</b> 12,800 (19.69%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 20-55 anos (Petroquímica/Porto)<br/>
+        <b>Classe Social Predominante:</b> Classe C e D (Porto de Aratu)<br/>
+        <b>Escolaridade Predominante:</b> Médio e Técnico Petróleo<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Petróleo e Gás Privado (Acelen/Refinaria Mataripe), Reativação de Empregos Portuários<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-38.5447,-12.6711,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Cruz das Almas [IRE: 53.2]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Cruz das Almas — Tier 4 - Polo Universitário Agronômico</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 53.2 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Médio: Articulação com Prefeitos/Pastores e Mídia Digital Segmentada<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+3,135 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 49,000<br/>
+        <b>Votos 22 (1ºT):</b> 15,400 (38.90%)<br/>
+        <b>Votos 13 (1ºT):</b> 21,900 (55.30%)<br/>
+        <b>Terceira Via Disponível:</b> 2,300<br/>
+        <b>Abstenção 1ºT:</b> 9,400 (19.18%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 18-35 anos (Universitários/UFRB)<br/>
+        <b>Classe Social Predominante:</b> Classe C Universitária e B Rural<br/>
+        <b>Escolaridade Predominante:</b> Superior / Pesquisadores<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Diálogo com Embrapa, Pesquisa em Agronomia e Liberdade Acadêmica Universitária<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-39.1053,-12.6744,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Guanambi [IRE: 52.5]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Guanambi — Tier 4 - Polo de Energia Eólica</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 52.5 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Médio: Articulação com Prefeitos/Pastores e Mídia Digital Segmentada<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+3,945 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 63,000<br/>
+        <b>Votos 22 (1ºT):</b> 17,800 (36.20%)<br/>
+        <b>Votos 13 (1ºT):</b> 28,900 (58.70%)<br/>
+        <b>Terceira Via Disponível:</b> 2,500<br/>
+        <b>Abstenção 1ºT:</b> 13,800 (21.90%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 20-45 anos (Energia/Educação)<br/>
+        <b>Classe Social Predominante:</b> Classe C e B (Algodão e Eólica)<br/>
+        <b>Escolaridade Predominante:</b> Superior e Técnico Eólica<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Parques Eólicos, Irrigação de Ceraíma e Mobilização Médica/Universitária<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-42.7814,-14.2231,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Valenca [IRE: 50.6]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Valenca — Tier 4 - Polo do Baixo Sul</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 50.6 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Focado: Mobilização Orgânica de WhatsApp e Rádio Regional<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+3,990 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 67,000<br/>
+        <b>Votos 22 (1ºT):</b> 17,200 (32.80%)<br/>
+        <b>Votos 13 (1ºT):</b> 32,800 (62.60%)<br/>
+        <b>Terceira Via Disponível:</b> 2,400<br/>
+        <b>Abstenção 1ºT:</b> 14,600 (21.79%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 25-55 anos (Pescadores/Turismo)<br/>
+        <b>Classe Social Predominante:</b> Classe C e D (Apoio a Morro SP)<br/>
+        <b>Escolaridade Predominante:</b> Médio e Fundamental<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Porta de Entrada de Morro de São Paulo, Pescadores Artesanais e Segurança Marítima<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-39.0731,-13.3703,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Paulo Afonso [IRE: 50.6]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Paulo Afonso — Tier 4 - Polo Hidrelétrico do Sertão</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 50.6 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Focado: Mobilização Orgânica de WhatsApp e Rádio Regional<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+4,545 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 82,000<br/>
+        <b>Votos 22 (1ºT):</b> 20,800 (30.50%)<br/>
+        <b>Votos 13 (1ºT):</b> 44,500 (65.20%)<br/>
+        <b>Terceira Via Disponível:</b> 2,900<br/>
+        <b>Abstenção 1ºT:</b> 15,800 (19.27%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 30-60 anos (Eletricitários/Militar)<br/>
+        <b>Classe Social Predominante:</b> Classe C e B (CHESF e Exército)<br/>
+        <b>Escolaridade Predominante:</b> Médio Técnico e Superior<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Defesa dos Servidores da CHESF, Base Militar da 1ª Cia de Infantaria e Turismo das Usinas<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-38.2147,-9.4069,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Irecê [IRE: 48.8]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Irecê — Tier 4 - Polo Irrigado da Chapada</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 48.8 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Focado: Mobilização Orgânica de WhatsApp e Rádio Regional<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+3,165 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 52,000<br/>
+        <b>Votos 22 (1ºT):</b> 14,500 (34.20%)<br/>
+        <b>Votos 13 (1ºT):</b> 25,800 (60.80%)<br/>
+        <b>Terceira Via Disponível:</b> 2,100<br/>
+        <b>Abstenção 1ºT:</b> 10,600 (20.38%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 25-50 anos (Produtores Hortifrúti)<br/>
+        <b>Classe Social Predominante:</b> Classe C e B (Irrigação de Feijão)<br/>
+        <b>Escolaridade Predominante:</b> Médio e Técnico Agrícola<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Polo Hortifrutigranjeiro, Crédito Rural ao Pequeno Produtor e Parcerias Locais<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-41.8558,-11.3042,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Senhor do Bonfim [IRE: 45.0]</name>
+      <description><![CDATA[
+        <h3 style="color:#1e3a8a; margin-bottom:4px;">Senhor do Bonfim — Tier 4 - Polo Ferroviário do Norte</h3>
+        <p style="color:#d97706; font-weight:bold; font-size:12pt; margin:0 0 8px 0;">Índice de Retorno do Esforço (IRE): 45.0 / 100</p>
+        <div style="background:#f1f5f9; padding:8px; border-radius:6px; margin-bottom:8px;">
+          <b>Vetor de Alocação:</b> Esforço Focado: Mobilização Orgânica de WhatsApp e Rádio Regional<br/>
+          <b>Potencial Líquido de Novos Votos (2ºT):</b> <span style="color:#16a34a; font-weight:bold;">+3,210 votos</span>
+        </div>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Eleitorado Total:</b> 56,000<br/>
+        <b>Votos 22 (1ºT):</b> 14,200 (31.80%)<br/>
+        <b>Votos 13 (1ºT):</b> 28,400 (63.70%)<br/>
+        <b>Terceira Via Disponível:</b> 2,000<br/>
+        <b>Abstenção 1ºT:</b> 11,400 (20.36%)<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Faixa Etária Predominante:</b> 25-50 anos (Comércio/Rural)<br/>
+        <b>Classe Social Predominante:</b> Classe C e D (Comércio Regional)<br/>
+        <b>Escolaridade Predominante:</b> Ensino Médio<br/>
+        <hr style="border:none; border-top:1px solid #cbd5e1;"/>
+        <b>Estratégia Prioritária:</b> Capital Baiana do Forró, Conectividade Ferroviária e Redes de Comércio Local<br/>
+        <b>Estrategista:</b> Neville (rodvillex@gmail.com)<br/>
+      ]]></description>
+      <Point>
+        <coordinates>-40.1894,-10.4611,0</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>
