@@ -416,7 +416,7 @@ def gerar_dashboard_html(geo_json_str, df_muni, output_path):
     print(f"[OK] Dashboard Coroplético Demográfico & Renda gerado: {output_path}")
 
 def gerar_3d_demografico_html(geo_json_str, df_muni, output_path):
-    html_3d = f"""<!DOCTYPE html>
+    html_3d = """<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -427,41 +427,51 @@ def gerar_3d_demografico_html(geo_json_str, df_muni, output_path):
     <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        * {{ margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }}
-        body {{ width: 100vw; height: 100vh; overflow: hidden; background: #0b0f19; }}
-        #container {{ width: 100%; height: 100%; position: relative; }}
-        #panel {{
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        body { width: 100vw; height: 100vh; overflow: hidden; background: #0b0f19; }
+        #container { width: 100%; height: 100%; position: relative; }
+        #panel {
             position: absolute; top: 20px; left: 20px; z-index: 10;
             background: rgba(15, 23, 42, 0.94); backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 16px;
             padding: 20px 24px; color: #f8fafc; max-width: 360px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-        }}
-        .badge {{
+        }
+        .badge {
             display: inline-block; padding: 4px 10px; border-radius: 9999px;
             font-size: 0.75rem; font-weight: 700; background: #38bdf8; color: #000;
-        }}
-        h2 {{ font-size: 1.25rem; font-weight: 700; margin: 8px 0 4px 0; }}
-        p {{ font-size: 0.85rem; color: #94a3b8; line-height: 1.4; }}
-        select {{
+        }
+        h2 { font-size: 1.25rem; font-weight: 700; margin: 8px 0 4px 0; }
+        p { font-size: 0.85rem; color: #94a3b8; line-height: 1.4; }
+        select {
             width: 100%; padding: 10px 12px; background: #1e293b; border: 1px solid #334155;
             border-radius: 8px; color: #f8fafc; font-size: 0.9rem; margin-top: 10px; outline: none;
-        }}
-        #tooltip {{
+        }
+        #tooltip {
             position: absolute; z-index: 20; pointer-events: none;
             background: rgba(15, 23, 42, 0.95); color: #fff; padding: 12px 16px;
             border-radius: 10px; font-size: 0.85rem; border: 1px solid #38bdf8;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5); display: none; max-width: 300px;
-        }}
-        .instructions {{ margin-top: 12px; font-size: 0.75rem; color: #cbd5e1; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; }}
+        }
+        #legendBox {
+            margin-top: 12px; padding: 12px; background: rgba(0,0,0,0.35);
+            border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); font-size: 0.78rem;
+        }
+        .color-ramp {
+            height: 10px; border-radius: 5px; margin: 6px 0;
+            display: flex; overflow: hidden;
+        }
+        .color-ramp span { flex: 1; height: 100%; }
+        .ramp-labels { display: flex; justify-content: space-between; font-size: 0.72rem; color: #94a3b8; }
+        .instructions { margin-top: 12px; font-size: 0.75rem; color: #cbd5e1; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; }
     </style>
 </head>
 <body>
     <div id="container">
         <div id="panel">
-            <span class="badge">DEMOGRAFIA & RENDA 3D</span>
+            <span class="badge">DEMOGRAFIA & RENDA 3D GPU</span>
             <h2>Eleitorado da Bahia 3D</h2>
-            <p>A altura tridimensional dos municípios representa a dimensão demográfica selecionada.</p>
+            <p>A elevação e as cores dos 417 municípios reagem dinamicamente à métrica selecionada.</p>
             
             <select id="metricSelect">
                 <option value="PCT_RENDA_ACIMA_4SM">💰 Renda > 4 Salários Mínimos (%)</option>
@@ -470,142 +480,279 @@ def gerar_3d_demografico_html(geo_json_str, df_muni, output_path):
                 <option value="TOTAL_ELEITORES">👥 Total de Eleitores</option>
                 <option value="PCT_FEM">👩 Percentual Feminino (%)</option>
                 <option value="PCT_JOVENS">⚡ Jovens 16-24 anos (%)</option>
+                <option value="PCT_IDOSOS">👴 Idosos 60+ anos (%)</option>
+                <option value="PCT_BIOMETRIA">👆 Biometria Cadastrada (%)</option>
             </select>
+
+            <div id="legendBox">
+                <div id="legendTitle" style="font-weight: 700; color: #38bdf8;">💰 Renda > 4 Salários Mínimos</div>
+                <div class="color-ramp" id="legendRamp"></div>
+                <div class="ramp-labels">
+                    <span id="legendMin">Min</span>
+                    <span id="legendMid">Média</span>
+                    <span id="legendMax">Max</span>
+                </div>
+            </div>
 
             <div class="instructions">
                 🖱️ <b>Navegação 3D:</b><br>
                 • <b>Botão Direito ou Ctrl + Arrastar:</b> Inclinar e girar em 3D<br>
                 • <b>Botão Esquerdo:</b> Mover o mapa<br>
-                • <b>Scroll:</b> Zoom
+                • <b>Scroll:</b> Zoom in/out
             </div>
         </div>
         <div id="tooltip"></div>
     </div>
 
     <script>
-        const geoData = {geo_json_str};
+        const geoData = __GEO_DATA__;
         const tooltip = document.getElementById('tooltip');
 
-        const mapStyle = {{
+        const METRIC_CONFIGS = {
+            'PCT_RENDA_ACIMA_4SM': {
+                name: '💰 Renda > 4 Salários Mínimos (%)',
+                colors: ['#edf8e9', '#bae4b3', '#74c476', '#31a354', '#006d2c'],
+                scale: 5500,
+                minLbl: '3%', midLbl: '8%', maxLbl: '18%+',
+                getColor: v => {
+                    if (v >= 15) return [0, 109, 44, 245];
+                    if (v >= 10) return [49, 163, 84, 235];
+                    if (v >= 7) return [116, 196, 118, 220];
+                    if (v >= 5) return [186, 228, 179, 210];
+                    return [237, 248, 233, 190];
+                },
+                getElevation: v => v * 5500
+            },
+            'SALARIO_MEDIO_SM': {
+                name: '💵 Salário Médio Formal (SM)',
+                colors: ['#e0f3f8', '#99d5e4', '#45b4d3', '#157fad', '#08457e'],
+                scale: 35000,
+                minLbl: '1.2 SM', midLbl: '2.0 SM', maxLbl: '3.8+ SM',
+                getColor: v => {
+                    if (v >= 3.0) return [8, 69, 126, 245];
+                    if (v >= 2.3) return [21, 127, 173, 235];
+                    if (v >= 1.8) return [69, 180, 211, 220];
+                    if (v >= 1.5) return [153, 213, 228, 210];
+                    return [224, 243, 248, 190];
+                },
+                getElevation: v => v * 35000
+            },
+            'PCT_SUPERIOR': {
+                name: '🎓 Ensino Superior (%)',
+                colors: ['#f2f0f7', '#cbc9e2', '#9e9ac8', '#756bb1', '#54278f'],
+                scale: 5500,
+                minLbl: '4%', midLbl: '10%', maxLbl: '22%+',
+                getColor: v => {
+                    if (v >= 16) return [84, 39, 143, 245];
+                    if (v >= 12) return [117, 107, 177, 235];
+                    if (v >= 8) return [158, 154, 200, 220];
+                    if (v >= 6) return [203, 201, 226, 210];
+                    return [242, 240, 247, 190];
+                },
+                getElevation: v => v * 5500
+            },
+            'TOTAL_ELEITORES': {
+                name: '👥 Total de Eleitores',
+                colors: ['#edf8fb', '#b3cde3', '#8c96c6', '#8856a7', '#810f7c'],
+                scale: 0.07,
+                minLbl: '5 mil', midLbl: '30 mil', maxLbl: '100 mil+',
+                getColor: v => {
+                    if (v >= 100000) return [129, 15, 124, 245];
+                    if (v >= 50000) return [136, 86, 167, 235];
+                    if (v >= 25000) return [140, 150, 198, 220];
+                    if (v >= 10000) return [179, 205, 227, 210];
+                    return [237, 248, 251, 190];
+                },
+                getElevation: v => Math.min(v * 0.07, 160000)
+            },
+            'PCT_FEM': {
+                name: '👩 Percentual Feminino (%)',
+                colors: ['#fde0dd', '#fa9fb5', '#f768a1', '#c51b8a', '#7a0177'],
+                scale: 2500,
+                minLbl: '48%', midLbl: '52%', maxLbl: '55%+',
+                getColor: v => {
+                    if (v >= 53.5) return [122, 1, 119, 245];
+                    if (v >= 52.5) return [197, 27, 138, 235];
+                    if (v >= 51.5) return [247, 104, 161, 220];
+                    if (v >= 50.5) return [250, 159, 181, 210];
+                    return [253, 224, 221, 190];
+                },
+                getElevation: v => (v - 48) * 15000
+            },
+            'PCT_JOVENS': {
+                name: '⚡ Jovens 16-24 anos (%)',
+                colors: ['#ffffcc', '#c7e9b4', '#7fcdbb', '#41b6c4', '#225ea8'],
+                scale: 5000,
+                minLbl: '12%', midLbl: '17%', maxLbl: '24%+',
+                getColor: v => {
+                    if (v >= 20) return [34, 94, 168, 245];
+                    if (v >= 18) return [65, 182, 196, 235];
+                    if (v >= 16) return [127, 205, 187, 220];
+                    if (v >= 14) return [199, 233, 180, 210];
+                    return [255, 255, 204, 190];
+                },
+                getElevation: v => v * 5000
+            },
+            'PCT_IDOSOS': {
+                name: '👴 Idosos 60+ anos (%)',
+                colors: ['#ffffd4', '#fed98e', '#fe9929', '#d95f0e', '#993404'],
+                scale: 4500,
+                minLbl: '18%', midLbl: '25%', maxLbl: '34%+',
+                getColor: v => {
+                    if (v >= 30) return [153, 52, 4, 245];
+                    if (v >= 26) return [217, 95, 14, 235];
+                    if (v >= 22) return [254, 153, 41, 220];
+                    if (v >= 19) return [254, 217, 142, 210];
+                    return [255, 255, 212, 190];
+                },
+                getElevation: v => v * 4500
+            },
+            'PCT_BIOMETRIA': {
+                name: '👆 Biometria Cadastrada (%)',
+                colors: ['#ece7f2', '#d0d1e6', '#a6bddb', '#67a9cf', '#02818a'],
+                scale: 1800,
+                minLbl: '75%', midLbl: '88%', maxLbl: '98%+',
+                getColor: v => {
+                    if (v >= 95) return [2, 129, 138, 245];
+                    if (v >= 90) return [103, 169, 207, 235];
+                    if (v >= 85) return [166, 189, 219, 220];
+                    if (v >= 80) return [208, 209, 230, 210];
+                    return [236, 231, 242, 190];
+                },
+                getElevation: v => v * 1800
+            }
+        };
+
+        const mapStyle = {
             version: 8,
-            sources: {{
-                'esri-tiles': {{
+            sources: {
+                'esri-tiles': {
                     type: 'raster',
                     tiles: [
-                        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{{z}}/{{y}}/{{x}}'
+                        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}'
                     ],
                     tileSize: 256,
                     attribution: '© Esri World Street Map, © IBGE'
-                }}
-            }},
+                }
+            },
             layers: [
-                {{
+                {
                     id: 'esri-tiles-layer',
                     type: 'raster',
                     source: 'esri-tiles',
                     minzoom: 0,
                     maxzoom: 19
-                }}
+                }
             ]
-        }};
+        };
 
-        let deckgl;
+        let deckgl = null;
+        let currentMetric = 'PCT_RENDA_ACIMA_4SM';
 
-        function getElevation(feature, metric) {{
-            const val = feature.properties[metric] || 0;
-            if (metric === 'TOTAL_ELEITORES') return Math.min(val * 0.04, 150000);
-            if (metric === 'PCT_RENDA_ACIMA_4SM') return val * 4500;
-            if (metric === 'SALARIO_MEDIO_SM') return val * 20000;
-            return val * 1500;
-        }}
+        function updateLegend(metric) {
+            const conf = METRIC_CONFIGS[metric];
+            if (!conf) return;
+            document.getElementById('legendTitle').textContent = conf.name;
+            document.getElementById('legendMin').textContent = conf.minLbl;
+            document.getElementById('legendMid').textContent = conf.midLbl;
+            document.getElementById('legendMax').textContent = conf.maxLbl;
+            
+            const ramp = document.getElementById('legendRamp');
+            ramp.innerHTML = conf.colors.map(c => `<span style="background:${c}"></span>`).join('');
+        }
 
-        function getFillColor(feature, metric) {{
-            const val = feature.properties[metric] || 0;
-            if (metric === 'PCT_RENDA_ACIMA_4SM') {{
-                if (val > 15) return [0, 109, 44, 230];
-                if (val > 10) return [49, 163, 84, 220];
-                if (val > 7) return [116, 196, 118, 220];
-                return [186, 228, 179, 200];
-            }}
-            if (metric === 'TOTAL_ELEITORES') {{
-                if (val > 100000) return [220, 38, 38, 220];
-                if (val > 50000) return [234, 88, 12, 220];
-                if (val > 25000) return [245, 158, 11, 220];
-                if (val > 10000) return [14, 165, 233, 220];
-                return [56, 189, 248, 200];
-            }}
-            if (metric === 'PCT_SUPERIOR') {{
-                if (val > 16) return [106, 81, 163, 230];
-                if (val > 12) return [158, 154, 200, 220];
-                if (val > 8) return [188, 189, 220, 220];
-                return [218, 218, 235, 200];
-            }}
-            return [56, 189, 248, 220];
-        }}
-
-        function initDeck() {{
-            const metric = document.getElementById('metricSelect').value;
-
-            const layer = new deck.GeoJsonLayer({{
-                id: 'demographics-3d-layer',
+        function createDeckLayer(metric) {
+            const conf = METRIC_CONFIGS[metric];
+            return new deck.GeoJsonLayer({
+                id: 'bahia-3d-demographics-layer',
                 data: geoData,
                 extruded: true,
                 filled: true,
                 stroked: true,
-                lineWidthMinPixels: 1.5,
+                lineWidthMinPixels: 1.2,
                 getLineColor: [15, 23, 42, 255],
-                getElevation: f => getElevation(f, metric),
-                getFillColor: f => getFillColor(f, metric),
+                getElevation: f => {
+                    const val = Number(f.properties ? f.properties[metric] : 0) || 0;
+                    return conf.getElevation(val);
+                },
+                getFillColor: f => {
+                    const val = Number(f.properties ? f.properties[metric] : 0) || 0;
+                    return conf.getColor(val);
+                },
+                updateTriggers: {
+                    getElevation: [metric],
+                    getFillColor: [metric]
+                },
+                transitions: {
+                    getElevation: 700,
+                    getFillColor: 700
+                },
                 pickable: true,
                 autoHighlight: true,
-                highlightColor: [255, 255, 255, 100],
-                onHover: info => {{
-                    if (info.object) {{
+                highlightColor: [255, 255, 255, 120],
+                onHover: info => {
+                    if (info.object && info.object.properties) {
                         const p = info.object.properties;
                         tooltip.style.display = 'block';
                         tooltip.style.left = (info.x + 15) + 'px';
                         tooltip.style.top = (info.y + 15) + 'px';
                         tooltip.innerHTML = `
-                            <b style="color:#38bdf8;font-size:1.05rem;">${{p.MUNICIPIO}}</b><br>
-                            <b>💰 Renda > 4 SM:</b> <span style="color:#22c55e;font-weight:bold;">${{p.PCT_RENDA_ACIMA_4SM}}%</span><br>
-                            <b>💵 Salário Médio:</b> ${{p.SALARIO_MEDIO_SM}} SM<br>
-                            <b>🎓 Ensino Superior:</b> ${{p.PCT_SUPERIOR}}%<br>
-                            <b>👥 Eleitores:</b> ${{Number(p.TOTAL_ELEITORES).toLocaleString('pt-BR')}}<br>
-                            <b>👩 Mulheres:</b> ${{p.PCT_FEM}}%<br>
-                            <b>⚡ Jovens (16-24):</b> ${{p.PCT_JOVENS}}%
+                            <b style="color:#38bdf8;font-size:1.05rem;">${p.MUNICIPIO || 'Município'}</b><br>
+                            <b>💰 Renda > 4 SM:</b> <span style="color:#22c55e;font-weight:bold;">${p.PCT_RENDA_ACIMA_4SM || 0}%</span><br>
+                            <b>💵 Salário Médio:</b> ${p.SALARIO_MEDIO_SM || 0} SM<br>
+                            <b>🎓 Ensino Superior:</b> ${p.PCT_SUPERIOR || 0}%<br>
+                            <b>👥 Eleitores:</b> ${Number(p.TOTAL_ELEITORES || 0).toLocaleString('pt-BR')}<br>
+                            <b>👩 Mulheres:</b> ${p.PCT_FEM || 0}%<br>
+                            <b>⚡ Jovens (16-24):</b> ${p.PCT_JOVENS || 0}%<br>
+                            <b>👴 Idosos (60+):</b> ${p.PCT_IDOSOS || 0}%
                         `;
-                    }} else {{
+                    } else {
                         tooltip.style.display = 'none';
-                    }}
-                }}
-            }});
+                    }
+                }
+            });
+        }
 
-            if (!deckgl) {{
-                deckgl = new deck.DeckGL({{
+        function renderMap() {
+            const selectEl = document.getElementById('metricSelect');
+            currentMetric = selectEl ? selectEl.value : 'PCT_RENDA_ACIMA_4SM';
+            updateLegend(currentMetric);
+
+            const layer = createDeckLayer(currentMetric);
+
+            if (!deckgl) {
+                deckgl = new deck.DeckGL({
                     container: 'container',
                     map: maplibregl,
                     mapStyle: mapStyle,
-                    initialViewState: {{
+                    initialViewState: {
                         longitude: -39.2,
                         latitude: -12.9,
                         zoom: 6.8,
                         pitch: 52,
                         bearing: -15,
                         maxPitch: 85
-                    }},
+                    },
                     controller: true,
                     layers: [layer]
-                }});
-            }} else {{
-                deckgl.setProps({{ layers: [layer] }});
-            }}
-        }}
+                });
+            } else {
+                deckgl.setProps({ layers: [layer] });
+                if (typeof deckgl.redraw === 'function') {
+                    deckgl.redraw(true);
+                }
+            }
+        }
 
-        document.getElementById('metricSelect').addEventListener('change', initDeck);
-        initDeck();
+        const sel = document.getElementById('metricSelect');
+        sel.addEventListener('change', renderMap);
+        sel.addEventListener('input', renderMap);
+
+        // Render inicial
+        renderMap();
     </script>
 </body>
-</html>"""
+</html>""".replace("__GEO_DATA__", geo_json_str)
 
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(html_3d)
@@ -613,3 +760,4 @@ def gerar_3d_demografico_html(geo_json_str, df_muni, output_path):
 
 if __name__ == "__main__":
     generate_demographics_dashboard()
+
