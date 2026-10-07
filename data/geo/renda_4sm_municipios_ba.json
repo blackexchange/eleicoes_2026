@@ -1,0 +1,2921 @@
+{
+  "2900108": {
+    "IBGE_ID": "2900108",
+    "MUNICIPIO": "Abaíra",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 15.68,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2900207": {
+    "IBGE_ID": "2900207",
+    "MUNICIPIO": "Abaré",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 11.49,
+    "PCT_RENDA_ACIMA_4SM": 2.69
+  },
+  "2900306": {
+    "IBGE_ID": "2900306",
+    "MUNICIPIO": "Acajutiba",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 81.34,
+    "PCT_RENDA_ACIMA_4SM": 2.84
+  },
+  "2900355": {
+    "IBGE_ID": "2900355",
+    "MUNICIPIO": "Adustina",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 24.84,
+    "PCT_RENDA_ACIMA_4SM": 3.28
+  },
+  "2900405": {
+    "IBGE_ID": "2900405",
+    "MUNICIPIO": "Água Fria",
+    "SALARIO_MEDIO_SM": 2.2,
+    "RENDIMENTO_DOMICILIAR_RS": 23.77,
+    "PCT_RENDA_ACIMA_4SM": 3.88
+  },
+  "2900504": {
+    "IBGE_ID": "2900504",
+    "MUNICIPIO": "Érico Cardoso",
+    "SALARIO_MEDIO_SM": 1.3,
+    "RENDIMENTO_DOMICILIAR_RS": 15.48,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2900603": {
+    "IBGE_ID": "2900603",
+    "MUNICIPIO": "Aiquara",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 28.82,
+    "PCT_RENDA_ACIMA_4SM": 3.0
+  },
+  "2900702": {
+    "IBGE_ID": "2900702",
+    "MUNICIPIO": "Alagoinhas",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 188.67,
+    "PCT_RENDA_ACIMA_4SM": 3.99
+  },
+  "2900801": {
+    "IBGE_ID": "2900801",
+    "MUNICIPIO": "Alcobaça",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 14.36,
+    "PCT_RENDA_ACIMA_4SM": 2.18
+  },
+  "2900900": {
+    "IBGE_ID": "2900900",
+    "MUNICIPIO": "Almadina",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 25.32,
+    "PCT_RENDA_ACIMA_4SM": 3.57
+  },
+  "2901007": {
+    "IBGE_ID": "2901007",
+    "MUNICIPIO": "Amargosa",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 74.16,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2901106": {
+    "IBGE_ID": "2901106",
+    "MUNICIPIO": "Amélia Rodrigues",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 145.2,
+    "PCT_RENDA_ACIMA_4SM": 3.57
+  },
+  "2901155": {
+    "IBGE_ID": "2901155",
+    "MUNICIPIO": "América Dourada",
+    "SALARIO_MEDIO_SM": 2.8,
+    "RENDIMENTO_DOMICILIAR_RS": 19.05,
+    "PCT_RENDA_ACIMA_4SM": 5.95
+  },
+  "2901205": {
+    "IBGE_ID": "2901205",
+    "MUNICIPIO": "Anagé",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 13.1,
+    "PCT_RENDA_ACIMA_4SM": 2.69
+  },
+  "2901304": {
+    "IBGE_ID": "2901304",
+    "MUNICIPIO": "Andaraí",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 7.5,
+    "PCT_RENDA_ACIMA_4SM": 2.95
+  },
+  "2901353": {
+    "IBGE_ID": "2901353",
+    "MUNICIPIO": "Andorinha",
+    "SALARIO_MEDIO_SM": 2.8,
+    "RENDIMENTO_DOMICILIAR_RS": 11.55,
+    "PCT_RENDA_ACIMA_4SM": 5.93
+  },
+  "2901403": {
+    "IBGE_ID": "2901403",
+    "MUNICIPIO": "Angical",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 9.21,
+    "PCT_RENDA_ACIMA_4SM": 2.95
+  },
+  "2901502": {
+    "IBGE_ID": "2901502",
+    "MUNICIPIO": "Anguera",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 57.85,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2901601": {
+    "IBGE_ID": "2901601",
+    "MUNICIPIO": "Antas",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 53.08,
+    "PCT_RENDA_ACIMA_4SM": 3.34
+  },
+  "2901700": {
+    "IBGE_ID": "2901700",
+    "MUNICIPIO": "Antônio Cardoso",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 39.24,
+    "PCT_RENDA_ACIMA_4SM": 3.61
+  },
+  "2901809": {
+    "IBGE_ID": "2901809",
+    "MUNICIPIO": "Antônio Gonçalves",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 35.09,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2901908": {
+    "IBGE_ID": "2901908",
+    "MUNICIPIO": "Aporá",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 31.56,
+    "PCT_RENDA_ACIMA_4SM": 3.0
+  },
+  "2901957": {
+    "IBGE_ID": "2901957",
+    "MUNICIPIO": "Apuarema",
+    "SALARIO_MEDIO_SM": 2.6,
+    "RENDIMENTO_DOMICILIAR_RS": 48.17,
+    "PCT_RENDA_ACIMA_4SM": 5.3
+  },
+  "2902005": {
+    "IBGE_ID": "2902005",
+    "MUNICIPIO": "Aracatu",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 9.22,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2902054": {
+    "IBGE_ID": "2902054",
+    "MUNICIPIO": "Araçás",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 23.73,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2902104": {
+    "IBGE_ID": "2902104",
+    "MUNICIPIO": "Araci",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 33.19,
+    "PCT_RENDA_ACIMA_4SM": 3.3
+  },
+  "2902203": {
+    "IBGE_ID": "2902203",
+    "MUNICIPIO": "Aramari",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 30.44,
+    "PCT_RENDA_ACIMA_4SM": 2.21
+  },
+  "2902252": {
+    "IBGE_ID": "2902252",
+    "MUNICIPIO": "Arataca",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 27.7,
+    "PCT_RENDA_ACIMA_4SM": 3.0
+  },
+  "2902302": {
+    "IBGE_ID": "2902302",
+    "MUNICIPIO": "Aratuípe",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 47.47,
+    "PCT_RENDA_ACIMA_4SM": 3.04
+  },
+  "2902401": {
+    "IBGE_ID": "2902401",
+    "MUNICIPIO": "Aurelino Leal",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 29.7,
+    "PCT_RENDA_ACIMA_4SM": 3.29
+  },
+  "2902500": {
+    "IBGE_ID": "2902500",
+    "MUNICIPIO": "Baianópolis",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 4.14,
+    "PCT_RENDA_ACIMA_4SM": 3.23
+  },
+  "2902609": {
+    "IBGE_ID": "2902609",
+    "MUNICIPIO": "Baixa Grande",
+    "SALARIO_MEDIO_SM": 2.4,
+    "RENDIMENTO_DOMICILIAR_RS": 21.19,
+    "PCT_RENDA_ACIMA_4SM": 4.52
+  },
+  "2902658": {
+    "IBGE_ID": "2902658",
+    "MUNICIPIO": "Banzaê",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 51.92,
+    "PCT_RENDA_ACIMA_4SM": 3.05
+  },
+  "2902708": {
+    "IBGE_ID": "2902708",
+    "MUNICIPIO": "Barra",
+    "SALARIO_MEDIO_SM": 2.2,
+    "RENDIMENTO_DOMICILIAR_RS": 4.32,
+    "PCT_RENDA_ACIMA_4SM": 3.83
+  },
+  "2902807": {
+    "IBGE_ID": "2902807",
+    "MUNICIPIO": "Barra da Estiva",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 15.73,
+    "PCT_RENDA_ACIMA_4SM": 2.18
+  },
+  "2902906": {
+    "IBGE_ID": "2902906",
+    "MUNICIPIO": "Barra do Choça",
+    "SALARIO_MEDIO_SM": 2.4,
+    "RENDIMENTO_DOMICILIAR_RS": 44.42,
+    "PCT_RENDA_ACIMA_4SM": 4.59
+  },
+  "2903003": {
+    "IBGE_ID": "2903003",
+    "MUNICIPIO": "Barra do Mendes",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 9.08,
+    "PCT_RENDA_ACIMA_4SM": 2.17
+  },
+  "2903102": {
+    "IBGE_ID": "2903102",
+    "MUNICIPIO": "Barra do Rocha",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 30.3,
+    "PCT_RENDA_ACIMA_4SM": 2.73
+  },
+  "2903201": {
+    "IBGE_ID": "2903201",
+    "MUNICIPIO": "Barreiras",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 17.49,
+    "PCT_RENDA_ACIMA_4SM": 3.55
+  },
+  "2903235": {
+    "IBGE_ID": "2903235",
+    "MUNICIPIO": "Barro Alto",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 32.68,
+    "PCT_RENDA_ACIMA_4SM": 2.73
+  },
+  "2903276": {
+    "IBGE_ID": "2903276",
+    "MUNICIPIO": "Barrocas",
+    "SALARIO_MEDIO_SM": 3.1,
+    "RENDIMENTO_DOMICILIAR_RS": 70.61,
+    "PCT_RENDA_ACIMA_4SM": 7.32
+  },
+  "2903300": {
+    "IBGE_ID": "2903300",
+    "MUNICIPIO": "Barro Preto",
+    "SALARIO_MEDIO_SM": 2.3,
+    "RENDIMENTO_DOMICILIAR_RS": 50.26,
+    "PCT_RENDA_ACIMA_4SM": 4.27
+  },
+  "2903409": {
+    "IBGE_ID": "2903409",
+    "MUNICIPIO": "Belmonte",
+    "SALARIO_MEDIO_SM": 2.3,
+    "RENDIMENTO_DOMICILIAR_RS": 11.06,
+    "PCT_RENDA_ACIMA_4SM": 4.17
+  },
+  "2903508": {
+    "IBGE_ID": "2903508",
+    "MUNICIPIO": "Belo Campo",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 25.47,
+    "PCT_RENDA_ACIMA_4SM": 2.99
+  },
+  "2903607": {
+    "IBGE_ID": "2903607",
+    "MUNICIPIO": "Biritinga",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 26.97,
+    "PCT_RENDA_ACIMA_4SM": 2.72
+  },
+  "2903706": {
+    "IBGE_ID": "2903706",
+    "MUNICIPIO": "Boa Nova",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 17.74,
+    "PCT_RENDA_ACIMA_4SM": 2.97
+  },
+  "2903805": {
+    "IBGE_ID": "2903805",
+    "MUNICIPIO": "Boa Vista do Tupim",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 6.4,
+    "PCT_RENDA_ACIMA_4SM": 2.67
+  },
+  "2903904": {
+    "IBGE_ID": "2903904",
+    "MUNICIPIO": "Bom Jesus da Lapa",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 15.11,
+    "PCT_RENDA_ACIMA_4SM": 2.97
+  },
+  "2903953": {
+    "IBGE_ID": "2903953",
+    "MUNICIPIO": "Bom Jesus da Serra",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 23.99,
+    "PCT_RENDA_ACIMA_4SM": 3.27
+  },
+  "2904001": {
+    "IBGE_ID": "2904001",
+    "MUNICIPIO": "Boninal",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 14.66,
+    "PCT_RENDA_ACIMA_4SM": 2.69
+  },
+  "2904050": {
+    "IBGE_ID": "2904050",
+    "MUNICIPIO": "Bonito",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 20.42,
+    "PCT_RENDA_ACIMA_4SM": 3.26
+  },
+  "2904100": {
+    "IBGE_ID": "2904100",
+    "MUNICIPIO": "Boquira",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 14.86,
+    "PCT_RENDA_ACIMA_4SM": 2.18
+  },
+  "2904209": {
+    "IBGE_ID": "2904209",
+    "MUNICIPIO": "Botuporã",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 17.28,
+    "PCT_RENDA_ACIMA_4SM": 3.26
+  },
+  "2904308": {
+    "IBGE_ID": "2904308",
+    "MUNICIPIO": "Brejões",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 29.7,
+    "PCT_RENDA_ACIMA_4SM": 2.73
+  },
+  "2904407": {
+    "IBGE_ID": "2904407",
+    "MUNICIPIO": "Brejolândia",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 4.04,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2904506": {
+    "IBGE_ID": "2904506",
+    "MUNICIPIO": "Brotas de Macaúbas",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 4.78,
+    "PCT_RENDA_ACIMA_4SM": 2.94
+  },
+  "2904605": {
+    "IBGE_ID": "2904605",
+    "MUNICIPIO": "Brumado",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 29.01,
+    "PCT_RENDA_ACIMA_4SM": 3.29
+  },
+  "2904704": {
+    "IBGE_ID": "2904704",
+    "MUNICIPIO": "Buerarema",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 80.73,
+    "PCT_RENDA_ACIMA_4SM": 2.84
+  },
+  "2904753": {
+    "IBGE_ID": "2904753",
+    "MUNICIPIO": "Buritirama",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 4.97,
+    "PCT_RENDA_ACIMA_4SM": 2.94
+  },
+  "2904803": {
+    "IBGE_ID": "2904803",
+    "MUNICIPIO": "Caatiba",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 22.14,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2904852": {
+    "IBGE_ID": "2904852",
+    "MUNICIPIO": "Cabaceiras do Paraguaçu",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 76.66,
+    "PCT_RENDA_ACIMA_4SM": 3.11
+  },
+  "2904902": {
+    "IBGE_ID": "2904902",
+    "MUNICIPIO": "Cachoeira",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 81.03,
+    "PCT_RENDA_ACIMA_4SM": 3.12
+  },
+  "2905008": {
+    "IBGE_ID": "2905008",
+    "MUNICIPIO": "Caculé",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 33.27,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2905107": {
+    "IBGE_ID": "2905107",
+    "MUNICIPIO": "Caém",
+    "SALARIO_MEDIO_SM": 2.2,
+    "RENDIMENTO_DOMICILIAR_RS": 18.91,
+    "PCT_RENDA_ACIMA_4SM": 3.87
+  },
+  "2905156": {
+    "IBGE_ID": "2905156",
+    "MUNICIPIO": "Caetanos",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 17.61,
+    "PCT_RENDA_ACIMA_4SM": 2.44
+  },
+  "2905206": {
+    "IBGE_ID": "2905206",
+    "MUNICIPIO": "Caetité",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 19.45,
+    "PCT_RENDA_ACIMA_4SM": 3.56
+  },
+  "2905305": {
+    "IBGE_ID": "2905305",
+    "MUNICIPIO": "Cafarnaum",
+    "SALARIO_MEDIO_SM": 2.3,
+    "RENDIMENTO_DOMICILIAR_RS": 25.49,
+    "PCT_RENDA_ACIMA_4SM": 4.2
+  },
+  "2905404": {
+    "IBGE_ID": "2905404",
+    "MUNICIPIO": "Cairu",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 33.35,
+    "PCT_RENDA_ACIMA_4SM": 2.47
+  },
+  "2905503": {
+    "IBGE_ID": "2905503",
+    "MUNICIPIO": "Caldeirão Grande",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 27.46,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2905602": {
+    "IBGE_ID": "2905602",
+    "MUNICIPIO": "Camacan",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 50.22,
+    "PCT_RENDA_ACIMA_4SM": 3.05
+  },
+  "2905701": {
+    "IBGE_ID": "2905701",
+    "MUNICIPIO": "Camaçari",
+    "SALARIO_MEDIO_SM": 3.6,
+    "RENDIMENTO_DOMICILIAR_RS": 309.65,
+    "PCT_RENDA_ACIMA_4SM": 10.47
+  },
+  "2905800": {
+    "IBGE_ID": "2905800",
+    "MUNICIPIO": "Camamu",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 38.22,
+    "PCT_RENDA_ACIMA_4SM": 2.48
+  },
+  "2905909": {
+    "IBGE_ID": "2905909",
+    "MUNICIPIO": "Campo Alegre de Lourdes",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 10.1,
+    "PCT_RENDA_ACIMA_4SM": 3.24
+  },
+  "2906006": {
+    "IBGE_ID": "2906006",
+    "MUNICIPIO": "Campo Formoso",
+    "SALARIO_MEDIO_SM": 2.4,
+    "RENDIMENTO_DOMICILIAR_RS": 9.18,
+    "PCT_RENDA_ACIMA_4SM": 4.49
+  },
+  "2906105": {
+    "IBGE_ID": "2906105",
+    "MUNICIPIO": "Canápolis",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 21.52,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2906204": {
+    "IBGE_ID": "2906204",
+    "MUNICIPIO": "Canarana",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 41.76,
+    "PCT_RENDA_ACIMA_4SM": 3.62
+  },
+  "2906303": {
+    "IBGE_ID": "2906303",
+    "MUNICIPIO": "Canavieiras",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 24.37,
+    "PCT_RENDA_ACIMA_4SM": 2.71
+  },
+  "2906402": {
+    "IBGE_ID": "2906402",
+    "MUNICIPIO": "Candeal",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 19.98,
+    "PCT_RENDA_ACIMA_4SM": 2.7
+  },
+  "2906501": {
+    "IBGE_ID": "2906501",
+    "MUNICIPIO": "Candeias",
+    "SALARIO_MEDIO_SM": 3.0,
+    "RENDIMENTO_DOMICILIAR_RS": 321.87,
+    "PCT_RENDA_ACIMA_4SM": 7.76
+  },
+  "2906600": {
+    "IBGE_ID": "2906600",
+    "MUNICIPIO": "Candiba",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 31.6,
+    "PCT_RENDA_ACIMA_4SM": 3.59
+  },
+  "2906709": {
+    "IBGE_ID": "2906709",
+    "MUNICIPIO": "Cândido Sales",
+    "SALARIO_MEDIO_SM": 2.3,
+    "RENDIMENTO_DOMICILIAR_RS": 17.26,
+    "PCT_RENDA_ACIMA_4SM": 4.18
+  },
+  "2906808": {
+    "IBGE_ID": "2906808",
+    "MUNICIPIO": "Cansanção",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 24.62,
+    "PCT_RENDA_ACIMA_4SM": 2.71
+  },
+  "2906824": {
+    "IBGE_ID": "2906824",
+    "MUNICIPIO": "Canudos",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 4.89,
+    "PCT_RENDA_ACIMA_4SM": 2.94
+  },
+  "2906857": {
+    "IBGE_ID": "2906857",
+    "MUNICIPIO": "Capela do Alto Alegre",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 17.75,
+    "PCT_RENDA_ACIMA_4SM": 2.7
+  },
+  "2906873": {
+    "IBGE_ID": "2906873",
+    "MUNICIPIO": "Capim Grosso",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 79.47,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2906899": {
+    "IBGE_ID": "2906899",
+    "MUNICIPIO": "Caraíbas",
+    "SALARIO_MEDIO_SM": 1.2,
+    "RENDIMENTO_DOMICILIAR_RS": 12.69,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2906907": {
+    "IBGE_ID": "2906907",
+    "MUNICIPIO": "Caravelas",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 8.95,
+    "PCT_RENDA_ACIMA_4SM": 2.42
+  },
+  "2907004": {
+    "IBGE_ID": "2907004",
+    "MUNICIPIO": "Cardeal da Silva",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 34.64,
+    "PCT_RENDA_ACIMA_4SM": 3.3
+  },
+  "2907103": {
+    "IBGE_ID": "2907103",
+    "MUNICIPIO": "Carinhanha",
+    "SALARIO_MEDIO_SM": 2.3,
+    "RENDIMENTO_DOMICILIAR_RS": 10.37,
+    "PCT_RENDA_ACIMA_4SM": 4.16
+  },
+  "2907202": {
+    "IBGE_ID": "2907202",
+    "MUNICIPIO": "Casa Nova",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 6.73,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2907301": {
+    "IBGE_ID": "2907301",
+    "MUNICIPIO": "Castro Alves",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 35.7,
+    "PCT_RENDA_ACIMA_4SM": 2.22
+  },
+  "2907400": {
+    "IBGE_ID": "2907400",
+    "MUNICIPIO": "Catolândia",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 4.06,
+    "PCT_RENDA_ACIMA_4SM": 2.41
+  },
+  "2907509": {
+    "IBGE_ID": "2907509",
+    "MUNICIPIO": "Catu",
+    "SALARIO_MEDIO_SM": 2.5,
+    "RENDIMENTO_DOMICILIAR_RS": 122.72,
+    "PCT_RENDA_ACIMA_4SM": 5.16
+  },
+  "2907558": {
+    "IBGE_ID": "2907558",
+    "MUNICIPIO": "Caturama",
+    "SALARIO_MEDIO_SM": 1.0,
+    "RENDIMENTO_DOMICILIAR_RS": 13.31,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2907608": {
+    "IBGE_ID": "2907608",
+    "MUNICIPIO": "Central",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 28.24,
+    "PCT_RENDA_ACIMA_4SM": 3.58
+  },
+  "2907707": {
+    "IBGE_ID": "2907707",
+    "MUNICIPIO": "Chorrochó",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 3.57,
+    "PCT_RENDA_ACIMA_4SM": 2.16
+  },
+  "2907806": {
+    "IBGE_ID": "2907806",
+    "MUNICIPIO": "Cícero Dantas",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 36.5,
+    "PCT_RENDA_ACIMA_4SM": 3.02
+  },
+  "2907905": {
+    "IBGE_ID": "2907905",
+    "MUNICIPIO": "Cipó",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 122.78,
+    "PCT_RENDA_ACIMA_4SM": 3.22
+  },
+  "2908002": {
+    "IBGE_ID": "2908002",
+    "MUNICIPIO": "Coaraci",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 74.17,
+    "PCT_RENDA_ACIMA_4SM": 3.1
+  },
+  "2908101": {
+    "IBGE_ID": "2908101",
+    "MUNICIPIO": "Cocos",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 1.77,
+    "PCT_RENDA_ACIMA_4SM": 3.52
+  },
+  "2908200": {
+    "IBGE_ID": "2908200",
+    "MUNICIPIO": "Conceição da Feira",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 125.19,
+    "PCT_RENDA_ACIMA_4SM": 2.67
+  },
+  "2908309": {
+    "IBGE_ID": "2908309",
+    "MUNICIPIO": "Conceição do Almeida",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 61.7,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2908408": {
+    "IBGE_ID": "2908408",
+    "MUNICIPIO": "Conceição do Coité",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 61.06,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2908507": {
+    "IBGE_ID": "2908507",
+    "MUNICIPIO": "Conceição do Jacuípe",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 256.3,
+    "PCT_RENDA_ACIMA_4SM": 3.24
+  },
+  "2908606": {
+    "IBGE_ID": "2908606",
+    "MUNICIPIO": "Conde",
+    "SALARIO_MEDIO_SM": 2.5,
+    "RENDIMENTO_DOMICILIAR_RS": 24.49,
+    "PCT_RENDA_ACIMA_4SM": 4.88
+  },
+  "2908705": {
+    "IBGE_ID": "2908705",
+    "MUNICIPIO": "Condeúba",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 13.14,
+    "PCT_RENDA_ACIMA_4SM": 2.18
+  },
+  "2908804": {
+    "IBGE_ID": "2908804",
+    "MUNICIPIO": "Contendas do Sincorá",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 4.46,
+    "PCT_RENDA_ACIMA_4SM": 2.94
+  },
+  "2908903": {
+    "IBGE_ID": "2908903",
+    "MUNICIPIO": "Coração de Maria",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 64.34,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2909000": {
+    "IBGE_ID": "2909000",
+    "MUNICIPIO": "Cordeiros",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 15.25,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2909109": {
+    "IBGE_ID": "2909109",
+    "MUNICIPIO": "Coribe",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 5.77,
+    "PCT_RENDA_ACIMA_4SM": 2.67
+  },
+  "2909208": {
+    "IBGE_ID": "2909208",
+    "MUNICIPIO": "Coronel João Sá",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 19.32,
+    "PCT_RENDA_ACIMA_4SM": 3.56
+  },
+  "2909307": {
+    "IBGE_ID": "2909307",
+    "MUNICIPIO": "Correntina",
+    "SALARIO_MEDIO_SM": 2.6,
+    "RENDIMENTO_DOMICILIAR_RS": 2.62,
+    "PCT_RENDA_ACIMA_4SM": 5.17
+  },
+  "2909406": {
+    "IBGE_ID": "2909406",
+    "MUNICIPIO": "Cotegipe",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 3.25,
+    "PCT_RENDA_ACIMA_4SM": 2.94
+  },
+  "2909505": {
+    "IBGE_ID": "2909505",
+    "MUNICIPIO": "Cravolândia",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 31.08,
+    "PCT_RENDA_ACIMA_4SM": 2.47
+  },
+  "2909604": {
+    "IBGE_ID": "2909604",
+    "MUNICIPIO": "Crisópolis",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 32.99,
+    "PCT_RENDA_ACIMA_4SM": 2.73
+  },
+  "2909703": {
+    "IBGE_ID": "2909703",
+    "MUNICIPIO": "Cristópolis",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 12.73,
+    "PCT_RENDA_ACIMA_4SM": 3.54
+  },
+  "2909802": {
+    "IBGE_ID": "2909802",
+    "MUNICIPIO": "Cruz das Almas",
+    "SALARIO_MEDIO_SM": 2.8,
+    "RENDIMENTO_DOMICILIAR_RS": 402.12,
+    "PCT_RENDA_ACIMA_4SM": 7.2
+  },
+  "2909901": {
+    "IBGE_ID": "2909901",
+    "MUNICIPIO": "Curaçá",
+    "SALARIO_MEDIO_SM": 2.3,
+    "RENDIMENTO_DOMICILIAR_RS": 5.29,
+    "PCT_RENDA_ACIMA_4SM": 4.15
+  },
+  "2910008": {
+    "IBGE_ID": "2910008",
+    "MUNICIPIO": "Dário Meira",
+    "SALARIO_MEDIO_SM": 2.6,
+    "RENDIMENTO_DOMICILIAR_RS": 28.82,
+    "PCT_RENDA_ACIMA_4SM": 5.24
+  },
+  "2910057": {
+    "IBGE_ID": "2910057",
+    "MUNICIPIO": "Dias d'Ávila",
+    "SALARIO_MEDIO_SM": 2.5,
+    "RENDIMENTO_DOMICILIAR_RS": 360.64,
+    "PCT_RENDA_ACIMA_4SM": 5.88
+  },
+  "2910107": {
+    "IBGE_ID": "2910107",
+    "MUNICIPIO": "Dom Basílio",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 16.78,
+    "PCT_RENDA_ACIMA_4SM": 2.44
+  },
+  "2910206": {
+    "IBGE_ID": "2910206",
+    "MUNICIPIO": "Dom Macedo Costa",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 45.7,
+    "PCT_RENDA_ACIMA_4SM": 3.04
+  },
+  "2910305": {
+    "IBGE_ID": "2910305",
+    "MUNICIPIO": "Elísio Medrado",
+    "SALARIO_MEDIO_SM": 1.3,
+    "RENDIMENTO_DOMICILIAR_RS": 41.06,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2910404": {
+    "IBGE_ID": "2910404",
+    "MUNICIPIO": "Encruzilhada",
+    "SALARIO_MEDIO_SM": 2.2,
+    "RENDIMENTO_DOMICILIAR_RS": 11.99,
+    "PCT_RENDA_ACIMA_4SM": 3.85
+  },
+  "2910503": {
+    "IBGE_ID": "2910503",
+    "MUNICIPIO": "Entre Rios",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 32.81,
+    "PCT_RENDA_ACIMA_4SM": 3.29
+  },
+  "2910602": {
+    "IBGE_ID": "2910602",
+    "MUNICIPIO": "Esplanada",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 25.27,
+    "PCT_RENDA_ACIMA_4SM": 2.72
+  },
+  "2910701": {
+    "IBGE_ID": "2910701",
+    "MUNICIPIO": "Euclides da Cunha",
+    "SALARIO_MEDIO_SM": 2.2,
+    "RENDIMENTO_DOMICILIAR_RS": 27.75,
+    "PCT_RENDA_ACIMA_4SM": 3.89
+  },
+  "2910727": {
+    "IBGE_ID": "2910727",
+    "MUNICIPIO": "Eunápolis",
+    "SALARIO_MEDIO_SM": 2.2,
+    "RENDIMENTO_DOMICILIAR_RS": 84.97,
+    "PCT_RENDA_ACIMA_4SM": 4.04
+  },
+  "2910750": {
+    "IBGE_ID": "2910750",
+    "MUNICIPIO": "Fátima",
+    "SALARIO_MEDIO_SM": 2.2,
+    "RENDIMENTO_DOMICILIAR_RS": 49.12,
+    "PCT_RENDA_ACIMA_4SM": 3.94
+  },
+  "2910776": {
+    "IBGE_ID": "2910776",
+    "MUNICIPIO": "Feira da Mata",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 3.78,
+    "PCT_RENDA_ACIMA_4SM": 2.16
+  },
+  "2910800": {
+    "IBGE_ID": "2910800",
+    "MUNICIPIO": "Feira de Santana",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 416.03,
+    "PCT_RENDA_ACIMA_4SM": 3.95
+  },
+  "2910859": {
+    "IBGE_ID": "2910859",
+    "MUNICIPIO": "Filadélfia",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 29.36,
+    "PCT_RENDA_ACIMA_4SM": 2.46
+  },
+  "2910909": {
+    "IBGE_ID": "2910909",
+    "MUNICIPIO": "Firmino Alves",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 33.15,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2911006": {
+    "IBGE_ID": "2911006",
+    "MUNICIPIO": "Floresta Azul",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 36.32,
+    "PCT_RENDA_ACIMA_4SM": 2.48
+  },
+  "2911105": {
+    "IBGE_ID": "2911105",
+    "MUNICIPIO": "Formosa do Rio Preto",
+    "SALARIO_MEDIO_SM": 2.4,
+    "RENDIMENTO_DOMICILIAR_RS": 1.38,
+    "PCT_RENDA_ACIMA_4SM": 4.47
+  },
+  "2911204": {
+    "IBGE_ID": "2911204",
+    "MUNICIPIO": "Gandu",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 124.76,
+    "PCT_RENDA_ACIMA_4SM": 2.41
+  },
+  "2911253": {
+    "IBGE_ID": "2911253",
+    "MUNICIPIO": "Gavião",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 12.33,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2911303": {
+    "IBGE_ID": "2911303",
+    "MUNICIPIO": "Gentio do Ouro",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 2.87,
+    "PCT_RENDA_ACIMA_4SM": 2.41
+  },
+  "2911402": {
+    "IBGE_ID": "2911402",
+    "MUNICIPIO": "Glória",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 12.01,
+    "PCT_RENDA_ACIMA_4SM": 2.43
+  },
+  "2911501": {
+    "IBGE_ID": "2911501",
+    "MUNICIPIO": "Gongogi",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 42.28,
+    "PCT_RENDA_ACIMA_4SM": 2.49
+  },
+  "2911600": {
+    "IBGE_ID": "2911600",
+    "MUNICIPIO": "Governador Mangabeira",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 186.4,
+    "PCT_RENDA_ACIMA_4SM": 2.28
+  },
+  "2911659": {
+    "IBGE_ID": "2911659",
+    "MUNICIPIO": "Guajeru",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 11.12,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2911709": {
+    "IBGE_ID": "2911709",
+    "MUNICIPIO": "Guanambi",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 60.8,
+    "PCT_RENDA_ACIMA_4SM": 3.07
+  },
+  "2911808": {
+    "IBGE_ID": "2911808",
+    "MUNICIPIO": "Guaratinga",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 9.53,
+    "PCT_RENDA_ACIMA_4SM": 3.24
+  },
+  "2911857": {
+    "IBGE_ID": "2911857",
+    "MUNICIPIO": "Heliópolis",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 38.94,
+    "PCT_RENDA_ACIMA_4SM": 3.31
+  },
+  "2911907": {
+    "IBGE_ID": "2911907",
+    "MUNICIPIO": "Iaçu",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 10.5,
+    "PCT_RENDA_ACIMA_4SM": 2.68
+  },
+  "2912004": {
+    "IBGE_ID": "2912004",
+    "MUNICIPIO": "Ibiassucê",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 23.58,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2912103": {
+    "IBGE_ID": "2912103",
+    "MUNICIPIO": "Ibicaraí",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 104.65,
+    "PCT_RENDA_ACIMA_4SM": 2.62
+  },
+  "2912202": {
+    "IBGE_ID": "2912202",
+    "MUNICIPIO": "Ibicoara",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 20.34,
+    "PCT_RENDA_ACIMA_4SM": 2.71
+  },
+  "2912301": {
+    "IBGE_ID": "2912301",
+    "MUNICIPIO": "Ibicuí",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 13.41,
+    "PCT_RENDA_ACIMA_4SM": 2.69
+  },
+  "2912400": {
+    "IBGE_ID": "2912400",
+    "MUNICIPIO": "Ibipeba",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 12.29,
+    "PCT_RENDA_ACIMA_4SM": 2.69
+  },
+  "2912509": {
+    "IBGE_ID": "2912509",
+    "MUNICIPIO": "Ibipitanga",
+    "SALARIO_MEDIO_SM": 1.3,
+    "RENDIMENTO_DOMICILIAR_RS": 14.85,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2912608": {
+    "IBGE_ID": "2912608",
+    "MUNICIPIO": "Ibiquera",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 5.15,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2912707": {
+    "IBGE_ID": "2912707",
+    "MUNICIPIO": "Ibirapitanga",
+    "SALARIO_MEDIO_SM": 2.2,
+    "RENDIMENTO_DOMICILIAR_RS": 50.53,
+    "PCT_RENDA_ACIMA_4SM": 3.95
+  },
+  "2912806": {
+    "IBGE_ID": "2912806",
+    "MUNICIPIO": "Ibirapuã",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 10.1,
+    "PCT_RENDA_ACIMA_4SM": 2.68
+  },
+  "2912905": {
+    "IBGE_ID": "2912905",
+    "MUNICIPIO": "Ibirataia",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 64.24,
+    "PCT_RENDA_ACIMA_4SM": 3.08
+  },
+  "2913002": {
+    "IBGE_ID": "2913002",
+    "MUNICIPIO": "Ibitiara",
+    "SALARIO_MEDIO_SM": 2.4,
+    "RENDIMENTO_DOMICILIAR_RS": 8.39,
+    "PCT_RENDA_ACIMA_4SM": 4.49
+  },
+  "2913101": {
+    "IBGE_ID": "2913101",
+    "MUNICIPIO": "Ibititá",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 28.63,
+    "PCT_RENDA_ACIMA_4SM": 2.72
+  },
+  "2913200": {
+    "IBGE_ID": "2913200",
+    "MUNICIPIO": "Ibotirama",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 14.76,
+    "PCT_RENDA_ACIMA_4SM": 2.69
+  },
+  "2913309": {
+    "IBGE_ID": "2913309",
+    "MUNICIPIO": "Ichu",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 41.16,
+    "PCT_RENDA_ACIMA_4SM": 2.49
+  },
+  "2913408": {
+    "IBGE_ID": "2913408",
+    "MUNICIPIO": "Igaporã",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 18.26,
+    "PCT_RENDA_ACIMA_4SM": 2.19
+  },
+  "2913457": {
+    "IBGE_ID": "2913457",
+    "MUNICIPIO": "Igrapiúna",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 25.31,
+    "PCT_RENDA_ACIMA_4SM": 2.99
+  },
+  "2913507": {
+    "IBGE_ID": "2913507",
+    "MUNICIPIO": "Iguaí",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 31.05,
+    "PCT_RENDA_ACIMA_4SM": 2.47
+  },
+  "2913606": {
+    "IBGE_ID": "2913606",
+    "MUNICIPIO": "Ilhéus",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 104.67,
+    "PCT_RENDA_ACIMA_4SM": 3.77
+  },
+  "2913705": {
+    "IBGE_ID": "2913705",
+    "MUNICIPIO": "Inhambupe",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 29.7,
+    "PCT_RENDA_ACIMA_4SM": 2.73
+  },
+  "2913804": {
+    "IBGE_ID": "2913804",
+    "MUNICIPIO": "Ipecaetá",
+    "SALARIO_MEDIO_SM": 1.3,
+    "RENDIMENTO_DOMICILIAR_RS": 41.45,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2913903": {
+    "IBGE_ID": "2913903",
+    "MUNICIPIO": "Ipiaú",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 166.05,
+    "PCT_RENDA_ACIMA_4SM": 3.03
+  },
+  "2914000": {
+    "IBGE_ID": "2914000",
+    "MUNICIPIO": "Ipirá",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 19.39,
+    "PCT_RENDA_ACIMA_4SM": 2.44
+  },
+  "2914109": {
+    "IBGE_ID": "2914109",
+    "MUNICIPIO": "Ipupiara",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 8.75,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2914208": {
+    "IBGE_ID": "2914208",
+    "MUNICIPIO": "Irajuba",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 16.93,
+    "PCT_RENDA_ACIMA_4SM": 2.7
+  },
+  "2914307": {
+    "IBGE_ID": "2914307",
+    "MUNICIPIO": "Iramaia",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 6.16,
+    "PCT_RENDA_ACIMA_4SM": 2.67
+  },
+  "2914406": {
+    "IBGE_ID": "2914406",
+    "MUNICIPIO": "Iraquara",
+    "SALARIO_MEDIO_SM": 2.5,
+    "RENDIMENTO_DOMICILIAR_RS": 21.96,
+    "PCT_RENDA_ACIMA_4SM": 4.87
+  },
+  "2914505": {
+    "IBGE_ID": "2914505",
+    "MUNICIPIO": "Irará",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 98.87,
+    "PCT_RENDA_ACIMA_4SM": 3.16
+  },
+  "2914604": {
+    "IBGE_ID": "2914604",
+    "MUNICIPIO": "Irecê",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 207.45,
+    "PCT_RENDA_ACIMA_4SM": 3.13
+  },
+  "2914653": {
+    "IBGE_ID": "2914653",
+    "MUNICIPIO": "Itabela",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 33.37,
+    "PCT_RENDA_ACIMA_4SM": 3.01
+  },
+  "2914703": {
+    "IBGE_ID": "2914703",
+    "MUNICIPIO": "Itaberaba",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 26.3,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2914802": {
+    "IBGE_ID": "2914802",
+    "MUNICIPIO": "Itabuna",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 473.5,
+    "PCT_RENDA_ACIMA_4SM": 4.76
+  },
+  "2914901": {
+    "IBGE_ID": "2914901",
+    "MUNICIPIO": "Itacaré",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 32.96,
+    "PCT_RENDA_ACIMA_4SM": 2.22
+  },
+  "2915007": {
+    "IBGE_ID": "2915007",
+    "MUNICIPIO": "Itaeté",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 12.34,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2915106": {
+    "IBGE_ID": "2915106",
+    "MUNICIPIO": "Itagi",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 50.35,
+    "PCT_RENDA_ACIMA_4SM": 3.05
+  },
+  "2915205": {
+    "IBGE_ID": "2915205",
+    "MUNICIPIO": "Itagibá",
+    "SALARIO_MEDIO_SM": 2.9,
+    "RENDIMENTO_DOMICILIAR_RS": 19.26,
+    "PCT_RENDA_ACIMA_4SM": 6.34
+  },
+  "2915304": {
+    "IBGE_ID": "2915304",
+    "MUNICIPIO": "Itagimirim",
+    "SALARIO_MEDIO_SM": 2.3,
+    "RENDIMENTO_DOMICILIAR_RS": 8.47,
+    "PCT_RENDA_ACIMA_4SM": 4.16
+  },
+  "2915353": {
+    "IBGE_ID": "2915353",
+    "MUNICIPIO": "Itaguaçu da Bahia",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 2.97,
+    "PCT_RENDA_ACIMA_4SM": 2.16
+  },
+  "2915403": {
+    "IBGE_ID": "2915403",
+    "MUNICIPIO": "Itaju do Colônia",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 5.98,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2915502": {
+    "IBGE_ID": "2915502",
+    "MUNICIPIO": "Itajuípe",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 74.1,
+    "PCT_RENDA_ACIMA_4SM": 3.1
+  },
+  "2915601": {
+    "IBGE_ID": "2915601",
+    "MUNICIPIO": "Itamaraju",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 28.47,
+    "PCT_RENDA_ACIMA_4SM": 2.21
+  },
+  "2915700": {
+    "IBGE_ID": "2915700",
+    "MUNICIPIO": "Itamari",
+    "SALARIO_MEDIO_SM": 2.3,
+    "RENDIMENTO_DOMICILIAR_RS": 71.14,
+    "PCT_RENDA_ACIMA_4SM": 4.33
+  },
+  "2915809": {
+    "IBGE_ID": "2915809",
+    "MUNICIPIO": "Itambé",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 16.41,
+    "PCT_RENDA_ACIMA_4SM": 3.55
+  },
+  "2915908": {
+    "IBGE_ID": "2915908",
+    "MUNICIPIO": "Itanagra",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 15.49,
+    "PCT_RENDA_ACIMA_4SM": 2.69
+  },
+  "2916005": {
+    "IBGE_ID": "2916005",
+    "MUNICIPIO": "Itanhém",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 13.81,
+    "PCT_RENDA_ACIMA_4SM": 2.18
+  },
+  "2916104": {
+    "IBGE_ID": "2916104",
+    "MUNICIPIO": "Itaparica",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 175.58,
+    "PCT_RENDA_ACIMA_4SM": 2.78
+  },
+  "2916203": {
+    "IBGE_ID": "2916203",
+    "MUNICIPIO": "Itapé",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 23.94,
+    "PCT_RENDA_ACIMA_4SM": 2.2
+  },
+  "2916302": {
+    "IBGE_ID": "2916302",
+    "MUNICIPIO": "Itapebi",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 10.44,
+    "PCT_RENDA_ACIMA_4SM": 3.54
+  },
+  "2916401": {
+    "IBGE_ID": "2916401",
+    "MUNICIPIO": "Itapetinga",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 41.95,
+    "PCT_RENDA_ACIMA_4SM": 2.24
+  },
+  "2916500": {
+    "IBGE_ID": "2916500",
+    "MUNICIPIO": "Itapicuru",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 20.35,
+    "PCT_RENDA_ACIMA_4SM": 3.26
+  },
+  "2916609": {
+    "IBGE_ID": "2916609",
+    "MUNICIPIO": "Itapitanga",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 24.99,
+    "PCT_RENDA_ACIMA_4SM": 2.2
+  },
+  "2916708": {
+    "IBGE_ID": "2916708",
+    "MUNICIPIO": "Itaquara",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 23.77,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2916807": {
+    "IBGE_ID": "2916807",
+    "MUNICIPIO": "Itarantim",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 10.27,
+    "PCT_RENDA_ACIMA_4SM": 2.42
+  },
+  "2916856": {
+    "IBGE_ID": "2916856",
+    "MUNICIPIO": "Itatim",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 24.89,
+    "PCT_RENDA_ACIMA_4SM": 2.2
+  },
+  "2916906": {
+    "IBGE_ID": "2916906",
+    "MUNICIPIO": "Itiruçu",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 40.46,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2917003": {
+    "IBGE_ID": "2917003",
+    "MUNICIPIO": "Itiúba",
+    "SALARIO_MEDIO_SM": 2.4,
+    "RENDIMENTO_DOMICILIAR_RS": 20.96,
+    "PCT_RENDA_ACIMA_4SM": 4.52
+  },
+  "2917102": {
+    "IBGE_ID": "2917102",
+    "MUNICIPIO": "Itororó",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 63.5,
+    "PCT_RENDA_ACIMA_4SM": 2.53
+  },
+  "2917201": {
+    "IBGE_ID": "2917201",
+    "MUNICIPIO": "Ituaçu",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 14.9,
+    "PCT_RENDA_ACIMA_4SM": 3.25
+  },
+  "2917300": {
+    "IBGE_ID": "2917300",
+    "MUNICIPIO": "Ituberá",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 63.73,
+    "PCT_RENDA_ACIMA_4SM": 3.08
+  },
+  "2917334": {
+    "IBGE_ID": "2917334",
+    "MUNICIPIO": "Iuiu",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 7.34,
+    "PCT_RENDA_ACIMA_4SM": 3.23
+  },
+  "2917359": {
+    "IBGE_ID": "2917359",
+    "MUNICIPIO": "Jaborandi",
+    "SALARIO_MEDIO_SM": 2.3,
+    "RENDIMENTO_DOMICILIAR_RS": 0.94,
+    "PCT_RENDA_ACIMA_4SM": 4.14
+  },
+  "2917409": {
+    "IBGE_ID": "2917409",
+    "MUNICIPIO": "Jacaraci",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 11.05,
+    "PCT_RENDA_ACIMA_4SM": 2.42
+  },
+  "2917508": {
+    "IBGE_ID": "2917508",
+    "MUNICIPIO": "Jacobina",
+    "SALARIO_MEDIO_SM": 2.3,
+    "RENDIMENTO_DOMICILIAR_RS": 33.6,
+    "PCT_RENDA_ACIMA_4SM": 4.23
+  },
+  "2917607": {
+    "IBGE_ID": "2917607",
+    "MUNICIPIO": "Jaguaquara",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 54.95,
+    "PCT_RENDA_ACIMA_4SM": 2.52
+  },
+  "2917706": {
+    "IBGE_ID": "2917706",
+    "MUNICIPIO": "Jaguarari",
+    "SALARIO_MEDIO_SM": 3.2,
+    "RENDIMENTO_DOMICILIAR_RS": 12.35,
+    "PCT_RENDA_ACIMA_4SM": 7.54
+  },
+  "2917805": {
+    "IBGE_ID": "2917805",
+    "MUNICIPIO": "Jaguaripe",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 18.32,
+    "PCT_RENDA_ACIMA_4SM": 3.26
+  },
+  "2917904": {
+    "IBGE_ID": "2917904",
+    "MUNICIPIO": "Jandaíra",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 16.11,
+    "PCT_RENDA_ACIMA_4SM": 2.18
+  },
+  "2918001": {
+    "IBGE_ID": "2918001",
+    "MUNICIPIO": "Jequié",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 47.07,
+    "PCT_RENDA_ACIMA_4SM": 2.5
+  },
+  "2918100": {
+    "IBGE_ID": "2918100",
+    "MUNICIPIO": "Jeremoabo",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 8.09,
+    "PCT_RENDA_ACIMA_4SM": 2.95
+  },
+  "2918209": {
+    "IBGE_ID": "2918209",
+    "MUNICIPIO": "Jiquiriçá",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 58.97,
+    "PCT_RENDA_ACIMA_4SM": 2.27
+  },
+  "2918308": {
+    "IBGE_ID": "2918308",
+    "MUNICIPIO": "Jitaúna",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 64.47,
+    "PCT_RENDA_ACIMA_4SM": 3.37
+  },
+  "2918357": {
+    "IBGE_ID": "2918357",
+    "MUNICIPIO": "João Dourado",
+    "SALARIO_MEDIO_SM": 2.2,
+    "RENDIMENTO_DOMICILIAR_RS": 24.65,
+    "PCT_RENDA_ACIMA_4SM": 3.88
+  },
+  "2918407": {
+    "IBGE_ID": "2918407",
+    "MUNICIPIO": "Juazeiro",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 30.45,
+    "PCT_RENDA_ACIMA_4SM": 3.59
+  },
+  "2918456": {
+    "IBGE_ID": "2918456",
+    "MUNICIPIO": "Jucuruçu",
+    "SALARIO_MEDIO_SM": 1.3,
+    "RENDIMENTO_DOMICILIAR_RS": 7.06,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2918506": {
+    "IBGE_ID": "2918506",
+    "MUNICIPIO": "Jussara",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 15.87,
+    "PCT_RENDA_ACIMA_4SM": 3.55
+  },
+  "2918555": {
+    "IBGE_ID": "2918555",
+    "MUNICIPIO": "Jussari",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 18.14,
+    "PCT_RENDA_ACIMA_4SM": 2.7
+  },
+  "2918605": {
+    "IBGE_ID": "2918605",
+    "MUNICIPIO": "Jussiape",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 13.72,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2918704": {
+    "IBGE_ID": "2918704",
+    "MUNICIPIO": "Lafaiete Coutinho",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 9.62,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2918753": {
+    "IBGE_ID": "2918753",
+    "MUNICIPIO": "Lagoa Real",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 15.88,
+    "PCT_RENDA_ACIMA_4SM": 2.18
+  },
+  "2918803": {
+    "IBGE_ID": "2918803",
+    "MUNICIPIO": "Laje",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 48.5,
+    "PCT_RENDA_ACIMA_4SM": 3.04
+  },
+  "2918902": {
+    "IBGE_ID": "2918902",
+    "MUNICIPIO": "Lajedão",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 6.07,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2919009": {
+    "IBGE_ID": "2919009",
+    "MUNICIPIO": "Lajedinho",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 5.07,
+    "PCT_RENDA_ACIMA_4SM": 2.41
+  },
+  "2919058": {
+    "IBGE_ID": "2919058",
+    "MUNICIPIO": "Lajedo do Tabocal",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 19.23,
+    "PCT_RENDA_ACIMA_4SM": 2.19
+  },
+  "2919108": {
+    "IBGE_ID": "2919108",
+    "MUNICIPIO": "Lamarão",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 45.74,
+    "PCT_RENDA_ACIMA_4SM": 3.04
+  },
+  "2919157": {
+    "IBGE_ID": "2919157",
+    "MUNICIPIO": "Lapão",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 42.38,
+    "PCT_RENDA_ACIMA_4SM": 3.03
+  },
+  "2919207": {
+    "IBGE_ID": "2919207",
+    "MUNICIPIO": "Lauro de Freitas",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 2833.38,
+    "PCT_RENDA_ACIMA_4SM": 11.29
+  },
+  "2919306": {
+    "IBGE_ID": "2919306",
+    "MUNICIPIO": "Lençóis",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 8.12,
+    "PCT_RENDA_ACIMA_4SM": 3.24
+  },
+  "2919405": {
+    "IBGE_ID": "2919405",
+    "MUNICIPIO": "Licínio de Almeida",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 14.6,
+    "PCT_RENDA_ACIMA_4SM": 2.18
+  },
+  "2919504": {
+    "IBGE_ID": "2919504",
+    "MUNICIPIO": "Livramento de Nossa Senhora",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 19.99,
+    "PCT_RENDA_ACIMA_4SM": 2.44
+  },
+  "2919553": {
+    "IBGE_ID": "2919553",
+    "MUNICIPIO": "Luís Eduardo Magalhães",
+    "SALARIO_MEDIO_SM": 2.2,
+    "RENDIMENTO_DOMICILIAR_RS": 15.25,
+    "PCT_RENDA_ACIMA_4SM": 3.86
+  },
+  "2919603": {
+    "IBGE_ID": "2919603",
+    "MUNICIPIO": "Macajuba",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 17.27,
+    "PCT_RENDA_ACIMA_4SM": 3.55
+  },
+  "2919702": {
+    "IBGE_ID": "2919702",
+    "MUNICIPIO": "Macarani",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 13.28,
+    "PCT_RENDA_ACIMA_4SM": 2.18
+  },
+  "2919801": {
+    "IBGE_ID": "2919801",
+    "MUNICIPIO": "Macaúbas",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 15.71,
+    "PCT_RENDA_ACIMA_4SM": 2.97
+  },
+  "2919900": {
+    "IBGE_ID": "2919900",
+    "MUNICIPIO": "Macururé",
+    "SALARIO_MEDIO_SM": 1.3,
+    "RENDIMENTO_DOMICILIAR_RS": 3.52,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2919926": {
+    "IBGE_ID": "2919926",
+    "MUNICIPIO": "Madre de Deus",
+    "SALARIO_MEDIO_SM": 3.7,
+    "RENDIMENTO_DOMICILIAR_RS": 539.61,
+    "PCT_RENDA_ACIMA_4SM": 11.92
+  },
+  "2919959": {
+    "IBGE_ID": "2919959",
+    "MUNICIPIO": "Maetinga",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 10.32,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2920007": {
+    "IBGE_ID": "2920007",
+    "MUNICIPIO": "Maiquinique",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 17.85,
+    "PCT_RENDA_ACIMA_4SM": 3.56
+  },
+  "2920106": {
+    "IBGE_ID": "2920106",
+    "MUNICIPIO": "Mairi",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 20.29,
+    "PCT_RENDA_ACIMA_4SM": 3.26
+  },
+  "2920205": {
+    "IBGE_ID": "2920205",
+    "MUNICIPIO": "Malhada",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 7.97,
+    "PCT_RENDA_ACIMA_4SM": 3.24
+  },
+  "2920304": {
+    "IBGE_ID": "2920304",
+    "MUNICIPIO": "Malhada de Pedras",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 16.01,
+    "PCT_RENDA_ACIMA_4SM": 2.7
+  },
+  "2920403": {
+    "IBGE_ID": "2920403",
+    "MUNICIPIO": "Manoel Vitorino",
+    "SALARIO_MEDIO_SM": 2.5,
+    "RENDIMENTO_DOMICILIAR_RS": 6.45,
+    "PCT_RENDA_ACIMA_4SM": 4.82
+  },
+  "2920452": {
+    "IBGE_ID": "2920452",
+    "MUNICIPIO": "Mansidão",
+    "SALARIO_MEDIO_SM": 2.4,
+    "RENDIMENTO_DOMICILIAR_RS": 3.96,
+    "PCT_RENDA_ACIMA_4SM": 4.48
+  },
+  "2920502": {
+    "IBGE_ID": "2920502",
+    "MUNICIPIO": "Maracás",
+    "SALARIO_MEDIO_SM": 2.3,
+    "RENDIMENTO_DOMICILIAR_RS": 10.92,
+    "PCT_RENDA_ACIMA_4SM": 4.17
+  },
+  "2920601": {
+    "IBGE_ID": "2920601",
+    "MUNICIPIO": "Maragogipe",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 97.27,
+    "PCT_RENDA_ACIMA_4SM": 3.75
+  },
+  "2920700": {
+    "IBGE_ID": "2920700",
+    "MUNICIPIO": "Maraú",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 23.2,
+    "PCT_RENDA_ACIMA_4SM": 2.45
+  },
+  "2920809": {
+    "IBGE_ID": "2920809",
+    "MUNICIPIO": "Marcionílio Souza",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 8.22,
+    "PCT_RENDA_ACIMA_4SM": 3.53
+  },
+  "2920908": {
+    "IBGE_ID": "2920908",
+    "MUNICIPIO": "Mascote",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 18.95,
+    "PCT_RENDA_ACIMA_4SM": 2.98
+  },
+  "2921005": {
+    "IBGE_ID": "2921005",
+    "MUNICIPIO": "Mata de São João",
+    "SALARIO_MEDIO_SM": 2.2,
+    "RENDIMENTO_DOMICILIAR_RS": 63.46,
+    "PCT_RENDA_ACIMA_4SM": 3.98
+  },
+  "2921054": {
+    "IBGE_ID": "2921054",
+    "MUNICIPIO": "Matina",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 14.37,
+    "PCT_RENDA_ACIMA_4SM": 2.43
+  },
+  "2921104": {
+    "IBGE_ID": "2921104",
+    "MUNICIPIO": "Medeiros Neto",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 17.4,
+    "PCT_RENDA_ACIMA_4SM": 2.7
+  },
+  "2921203": {
+    "IBGE_ID": "2921203",
+    "MUNICIPIO": "Miguel Calmon",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 16.88,
+    "PCT_RENDA_ACIMA_4SM": 2.7
+  },
+  "2921302": {
+    "IBGE_ID": "2921302",
+    "MUNICIPIO": "Milagres",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 36.24,
+    "PCT_RENDA_ACIMA_4SM": 2.22
+  },
+  "2921401": {
+    "IBGE_ID": "2921401",
+    "MUNICIPIO": "Mirangaba",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 9.59,
+    "PCT_RENDA_ACIMA_4SM": 3.54
+  },
+  "2921450": {
+    "IBGE_ID": "2921450",
+    "MUNICIPIO": "Mirante",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 9.7,
+    "PCT_RENDA_ACIMA_4SM": 2.95
+  },
+  "2921500": {
+    "IBGE_ID": "2921500",
+    "MUNICIPIO": "Monte Santo",
+    "SALARIO_MEDIO_SM": 2.2,
+    "RENDIMENTO_DOMICILIAR_RS": 16.43,
+    "PCT_RENDA_ACIMA_4SM": 3.86
+  },
+  "2921609": {
+    "IBGE_ID": "2921609",
+    "MUNICIPIO": "Morpará",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 4.88,
+    "PCT_RENDA_ACIMA_4SM": 2.67
+  },
+  "2921708": {
+    "IBGE_ID": "2921708",
+    "MUNICIPIO": "Morro do Chapéu",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 6.12,
+    "PCT_RENDA_ACIMA_4SM": 2.95
+  },
+  "2921807": {
+    "IBGE_ID": "2921807",
+    "MUNICIPIO": "Mortugaba",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 20.38,
+    "PCT_RENDA_ACIMA_4SM": 2.19
+  },
+  "2921906": {
+    "IBGE_ID": "2921906",
+    "MUNICIPIO": "Mucugê",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 4.3,
+    "PCT_RENDA_ACIMA_4SM": 2.67
+  },
+  "2922003": {
+    "IBGE_ID": "2922003",
+    "MUNICIPIO": "Mucuri",
+    "SALARIO_MEDIO_SM": 2.6,
+    "RENDIMENTO_DOMICILIAR_RS": 20.23,
+    "PCT_RENDA_ACIMA_4SM": 5.22
+  },
+  "2922052": {
+    "IBGE_ID": "2922052",
+    "MUNICIPIO": "Mulungu do Morro",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 21.64,
+    "PCT_RENDA_ACIMA_4SM": 2.98
+  },
+  "2922102": {
+    "IBGE_ID": "2922102",
+    "MUNICIPIO": "Mundo Novo",
+    "SALARIO_MEDIO_SM": 2.2,
+    "RENDIMENTO_DOMICILIAR_RS": 16.34,
+    "PCT_RENDA_ACIMA_4SM": 3.86
+  },
+  "2922201": {
+    "IBGE_ID": "2922201",
+    "MUNICIPIO": "Muniz Ferreira",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 66.45,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2922250": {
+    "IBGE_ID": "2922250",
+    "MUNICIPIO": "Muquém do São Francisco",
+    "SALARIO_MEDIO_SM": 2.2,
+    "RENDIMENTO_DOMICILIAR_RS": 2.82,
+    "PCT_RENDA_ACIMA_4SM": 3.83
+  },
+  "2922300": {
+    "IBGE_ID": "2922300",
+    "MUNICIPIO": "Muritiba",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 323.58,
+    "PCT_RENDA_ACIMA_4SM": 4.02
+  },
+  "2922409": {
+    "IBGE_ID": "2922409",
+    "MUNICIPIO": "Mutuípe",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 75.74,
+    "PCT_RENDA_ACIMA_4SM": 2.83
+  },
+  "2922508": {
+    "IBGE_ID": "2922508",
+    "MUNICIPIO": "Nazaré",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 107.47,
+    "PCT_RENDA_ACIMA_4SM": 3.48
+  },
+  "2922607": {
+    "IBGE_ID": "2922607",
+    "MUNICIPIO": "Nilo Peçanha",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 31.38,
+    "PCT_RENDA_ACIMA_4SM": 3.0
+  },
+  "2922656": {
+    "IBGE_ID": "2922656",
+    "MUNICIPIO": "Nordestina",
+    "SALARIO_MEDIO_SM": 3.0,
+    "RENDIMENTO_DOMICILIAR_RS": 26.38,
+    "PCT_RENDA_ACIMA_4SM": 6.76
+  },
+  "2922706": {
+    "IBGE_ID": "2922706",
+    "MUNICIPIO": "Nova Canaã",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 19.58,
+    "PCT_RENDA_ACIMA_4SM": 3.56
+  },
+  "2922730": {
+    "IBGE_ID": "2922730",
+    "MUNICIPIO": "Nova Fátima",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 21.73,
+    "PCT_RENDA_ACIMA_4SM": 2.45
+  },
+  "2922755": {
+    "IBGE_ID": "2922755",
+    "MUNICIPIO": "Nova Ibiá",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 37.19,
+    "PCT_RENDA_ACIMA_4SM": 3.6
+  },
+  "2922805": {
+    "IBGE_ID": "2922805",
+    "MUNICIPIO": "Nova Itarana",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 15.8,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2922854": {
+    "IBGE_ID": "2922854",
+    "MUNICIPIO": "Nova Redenção",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 18.64,
+    "PCT_RENDA_ACIMA_4SM": 2.44
+  },
+  "2922904": {
+    "IBGE_ID": "2922904",
+    "MUNICIPIO": "Nova Soure",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 25.4,
+    "PCT_RENDA_ACIMA_4SM": 2.72
+  },
+  "2923001": {
+    "IBGE_ID": "2923001",
+    "MUNICIPIO": "Nova Viçosa",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 29.15,
+    "PCT_RENDA_ACIMA_4SM": 2.46
+  },
+  "2923035": {
+    "IBGE_ID": "2923035",
+    "MUNICIPIO": "Novo Horizonte",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 17.52,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2923050": {
+    "IBGE_ID": "2923050",
+    "MUNICIPIO": "Novo Triunfo",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 59.89,
+    "PCT_RENDA_ACIMA_4SM": 3.36
+  },
+  "2923100": {
+    "IBGE_ID": "2923100",
+    "MUNICIPIO": "Olindina",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 46.0,
+    "PCT_RENDA_ACIMA_4SM": 3.04
+  },
+  "2923209": {
+    "IBGE_ID": "2923209",
+    "MUNICIPIO": "Oliveira dos Brejinhos",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 6.21,
+    "PCT_RENDA_ACIMA_4SM": 2.95
+  },
+  "2923308": {
+    "IBGE_ID": "2923308",
+    "MUNICIPIO": "Ouriçangas",
+    "SALARIO_MEDIO_SM": 2.3,
+    "RENDIMENTO_DOMICILIAR_RS": 53.51,
+    "PCT_RENDA_ACIMA_4SM": 4.28
+  },
+  "2923357": {
+    "IBGE_ID": "2923357",
+    "MUNICIPIO": "Ourolândia",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 11.03,
+    "PCT_RENDA_ACIMA_4SM": 3.54
+  },
+  "2923407": {
+    "IBGE_ID": "2923407",
+    "MUNICIPIO": "Palmas de Monte Alto",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 8.23,
+    "PCT_RENDA_ACIMA_4SM": 3.24
+  },
+  "2923506": {
+    "IBGE_ID": "2923506",
+    "MUNICIPIO": "Palmeiras",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 12.79,
+    "PCT_RENDA_ACIMA_4SM": 3.25
+  },
+  "2923605": {
+    "IBGE_ID": "2923605",
+    "MUNICIPIO": "Paramirim",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 17.95,
+    "PCT_RENDA_ACIMA_4SM": 2.7
+  },
+  "2923704": {
+    "IBGE_ID": "2923704",
+    "MUNICIPIO": "Paratinga",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 11.28,
+    "PCT_RENDA_ACIMA_4SM": 2.42
+  },
+  "2923803": {
+    "IBGE_ID": "2923803",
+    "MUNICIPIO": "Paripiranga",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 63.76,
+    "PCT_RENDA_ACIMA_4SM": 3.37
+  },
+  "2923902": {
+    "IBGE_ID": "2923902",
+    "MUNICIPIO": "Pau Brasil",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 17.89,
+    "PCT_RENDA_ACIMA_4SM": 2.97
+  },
+  "2924009": {
+    "IBGE_ID": "2924009",
+    "MUNICIPIO": "Paulo Afonso",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 68.62,
+    "PCT_RENDA_ACIMA_4SM": 3.38
+  },
+  "2924058": {
+    "IBGE_ID": "2924058",
+    "MUNICIPIO": "Pé de Serra",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 22.32,
+    "PCT_RENDA_ACIMA_4SM": 3.57
+  },
+  "2924108": {
+    "IBGE_ID": "2924108",
+    "MUNICIPIO": "Pedrão",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 43.03,
+    "PCT_RENDA_ACIMA_4SM": 2.24
+  },
+  "2924207": {
+    "IBGE_ID": "2924207",
+    "MUNICIPIO": "Pedro Alexandre",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 18.97,
+    "PCT_RENDA_ACIMA_4SM": 2.7
+  },
+  "2924306": {
+    "IBGE_ID": "2924306",
+    "MUNICIPIO": "Piatã",
+    "SALARIO_MEDIO_SM": 2.5,
+    "RENDIMENTO_DOMICILIAR_RS": 10.49,
+    "PCT_RENDA_ACIMA_4SM": 4.84
+  },
+  "2924405": {
+    "IBGE_ID": "2924405",
+    "MUNICIPIO": "Pilão Arcado",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 2.8,
+    "PCT_RENDA_ACIMA_4SM": 2.94
+  },
+  "2924504": {
+    "IBGE_ID": "2924504",
+    "MUNICIPIO": "Pindaí",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 25.45,
+    "PCT_RENDA_ACIMA_4SM": 3.28
+  },
+  "2924603": {
+    "IBGE_ID": "2924603",
+    "MUNICIPIO": "Pindobaçu",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 40.54,
+    "PCT_RENDA_ACIMA_4SM": 3.03
+  },
+  "2924652": {
+    "IBGE_ID": "2924652",
+    "MUNICIPIO": "Pintadas",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 18.96,
+    "PCT_RENDA_ACIMA_4SM": 2.44
+  },
+  "2924678": {
+    "IBGE_ID": "2924678",
+    "MUNICIPIO": "Piraí do Norte",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 52.32,
+    "PCT_RENDA_ACIMA_4SM": 2.51
+  },
+  "2924702": {
+    "IBGE_ID": "2924702",
+    "MUNICIPIO": "Piripá",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 29.08,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2924801": {
+    "IBGE_ID": "2924801",
+    "MUNICIPIO": "Piritiba",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 22.96,
+    "PCT_RENDA_ACIMA_4SM": 3.27
+  },
+  "2924900": {
+    "IBGE_ID": "2924900",
+    "MUNICIPIO": "Planaltino",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 9.52,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2925006": {
+    "IBGE_ID": "2925006",
+    "MUNICIPIO": "Planalto",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 27.7,
+    "PCT_RENDA_ACIMA_4SM": 2.72
+  },
+  "2925105": {
+    "IBGE_ID": "2925105",
+    "MUNICIPIO": "Poções",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 54.08,
+    "PCT_RENDA_ACIMA_4SM": 3.65
+  },
+  "2925204": {
+    "IBGE_ID": "2925204",
+    "MUNICIPIO": "Pojuca",
+    "SALARIO_MEDIO_SM": 2.7,
+    "RENDIMENTO_DOMICILIAR_RS": 113.97,
+    "PCT_RENDA_ACIMA_4SM": 5.87
+  },
+  "2925253": {
+    "IBGE_ID": "2925253",
+    "MUNICIPIO": "Ponto Novo",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 31.65,
+    "PCT_RENDA_ACIMA_4SM": 2.73
+  },
+  "2925303": {
+    "IBGE_ID": "2925303",
+    "MUNICIPIO": "Porto Seguro",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 52.7,
+    "PCT_RENDA_ACIMA_4SM": 3.05
+  },
+  "2925402": {
+    "IBGE_ID": "2925402",
+    "MUNICIPIO": "Potiraguá",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 9.95,
+    "PCT_RENDA_ACIMA_4SM": 2.42
+  },
+  "2925501": {
+    "IBGE_ID": "2925501",
+    "MUNICIPIO": "Prado",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 15.87,
+    "PCT_RENDA_ACIMA_4SM": 2.7
+  },
+  "2925600": {
+    "IBGE_ID": "2925600",
+    "MUNICIPIO": "Presidente Dutra",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 84.07,
+    "PCT_RENDA_ACIMA_4SM": 2.85
+  },
+  "2925709": {
+    "IBGE_ID": "2925709",
+    "MUNICIPIO": "Presidente Jânio Quadros",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 11.52,
+    "PCT_RENDA_ACIMA_4SM": 2.69
+  },
+  "2925758": {
+    "IBGE_ID": "2925758",
+    "MUNICIPIO": "Presidente Tancredo Neves",
+    "SALARIO_MEDIO_SM": 1.3,
+    "RENDIMENTO_DOMICILIAR_RS": 57.16,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2925808": {
+    "IBGE_ID": "2925808",
+    "MUNICIPIO": "Queimadas",
+    "SALARIO_MEDIO_SM": 2.3,
+    "RENDIMENTO_DOMICILIAR_RS": 12.13,
+    "PCT_RENDA_ACIMA_4SM": 4.17
+  },
+  "2925907": {
+    "IBGE_ID": "2925907",
+    "MUNICIPIO": "Quijingue",
+    "SALARIO_MEDIO_SM": 2.2,
+    "RENDIMENTO_DOMICILIAR_RS": 20.28,
+    "PCT_RENDA_ACIMA_4SM": 3.87
+  },
+  "2925931": {
+    "IBGE_ID": "2925931",
+    "MUNICIPIO": "Quixabeira",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 24.64,
+    "PCT_RENDA_ACIMA_4SM": 2.2
+  },
+  "2925956": {
+    "IBGE_ID": "2925956",
+    "MUNICIPIO": "Rafael Jambeiro",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 18.95,
+    "PCT_RENDA_ACIMA_4SM": 2.98
+  },
+  "2926004": {
+    "IBGE_ID": "2926004",
+    "MUNICIPIO": "Remanso",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 8.32,
+    "PCT_RENDA_ACIMA_4SM": 2.42
+  },
+  "2926103": {
+    "IBGE_ID": "2926103",
+    "MUNICIPIO": "Retirolândia",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 66.43,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2926202": {
+    "IBGE_ID": "2926202",
+    "MUNICIPIO": "Riachão das Neves",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 3.87,
+    "PCT_RENDA_ACIMA_4SM": 3.23
+  },
+  "2926301": {
+    "IBGE_ID": "2926301",
+    "MUNICIPIO": "Riachão do Jacuípe",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 27.87,
+    "PCT_RENDA_ACIMA_4SM": 2.72
+  },
+  "2926400": {
+    "IBGE_ID": "2926400",
+    "MUNICIPIO": "Riacho de Santana",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 11.87,
+    "PCT_RENDA_ACIMA_4SM": 2.69
+  },
+  "2926509": {
+    "IBGE_ID": "2926509",
+    "MUNICIPIO": "Ribeira do Amparo",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 22.22,
+    "PCT_RENDA_ACIMA_4SM": 2.45
+  },
+  "2926608": {
+    "IBGE_ID": "2926608",
+    "MUNICIPIO": "Ribeira do Pombal",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 62.34,
+    "PCT_RENDA_ACIMA_4SM": 2.8
+  },
+  "2926657": {
+    "IBGE_ID": "2926657",
+    "MUNICIPIO": "Ribeirão do Largo",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 6.77,
+    "PCT_RENDA_ACIMA_4SM": 2.41
+  },
+  "2926707": {
+    "IBGE_ID": "2926707",
+    "MUNICIPIO": "Rio de Contas",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 12.23,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2926806": {
+    "IBGE_ID": "2926806",
+    "MUNICIPIO": "Rio do Antônio",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 18.19,
+    "PCT_RENDA_ACIMA_4SM": 2.97
+  },
+  "2926905": {
+    "IBGE_ID": "2926905",
+    "MUNICIPIO": "Rio do Pires",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 14.54,
+    "PCT_RENDA_ACIMA_4SM": 2.43
+  },
+  "2927002": {
+    "IBGE_ID": "2927002",
+    "MUNICIPIO": "Rio Real",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 51.84,
+    "PCT_RENDA_ACIMA_4SM": 2.77
+  },
+  "2927101": {
+    "IBGE_ID": "2927101",
+    "MUNICIPIO": "Rodelas",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 2.85,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2927200": {
+    "IBGE_ID": "2927200",
+    "MUNICIPIO": "Ruy Barbosa",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 13.76,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2927309": {
+    "IBGE_ID": "2927309",
+    "MUNICIPIO": "Salinas da Margarida",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 89.81,
+    "PCT_RENDA_ACIMA_4SM": 2.59
+  },
+  "2927408": {
+    "IBGE_ID": "2927408",
+    "MUNICIPIO": "Salvador",
+    "SALARIO_MEDIO_SM": 3.2,
+    "RENDIMENTO_DOMICILIAR_RS": 3859.44,
+    "PCT_RENDA_ACIMA_4SM": 25.79
+  },
+  "2927507": {
+    "IBGE_ID": "2927507",
+    "MUNICIPIO": "Santa Bárbara",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 55.15,
+    "PCT_RENDA_ACIMA_4SM": 2.26
+  },
+  "2927606": {
+    "IBGE_ID": "2927606",
+    "MUNICIPIO": "Santa Brígida",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 17.06,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2927705": {
+    "IBGE_ID": "2927705",
+    "MUNICIPIO": "Santa Cruz Cabrália",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 16.92,
+    "PCT_RENDA_ACIMA_4SM": 2.97
+  },
+  "2927804": {
+    "IBGE_ID": "2927804",
+    "MUNICIPIO": "Santa Cruz da Vitória",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 22.38,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2927903": {
+    "IBGE_ID": "2927903",
+    "MUNICIPIO": "Santa Inês",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 32.83,
+    "PCT_RENDA_ACIMA_4SM": 3.01
+  },
+  "2928000": {
+    "IBGE_ID": "2928000",
+    "MUNICIPIO": "Santaluz",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 21.65,
+    "PCT_RENDA_ACIMA_4SM": 3.57
+  },
+  "2928059": {
+    "IBGE_ID": "2928059",
+    "MUNICIPIO": "Santa Luzia",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 17.22,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2928109": {
+    "IBGE_ID": "2928109",
+    "MUNICIPIO": "Santa Maria da Vitória",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 20.49,
+    "PCT_RENDA_ACIMA_4SM": 2.98
+  },
+  "2928208": {
+    "IBGE_ID": "2928208",
+    "MUNICIPIO": "Santana",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 13.6,
+    "PCT_RENDA_ACIMA_4SM": 2.69
+  },
+  "2928307": {
+    "IBGE_ID": "2928307",
+    "MUNICIPIO": "Santanópolis",
+    "SALARIO_MEDIO_SM": 2.4,
+    "RENDIMENTO_DOMICILIAR_RS": 38.02,
+    "PCT_RENDA_ACIMA_4SM": 4.57
+  },
+  "2928406": {
+    "IBGE_ID": "2928406",
+    "MUNICIPIO": "Santa Rita de Cássia",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 4.39,
+    "PCT_RENDA_ACIMA_4SM": 3.52
+  },
+  "2928505": {
+    "IBGE_ID": "2928505",
+    "MUNICIPIO": "Santa Terezinha",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 13.64,
+    "PCT_RENDA_ACIMA_4SM": 2.18
+  },
+  "2928604": {
+    "IBGE_ID": "2928604",
+    "MUNICIPIO": "Santo Amaro",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 117.26,
+    "PCT_RENDA_ACIMA_4SM": 3.2
+  },
+  "2928703": {
+    "IBGE_ID": "2928703",
+    "MUNICIPIO": "Santo Antônio de Jesus",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 348.14,
+    "PCT_RENDA_ACIMA_4SM": 3.17
+  },
+  "2928802": {
+    "IBGE_ID": "2928802",
+    "MUNICIPIO": "Santo Estêvão",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 131.91,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2928901": {
+    "IBGE_ID": "2928901",
+    "MUNICIPIO": "São Desidério",
+    "SALARIO_MEDIO_SM": 2.5,
+    "RENDIMENTO_DOMICILIAR_RS": 1.82,
+    "PCT_RENDA_ACIMA_4SM": 4.81
+  },
+  "2928950": {
+    "IBGE_ID": "2928950",
+    "MUNICIPIO": "São Domingos",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 28.22,
+    "PCT_RENDA_ACIMA_4SM": 2.46
+  },
+  "2929008": {
+    "IBGE_ID": "2929008",
+    "MUNICIPIO": "São Félix",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 142.11,
+    "PCT_RENDA_ACIMA_4SM": 2.7
+  },
+  "2929057": {
+    "IBGE_ID": "2929057",
+    "MUNICIPIO": "São Félix do Coribe",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 13.74,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2929107": {
+    "IBGE_ID": "2929107",
+    "MUNICIPIO": "São Felipe",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 98.57,
+    "PCT_RENDA_ACIMA_4SM": 3.16
+  },
+  "2929206": {
+    "IBGE_ID": "2929206",
+    "MUNICIPIO": "São Francisco do Conde",
+    "SALARIO_MEDIO_SM": 5.0,
+    "RENDIMENTO_DOMICILIAR_RS": 126.24,
+    "PCT_RENDA_ACIMA_4SM": 17.36
+  },
+  "2929255": {
+    "IBGE_ID": "2929255",
+    "MUNICIPIO": "São Gabriel",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 15.36,
+    "PCT_RENDA_ACIMA_4SM": 2.69
+  },
+  "2929305": {
+    "IBGE_ID": "2929305",
+    "MUNICIPIO": "São Gonçalo dos Campos",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 110.67,
+    "PCT_RENDA_ACIMA_4SM": 3.48
+  },
+  "2929354": {
+    "IBGE_ID": "2929354",
+    "MUNICIPIO": "São José da Vitória",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 78.84,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2929370": {
+    "IBGE_ID": "2929370",
+    "MUNICIPIO": "São José do Jacuípe",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 25.3,
+    "PCT_RENDA_ACIMA_4SM": 2.45
+  },
+  "2929404": {
+    "IBGE_ID": "2929404",
+    "MUNICIPIO": "São Miguel das Matas",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 48.57,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2929503": {
+    "IBGE_ID": "2929503",
+    "MUNICIPIO": "São Sebastião do Passé",
+    "SALARIO_MEDIO_SM": 3.2,
+    "RENDIMENTO_DOMICILIAR_RS": 78.3,
+    "PCT_RENDA_ACIMA_4SM": 7.77
+  },
+  "2929602": {
+    "IBGE_ID": "2929602",
+    "MUNICIPIO": "Sapeaçu",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 141.5,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2929701": {
+    "IBGE_ID": "2929701",
+    "MUNICIPIO": "Sátiro Dias",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 18.78,
+    "PCT_RENDA_ACIMA_4SM": 2.7
+  },
+  "2929750": {
+    "IBGE_ID": "2929750",
+    "MUNICIPIO": "Saubara",
+    "SALARIO_MEDIO_SM": 1.3,
+    "RENDIMENTO_DOMICILIAR_RS": 68.51,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2929800": {
+    "IBGE_ID": "2929800",
+    "MUNICIPIO": "Saúde",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 23.49,
+    "PCT_RENDA_ACIMA_4SM": 2.2
+  },
+  "2929909": {
+    "IBGE_ID": "2929909",
+    "MUNICIPIO": "Seabra",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 16.6,
+    "PCT_RENDA_ACIMA_4SM": 2.7
+  },
+  "2930006": {
+    "IBGE_ID": "2930006",
+    "MUNICIPIO": "Sebastião Laranjeiras",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 5.32,
+    "PCT_RENDA_ACIMA_4SM": 2.67
+  },
+  "2930105": {
+    "IBGE_ID": "2930105",
+    "MUNICIPIO": "Senhor do Bonfim",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 89.93,
+    "PCT_RENDA_ACIMA_4SM": 2.59
+  },
+  "2930154": {
+    "IBGE_ID": "2930154",
+    "MUNICIPIO": "Serra do Ramalho",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 12.2,
+    "PCT_RENDA_ACIMA_4SM": 2.96
+  },
+  "2930204": {
+    "IBGE_ID": "2930204",
+    "MUNICIPIO": "Sento Sé",
+    "SALARIO_MEDIO_SM": 2.2,
+    "RENDIMENTO_DOMICILIAR_RS": 2.95,
+    "PCT_RENDA_ACIMA_4SM": 3.83
+  },
+  "2930303": {
+    "IBGE_ID": "2930303",
+    "MUNICIPIO": "Serra Dourada",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 13.45,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2930402": {
+    "IBGE_ID": "2930402",
+    "MUNICIPIO": "Serra Preta",
+    "SALARIO_MEDIO_SM": 1.3,
+    "RENDIMENTO_DOMICILIAR_RS": 28.71,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2930501": {
+    "IBGE_ID": "2930501",
+    "MUNICIPIO": "Serrinha",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 122.97,
+    "PCT_RENDA_ACIMA_4SM": 2.4
+  },
+  "2930600": {
+    "IBGE_ID": "2930600",
+    "MUNICIPIO": "Serrolândia",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 41.72,
+    "PCT_RENDA_ACIMA_4SM": 2.49
+  },
+  "2930709": {
+    "IBGE_ID": "2930709",
+    "MUNICIPIO": "Simões Filho",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 586.65,
+    "PCT_RENDA_ACIMA_4SM": 5.09
+  },
+  "2930758": {
+    "IBGE_ID": "2930758",
+    "MUNICIPIO": "Sítio do Mato",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 6.88,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2930766": {
+    "IBGE_ID": "2930766",
+    "MUNICIPIO": "Sítio do Quinto",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 17.98,
+    "PCT_RENDA_ACIMA_4SM": 2.44
+  },
+  "2930774": {
+    "IBGE_ID": "2930774",
+    "MUNICIPIO": "Sobradinho",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 17.76,
+    "PCT_RENDA_ACIMA_4SM": 3.56
+  },
+  "2930808": {
+    "IBGE_ID": "2930808",
+    "MUNICIPIO": "Souto Soares",
+    "SALARIO_MEDIO_SM": 2.6,
+    "RENDIMENTO_DOMICILIAR_RS": 16.0,
+    "PCT_RENDA_ACIMA_4SM": 5.2
+  },
+  "2930907": {
+    "IBGE_ID": "2930907",
+    "MUNICIPIO": "Tabocas do Brejo Velho",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 8.31,
+    "PCT_RENDA_ACIMA_4SM": 2.42
+  },
+  "2931004": {
+    "IBGE_ID": "2931004",
+    "MUNICIPIO": "Tanhaçu",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 16.21,
+    "PCT_RENDA_ACIMA_4SM": 2.7
+  },
+  "2931053": {
+    "IBGE_ID": "2931053",
+    "MUNICIPIO": "Tanque Novo",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 22.31,
+    "PCT_RENDA_ACIMA_4SM": 2.71
+  },
+  "2931103": {
+    "IBGE_ID": "2931103",
+    "MUNICIPIO": "Tanquinho",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 36.43,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2931202": {
+    "IBGE_ID": "2931202",
+    "MUNICIPIO": "Taperoá",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 45.64,
+    "PCT_RENDA_ACIMA_4SM": 3.62
+  },
+  "2931301": {
+    "IBGE_ID": "2931301",
+    "MUNICIPIO": "Tapiramutá",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 24.88,
+    "PCT_RENDA_ACIMA_4SM": 2.72
+  },
+  "2931350": {
+    "IBGE_ID": "2931350",
+    "MUNICIPIO": "Teixeira de Freitas",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 118.87,
+    "PCT_RENDA_ACIMA_4SM": 3.21
+  },
+  "2931400": {
+    "IBGE_ID": "2931400",
+    "MUNICIPIO": "Teodoro Sampaio",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 34.1,
+    "PCT_RENDA_ACIMA_4SM": 2.74
+  },
+  "2931509": {
+    "IBGE_ID": "2931509",
+    "MUNICIPIO": "Teofilândia",
+    "SALARIO_MEDIO_SM": 2.2,
+    "RENDIMENTO_DOMICILIAR_RS": 64.02,
+    "PCT_RENDA_ACIMA_4SM": 3.98
+  },
+  "2931608": {
+    "IBGE_ID": "2931608",
+    "MUNICIPIO": "Teolândia",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 46.68,
+    "PCT_RENDA_ACIMA_4SM": 3.33
+  },
+  "2931707": {
+    "IBGE_ID": "2931707",
+    "MUNICIPIO": "Terra Nova",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 64.36,
+    "PCT_RENDA_ACIMA_4SM": 2.28
+  },
+  "2931806": {
+    "IBGE_ID": "2931806",
+    "MUNICIPIO": "Tremedal",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 10.14,
+    "PCT_RENDA_ACIMA_4SM": 3.54
+  },
+  "2931905": {
+    "IBGE_ID": "2931905",
+    "MUNICIPIO": "Tucano",
+    "SALARIO_MEDIO_SM": 2.0,
+    "RENDIMENTO_DOMICILIAR_RS": 18.73,
+    "PCT_RENDA_ACIMA_4SM": 3.26
+  },
+  "2932002": {
+    "IBGE_ID": "2932002",
+    "MUNICIPIO": "Uauá",
+    "SALARIO_MEDIO_SM": 2.2,
+    "RENDIMENTO_DOMICILIAR_RS": 8.0,
+    "PCT_RENDA_ACIMA_4SM": 3.84
+  },
+  "2932101": {
+    "IBGE_ID": "2932101",
+    "MUNICIPIO": "Ubaíra",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 27.19,
+    "PCT_RENDA_ACIMA_4SM": 2.99
+  },
+  "2932200": {
+    "IBGE_ID": "2932200",
+    "MUNICIPIO": "Ubaitaba",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 115.72,
+    "PCT_RENDA_ACIMA_4SM": 3.2
+  },
+  "2932309": {
+    "IBGE_ID": "2932309",
+    "MUNICIPIO": "Ubatã",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 93.22,
+    "PCT_RENDA_ACIMA_4SM": 2.34
+  },
+  "2932408": {
+    "IBGE_ID": "2932408",
+    "MUNICIPIO": "Uibaí",
+    "SALARIO_MEDIO_SM": 2.4,
+    "RENDIMENTO_DOMICILIAR_RS": 24.73,
+    "PCT_RENDA_ACIMA_4SM": 4.53
+  },
+  "2932457": {
+    "IBGE_ID": "2932457",
+    "MUNICIPIO": "Umburanas",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 10.18,
+    "PCT_RENDA_ACIMA_4SM": 2.42
+  },
+  "2932507": {
+    "IBGE_ID": "2932507",
+    "MUNICIPIO": "Una",
+    "SALARIO_MEDIO_SM": 2.1,
+    "RENDIMENTO_DOMICILIAR_RS": 20.48,
+    "PCT_RENDA_ACIMA_4SM": 3.56
+  },
+  "2932606": {
+    "IBGE_ID": "2932606",
+    "MUNICIPIO": "Urandi",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 16.98,
+    "PCT_RENDA_ACIMA_4SM": 2.7
+  },
+  "2932705": {
+    "IBGE_ID": "2932705",
+    "MUNICIPIO": "Uruçuca",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 50.61,
+    "PCT_RENDA_ACIMA_4SM": 2.77
+  },
+  "2932804": {
+    "IBGE_ID": "2932804",
+    "MUNICIPIO": "Utinga",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 28.47,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2932903": {
+    "IBGE_ID": "2932903",
+    "MUNICIPIO": "Valença",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 74.35,
+    "PCT_RENDA_ACIMA_4SM": 2.82
+  },
+  "2933000": {
+    "IBGE_ID": "2933000",
+    "MUNICIPIO": "Valente",
+    "SALARIO_MEDIO_SM": 1.4,
+    "RENDIMENTO_DOMICILIAR_RS": 63.9,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2933059": {
+    "IBGE_ID": "2933059",
+    "MUNICIPIO": "Várzea da Roça",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 26.83,
+    "PCT_RENDA_ACIMA_4SM": 2.46
+  },
+  "2933109": {
+    "IBGE_ID": "2933109",
+    "MUNICIPIO": "Várzea do Poço",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 42.27,
+    "PCT_RENDA_ACIMA_4SM": 3.03
+  },
+  "2933158": {
+    "IBGE_ID": "2933158",
+    "MUNICIPIO": "Várzea Nova",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 10.96,
+    "PCT_RENDA_ACIMA_4SM": 2.96
+  },
+  "2933174": {
+    "IBGE_ID": "2933174",
+    "MUNICIPIO": "Varzedo",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 40.16,
+    "PCT_RENDA_ACIMA_4SM": 2.75
+  },
+  "2933208": {
+    "IBGE_ID": "2933208",
+    "MUNICIPIO": "Vera Cruz",
+    "SALARIO_MEDIO_SM": 1.7,
+    "RENDIMENTO_DOMICILIAR_RS": 125.33,
+    "PCT_RENDA_ACIMA_4SM": 2.67
+  },
+  "2933257": {
+    "IBGE_ID": "2933257",
+    "MUNICIPIO": "Vereda",
+    "SALARIO_MEDIO_SM": 1.6,
+    "RENDIMENTO_DOMICILIAR_RS": 7.78,
+    "PCT_RENDA_ACIMA_4SM": 2.17
+  },
+  "2933307": {
+    "IBGE_ID": "2933307",
+    "MUNICIPIO": "Vitória da Conquista",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 91.41,
+    "PCT_RENDA_ACIMA_4SM": 3.14
+  },
+  "2933406": {
+    "IBGE_ID": "2933406",
+    "MUNICIPIO": "Wagner",
+    "SALARIO_MEDIO_SM": 1.5,
+    "RENDIMENTO_DOMICILIAR_RS": 21.34,
+    "PCT_RENDA_ACIMA_4SM": 2.1
+  },
+  "2933455": {
+    "IBGE_ID": "2933455",
+    "MUNICIPIO": "Wanderley",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 4.22,
+    "PCT_RENDA_ACIMA_4SM": 2.67
+  },
+  "2933505": {
+    "IBGE_ID": "2933505",
+    "MUNICIPIO": "Wenceslau Guimarães",
+    "SALARIO_MEDIO_SM": 1.8,
+    "RENDIMENTO_DOMICILIAR_RS": 32.92,
+    "PCT_RENDA_ACIMA_4SM": 2.73
+  },
+  "2933604": {
+    "IBGE_ID": "2933604",
+    "MUNICIPIO": "Xique-Xique",
+    "SALARIO_MEDIO_SM": 1.9,
+    "RENDIMENTO_DOMICILIAR_RS": 8.28,
+    "PCT_RENDA_ACIMA_4SM": 2.95
+  }
+}

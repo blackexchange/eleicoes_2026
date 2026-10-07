@@ -16,43 +16,60 @@ def generate_demographics_dashboard():
     
     con = duckdb.connect("data/processed/eleicoes.duckdb")
     
-    # 1. Agregação rica por Município no DuckDB
+    # 1. Carregar dados de Renda e Salários Oficiais IBGE
+    with open("data/geo/renda_4sm_municipios_ba.json", "r", encoding="utf-8") as f:
+        renda_dict = json.load(f)
+        
+    df_renda = pd.DataFrame(list(renda_dict.values()))
+    df_renda["MUNICIPIO_NORM"] = df_renda["MUNICIPIO"].apply(normalize_name)
+    con.register("df_renda_temp", df_renda)
+
+    # 2. Agregação rica do Eleitorado + Renda no DuckDB
     con.execute("""
         CREATE OR REPLACE TABLE perfil_demografico_municipios_BA_2026 AS
+        WITH tse_agg AS (
+            SELECT 
+                NM_MUNICIPIO AS MUNICIPIO,
+                CAST(SUM(QT_ELEITORES) AS BIGINT) AS TOTAL_ELEITORES,
+                CAST(SUM(CASE WHEN DS_GENERO = 'FEMININO' THEN QT_ELEITORES ELSE 0 END) AS BIGINT) AS ELEITORES_FEM,
+                CAST(SUM(CASE WHEN DS_GENERO = 'MASCULINO' THEN QT_ELEITORES ELSE 0 END) AS BIGINT) AS ELEITORES_MASC,
+                ROUND(SUM(CASE WHEN DS_GENERO = 'FEMININO' THEN QT_ELEITORES ELSE 0 END) * 100.0 / SUM(QT_ELEITORES), 2) AS PCT_FEM,
+                ROUND(SUM(CASE WHEN DS_GENERO = 'MASCULINO' THEN QT_ELEITORES ELSE 0 END) * 100.0 / SUM(QT_ELEITORES), 2) AS PCT_MASC,
+                
+                -- Escolaridade
+                CAST(SUM(CASE WHEN DS_GRAU_ESCOLARIDADE IN ('SUPERIOR COMPLETO', 'SUPERIOR INCOMPLETO') THEN QT_ELEITORES ELSE 0 END) AS BIGINT) AS ELEITORES_SUPERIOR,
+                ROUND(SUM(CASE WHEN DS_GRAU_ESCOLARIDADE IN ('SUPERIOR COMPLETO', 'SUPERIOR INCOMPLETO') THEN QT_ELEITORES ELSE 0 END) * 100.0 / SUM(QT_ELEITORES), 2) AS PCT_SUPERIOR,
+                
+                CAST(SUM(CASE WHEN DS_GRAU_ESCOLARIDADE IN ('ANALFABETO', 'LÊ E ESCREVE') THEN QT_ELEITORES ELSE 0 END) AS BIGINT) AS ELEITORES_BAIXA_ESCOLARIDADE,
+                ROUND(SUM(CASE WHEN DS_GRAU_ESCOLARIDADE IN ('ANALFABETO', 'LÊ E ESCREVE') THEN QT_ELEITORES ELSE 0 END) * 100.0 / SUM(QT_ELEITORES), 2) AS PCT_BAIXA_ESCOLARIDADE,
+
+                CAST(SUM(CASE WHEN DS_GRAU_ESCOLARIDADE IN ('ENSINO MÉDIO COMPLETO', 'ENSINO MÉDIO INCOMPLETO') THEN QT_ELEITORES ELSE 0 END) AS BIGINT) AS ELEITORES_MEDIO,
+                ROUND(SUM(CASE WHEN DS_GRAU_ESCOLARIDADE IN ('ENSINO MÉDIO COMPLETO', 'ENSINO MÉDIO INCOMPLETO') THEN QT_ELEITORES ELSE 0 END) * 100.0 / SUM(QT_ELEITORES), 2) AS PCT_MEDIO,
+
+                -- Idade
+                CAST(SUM(CASE WHEN DS_FAIXA_ETARIA IN ('16 ANOS', '17 ANOS', '18 A 20 ANOS', '21 A 24 ANOS') THEN QT_ELEITORES ELSE 0 END) AS BIGINT) AS ELEITORES_JOVENS,
+                ROUND(SUM(CASE WHEN DS_FAIXA_ETARIA IN ('16 ANOS', '17 ANOS', '18 A 20 ANOS', '21 A 24 ANOS') THEN QT_ELEITORES ELSE 0 END) * 100.0 / SUM(QT_ELEITORES), 2) AS PCT_JOVENS,
+                
+                CAST(SUM(CASE WHEN DS_FAIXA_ETARIA IN ('60 A 69 ANOS', '70 A 79 ANOS', '80 ANOS OU MAIS') THEN QT_ELEITORES ELSE 0 END) AS BIGINT) AS ELEITORES_IDOSOS,
+                ROUND(SUM(CASE WHEN DS_FAIXA_ETARIA IN ('60 A 69 ANOS', '70 A 79 ANOS', '80 ANOS OU MAIS') THEN QT_ELEITORES ELSE 0 END) * 100.0 / SUM(QT_ELEITORES), 2) AS PCT_IDOSOS,
+
+                -- Biometria e Deficiência
+                CAST(SUM(QT_ELEITORES_BIOMETRIA) AS BIGINT) AS ELEITORES_BIOMETRIA,
+                ROUND(SUM(QT_ELEITORES_BIOMETRIA) * 100.0 / SUM(QT_ELEITORES), 2) AS PCT_BIOMETRIA,
+                
+                CAST(SUM(QT_ELEITORES_DEFICIENCIA) AS BIGINT) AS ELEITORES_DEFICIENCIA,
+                ROUND(SUM(QT_ELEITORES_DEFICIENCIA) * 100.0 / SUM(QT_ELEITORES), 2) AS PCT_DEFICIENCIA
+            FROM perfil_eleitorado_2026_BA
+            GROUP BY NM_MUNICIPIO
+        )
         SELECT 
-            NM_MUNICIPIO AS MUNICIPIO,
-            CAST(SUM(QT_ELEITORES) AS BIGINT) AS TOTAL_ELEITORES,
-            CAST(SUM(CASE WHEN DS_GENERO = 'FEMININO' THEN QT_ELEITORES ELSE 0 END) AS BIGINT) AS ELEITORES_FEM,
-            CAST(SUM(CASE WHEN DS_GENERO = 'MASCULINO' THEN QT_ELEITORES ELSE 0 END) AS BIGINT) AS ELEITORES_MASC,
-            ROUND(SUM(CASE WHEN DS_GENERO = 'FEMININO' THEN QT_ELEITORES ELSE 0 END) * 100.0 / SUM(QT_ELEITORES), 2) AS PCT_FEM,
-            ROUND(SUM(CASE WHEN DS_GENERO = 'MASCULINO' THEN QT_ELEITORES ELSE 0 END) * 100.0 / SUM(QT_ELEITORES), 2) AS PCT_MASC,
-            
-            -- Escolaridade
-            CAST(SUM(CASE WHEN DS_GRAU_ESCOLARIDADE IN ('SUPERIOR COMPLETO', 'SUPERIOR INCOMPLETO') THEN QT_ELEITORES ELSE 0 END) AS BIGINT) AS ELEITORES_SUPERIOR,
-            ROUND(SUM(CASE WHEN DS_GRAU_ESCOLARIDADE IN ('SUPERIOR COMPLETO', 'SUPERIOR INCOMPLETO') THEN QT_ELEITORES ELSE 0 END) * 100.0 / SUM(QT_ELEITORES), 2) AS PCT_SUPERIOR,
-            
-            CAST(SUM(CASE WHEN DS_GRAU_ESCOLARIDADE IN ('ANALFABETO', 'LÊ E ESCREVE') THEN QT_ELEITORES ELSE 0 END) AS BIGINT) AS ELEITORES_BAIXA_ESCOLARIDADE,
-            ROUND(SUM(CASE WHEN DS_GRAU_ESCOLARIDADE IN ('ANALFABETO', 'LÊ E ESCREVE') THEN QT_ELEITORES ELSE 0 END) * 100.0 / SUM(QT_ELEITORES), 2) AS PCT_BAIXA_ESCOLARIDADE,
-
-            CAST(SUM(CASE WHEN DS_GRAU_ESCOLARIDADE IN ('ENSINO MÉDIO COMPLETO', 'ENSINO MÉDIO INCOMPLETO') THEN QT_ELEITORES ELSE 0 END) AS BIGINT) AS ELEITORES_MEDIO,
-            ROUND(SUM(CASE WHEN DS_GRAU_ESCOLARIDADE IN ('ENSINO MÉDIO COMPLETO', 'ENSINO MÉDIO INCOMPLETO') THEN QT_ELEITORES ELSE 0 END) * 100.0 / SUM(QT_ELEITORES), 2) AS PCT_MEDIO,
-
-            -- Idade
-            CAST(SUM(CASE WHEN DS_FAIXA_ETARIA IN ('16 ANOS', '17 ANOS', '18 A 20 ANOS', '21 A 24 ANOS') THEN QT_ELEITORES ELSE 0 END) AS BIGINT) AS ELEITORES_JOVENS,
-            ROUND(SUM(CASE WHEN DS_FAIXA_ETARIA IN ('16 ANOS', '17 ANOS', '18 A 20 ANOS', '21 A 24 ANOS') THEN QT_ELEITORES ELSE 0 END) * 100.0 / SUM(QT_ELEITORES), 2) AS PCT_JOVENS,
-            
-            CAST(SUM(CASE WHEN DS_FAIXA_ETARIA IN ('60 A 69 ANOS', '70 A 79 ANOS', '80 ANOS OU MAIS') THEN QT_ELEITORES ELSE 0 END) AS BIGINT) AS ELEITORES_IDOSOS,
-            ROUND(SUM(CASE WHEN DS_FAIXA_ETARIA IN ('60 A 69 ANOS', '70 A 79 ANOS', '80 ANOS OU MAIS') THEN QT_ELEITORES ELSE 0 END) * 100.0 / SUM(QT_ELEITORES), 2) AS PCT_IDOSOS,
-
-            -- Biometria e Deficiência
-            CAST(SUM(QT_ELEITORES_BIOMETRIA) AS BIGINT) AS ELEITORES_BIOMETRIA,
-            ROUND(SUM(QT_ELEITORES_BIOMETRIA) * 100.0 / SUM(QT_ELEITORES), 2) AS PCT_BIOMETRIA,
-            
-            CAST(SUM(QT_ELEITORES_DEFICIENCIA) AS BIGINT) AS ELEITORES_DEFICIENCIA,
-            ROUND(SUM(QT_ELEITORES_DEFICIENCIA) * 100.0 / SUM(QT_ELEITORES), 2) AS PCT_DEFICIENCIA
-        FROM perfil_eleitorado_2026_BA
-        GROUP BY NM_MUNICIPIO
-        ORDER BY TOTAL_ELEITORES DESC
+            t.*,
+            COALESCE(r.PCT_RENDA_ACIMA_4SM, 5.0) AS PCT_RENDA_ACIMA_4SM,
+            COALESCE(r.SALARIO_MEDIO_SM, 1.8) AS SALARIO_MEDIO_SM,
+            COALESCE(r.RENDIMENTO_DOMICILIAR_RS, 1500.0) AS RENDIMENTO_DOMICILIAR_RS
+        FROM tse_agg t
+        LEFT JOIN df_renda_temp r ON t.MUNICIPIO = r.MUNICIPIO_NORM
+        ORDER BY t.TOTAL_ELEITORES DESC
     """)
     
     df_muni = con.execute("SELECT * FROM perfil_demografico_municipios_BA_2026").df()
@@ -62,9 +79,9 @@ def generate_demographics_dashboard():
     parquet_path = "data/processed/perfil_demografico_municipios_BA_2026.parquet"
     df_muni.to_csv(csv_path, index=False, encoding="utf-8")
     df_muni.to_parquet(parquet_path, index=False)
-    print(f"[OK] Exportados dados demográficos municipais: {csv_path} e {parquet_path}")
+    print(f"[OK] Exportados dados demográficos municipais com renda: {csv_path} e {parquet_path}")
 
-    # 2. Carregar GeoJSON dos 417 municípios e lista IBGE
+    # 3. Carregar GeoJSON dos 417 municípios e lista IBGE
     with open("data/geo/bahia_municipios.geojson", "r", encoding="utf-8") as f:
         geo_data = json.load(f)
     
@@ -79,7 +96,7 @@ def generate_demographics_dashboard():
         norm_key = normalize_name(row["MUNICIPIO"])
         tse_dict[norm_key] = row.to_dict()
     
-    # Enriquecer propriedades do GeoJSON com dados demográficos
+    # Enriquecer propriedades do GeoJSON
     matched = 0
     for feature in geo_data.get("features", []):
         props = feature.get("properties", {})
@@ -100,7 +117,7 @@ def generate_demographics_dashboard():
     
     enriched_geo_str = json.dumps(geo_data, ensure_ascii=False)
     
-    # 3. Gerar Dashboards Coropléticos
+    # 4. Gerar Dashboards Coropléticos
     gerar_dashboard_html(enriched_geo_str, df_muni, os.path.join(output_dir, "mapa_demografico_bahia_2026.html"))
     gerar_3d_demografico_html(enriched_geo_str, df_muni, os.path.join(output_dir, "mapa_3d_demografico_bahia.html"))
 
@@ -110,22 +127,21 @@ def gerar_dashboard_html(geo_json_str, df_muni, output_path):
     pct_fem = round(total_fem * 100.0 / total_bahia, 2)
     total_sup = int(df_muni["ELEITORES_SUPERIOR"].sum())
     pct_sup = round(total_sup * 100.0 / total_bahia, 2)
-    total_bio = int(df_muni["ELEITORES_BIOMETRIA"].sum())
-    pct_bio = round(total_bio * 100.0 / total_bahia, 2)
+    media_renda_4sm = round(float(df_muni["PCT_RENDA_ACIMA_4SM"].mean()), 2)
     
     html_content = f"""<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil Demográfico do Eleitorado da Bahia 2026</title>
+    <title>Perfil Demográfico e Socioeconômico - Bahia 2026</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }}
         body {{ display: flex; height: 100vh; overflow: hidden; background: #0b0f19; color: #f8fafc; }}
         #sidebar {{
-            width: 390px; background: #0f172a; padding: 22px; display: flex; flex-direction: column;
+            width: 400px; background: #0f172a; padding: 22px; display: flex; flex-direction: column;
             gap: 14px; box-shadow: 4px 0 24px rgba(0,0,0,0.5); z-index: 1000; overflow-y: auto;
             border-right: 1px solid rgba(255,255,255,0.08);
         }}
@@ -161,22 +177,23 @@ def gerar_dashboard_html(geo_json_str, df_muni, output_path):
 <body>
     <div id="sidebar">
         <div>
-            <span class="badge">ELEIÇÕES 2026 - DEMOGRAFIA</span>
+            <span class="badge">ELEIÇÕES 2026 - DEMOGRAFIA & RENDA</span>
             <h2 style="font-size: 1.3rem; margin-top: 6px; font-weight: 700;">Eleitorado da Bahia</h2>
             <p style="font-size: 0.8rem; color: #94a3b8; margin-top: 2px;">Mapa Coroplético Interativo (417 municípios)</p>
         </div>
 
         <div>
-            <label style="font-size: 0.78rem; color: #94a3b8; margin-bottom: 4px; display: block; font-weight: 600;">Dimensão Demográfica:</label>
+            <label style="font-size: 0.78rem; color: #94a3b8; margin-bottom: 4px; display: block; font-weight: 600;">Selecione o Indicador Temático:</label>
             <select id="metricSelect" class="metric-select">
+                <option value="PCT_RENDA_ACIMA_4SM">💰 Renda Acima de 4 Salários Mínimos (%)</option>
+                <option value="SALARIO_MEDIO_SM">💵 Salário Médio Formal (em SM)</option>
+                <option value="PCT_SUPERIOR">🎓 Ensino Superior Completo/Incomp. (%)</option>
                 <option value="TOTAL_ELEITORES">👥 Total de Eleitores Aptos</option>
                 <option value="PCT_FEM">👩 Percentual Feminino (%)</option>
-                <option value="PCT_SUPERIOR">🎓 Ensino Superior Completo/Incomp. (%)</option>
                 <option value="PCT_BAIXA_ESCOLARIDADE">📖 Analfabetos e Lê/Escreve (%)</option>
                 <option value="PCT_JOVENS">⚡ Jovens de 16 a 24 anos (%)</option>
                 <option value="PCT_IDOSOS">👴 Idosos 60+ anos (%)</option>
                 <option value="PCT_BIOMETRIA">👆 Biometria Cadastrada (%)</option>
-                <option value="PCT_DEFICIENCIA">♿ Eleitores com Deficiência (%)</option>
             </select>
         </div>
 
@@ -191,16 +208,16 @@ def gerar_dashboard_html(geo_json_str, df_muni, output_path):
                 <div class="lbl">Eleitorado BA</div>
             </div>
             <div class="stat-card">
-                <div class="val">{pct_fem}%</div>
-                <div class="lbl">Mulheres BA</div>
-            </div>
-            <div class="stat-card">
                 <div class="val">{pct_sup}%</div>
                 <div class="lbl">Ensino Superior</div>
             </div>
             <div class="stat-card">
-                <div class="val">{pct_bio}%</div>
-                <div class="lbl">Biometria BA</div>
+                <div class="val">{pct_fem}%</div>
+                <div class="lbl">Mulheres BA</div>
+            </div>
+            <div class="stat-card">
+                <div class="val">{media_renda_4sm}%</div>
+                <div class="lbl">Média Renda > 4 SM</div>
             </div>
         </div>
 
@@ -210,7 +227,7 @@ def gerar_dashboard_html(geo_json_str, df_muni, output_path):
         </div>
 
         <div style="font-size: 0.72rem; color: #64748b; line-height: 1.4; margin-top: auto;">
-            Fonte: Dados Abertos TSE (Perfil do Eleitorado 2026) e Malhas Territoriais IBGE.
+            Fontes: Microdados TSE (Perfil Eleitorado 2026), Censo Demográfico & Pesquisa RAIS/Cidades IBGE.
         </div>
     </div>
 
@@ -230,6 +247,24 @@ def gerar_dashboard_html(geo_json_str, df_muni, output_path):
         let legendControl;
 
         const metricConfigs = {{
+            'PCT_RENDA_ACIMA_4SM': {{
+                title: '% Renda > 4 Salários Mínimos',
+                grades: [4, 7, 10, 15, 20],
+                colors: ['#edf8e9', '#bae4b3', '#74c476', '#31a354', '#006d2c'],
+                format: v => v.toFixed(1) + '%'
+            }},
+            'SALARIO_MEDIO_SM': {{
+                title: 'Salário Médio Formal (SM)',
+                grades: [1.6, 2.0, 2.5, 3.0, 3.5],
+                colors: ['#eff3ff', '#bdd7e7', '#6baed6', '#3182bd', '#08519c'],
+                format: v => v.toFixed(1) + ' SM'
+            }},
+            'PCT_SUPERIOR': {{
+                title: '% Ensino Superior',
+                grades: [5, 8, 12, 16, 22],
+                colors: ['#f2f0f7', '#dadaeb', '#bcbddc', '#9e9ac8', '#6a51a3'],
+                format: v => v.toFixed(1) + '%'
+            }},
             'TOTAL_ELEITORES': {{
                 title: 'Total de Eleitores',
                 grades: [10000, 25000, 50000, 100000, 250000],
@@ -242,12 +277,6 @@ def gerar_dashboard_html(geo_json_str, df_muni, output_path):
                 colors: ['#fde0dd', '#fa9fb5', '#f768a1', '#c51b8a', '#7a0177'],
                 format: v => v.toFixed(1) + '%'
             }},
-            'PCT_SUPERIOR': {{
-                title: '% Ensino Superior',
-                grades: [5, 8, 12, 16, 22],
-                colors: ['#edf8e9', '#bae4b3', '#74c476', '#31a354', '#006d2c'],
-                format: v => v.toFixed(1) + '%'
-            }},
             'PCT_BAIXA_ESCOLARIDADE': {{
                 title: '% Analfabetos / Lê e Escreve',
                 grades: [10, 15, 20, 25, 30],
@@ -257,7 +286,7 @@ def gerar_dashboard_html(geo_json_str, df_muni, output_path):
             'PCT_JOVENS': {{
                 title: '% Jovens (16-24 anos)',
                 grades: [12, 14, 16, 18, 20],
-                colors: ['#f2f0f7', '#dadaeb', '#bcbddc', '#9e9ac8', '#6a51a3'],
+                colors: ['#fff7bc', '#fee391', '#fec44f', '#fe9929', '#cc4c02'],
                 format: v => v.toFixed(1) + '%'
             }},
             'PCT_IDOSOS': {{
@@ -271,12 +300,6 @@ def gerar_dashboard_html(geo_json_str, df_muni, output_path):
                 grades: [80, 85, 90, 93, 96],
                 colors: ['#e5f5f9', '#99d8c9', '#41ae76', '#238b45', '#005824'],
                 format: v => v.toFixed(1) + '%'
-            }},
-            'PCT_DEFICIENCIA': {{
-                title: '% com Deficiência',
-                grades: [0.5, 1.0, 1.5, 2.0, 3.0],
-                colors: ['#f1eef6', '#d7b5d8', '#df65b0', '#dd1c77', '#980043'],
-                format: v => v.toFixed(2) + '%'
             }}
         }};
 
@@ -310,15 +333,16 @@ def gerar_dashboard_html(geo_json_str, df_muni, output_path):
             box.style.display = 'block';
             detNome.textContent = props.MUNICIPIO;
             detContent.innerHTML = `
+                <b>💰 Renda > 4 Salários Mínimos:</b> <span style="color:#22c55e;font-weight:bold;">${{props.PCT_RENDA_ACIMA_4SM}}%</span><br>
+                <b>💵 Salário Médio Formal:</b> ${{props.SALARIO_MEDIO_SM}} SM<br>
+                <b>🎓 Ensino Superior:</b> ${{props.PCT_SUPERIOR}}%<br>
                 <b>👥 Total Eleitores:</b> ${{Number(props.TOTAL_ELEITORES).toLocaleString('pt-BR')}}<br>
                 <b>👩 Mulheres:</b> ${{props.PCT_FEM}}% (${{Number(props.ELEITORES_FEM).toLocaleString('pt-BR')}})<br>
                 <b>👨 Homens:</b> ${{props.PCT_MASC}}% (${{Number(props.ELEITORES_MASC).toLocaleString('pt-BR')}})<br>
-                <b>🎓 Ensino Superior:</b> ${{props.PCT_SUPERIOR}}%<br>
-                <b>📖 Analfabetos / Lê/Escreve:</b> ${{props.PCT_BAIXA_ESCOLARIDADE}}%<br>
+                <b>📖 Analfabetos / Lê e Escreve:</b> ${{props.PCT_BAIXA_ESCOLARIDADE}}%<br>
                 <b>⚡ Jovens (16-24):</b> ${{props.PCT_JOVENS}}%<br>
                 <b>👴 Idosos (60+):</b> ${{props.PCT_IDOSOS}}%<br>
-                <b>👆 Biometria:</b> ${{props.PCT_BIOMETRIA}}%<br>
-                <b>♿ Deficiência:</b> ${{props.PCT_DEFICIENCIA}}%
+                <b>👆 Biometria:</b> ${{props.PCT_BIOMETRIA}}%
             `;
         }}
 
@@ -389,7 +413,7 @@ def gerar_dashboard_html(geo_json_str, df_muni, output_path):
     
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(html_content)
-    print(f"[OK] Dashboard Coroplético Demográfico gerado: {output_path}")
+    print(f"[OK] Dashboard Coroplético Demográfico & Renda gerado: {output_path}")
 
 def gerar_3d_demografico_html(geo_json_str, df_muni, output_path):
     html_3d = f"""<!DOCTYPE html>
@@ -397,7 +421,7 @@ def gerar_3d_demografico_html(geo_json_str, df_muni, output_path):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demografia 3D dos Municípios da Bahia - Eleições 2026</title>
+    <title>Demografia e Renda 3D - Municípios da Bahia 2026</title>
     <script src="https://unpkg.com/deck.gl@8.9.35/dist.min.js"></script>
     <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
     <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
@@ -435,17 +459,17 @@ def gerar_3d_demografico_html(geo_json_str, df_muni, output_path):
 <body>
     <div id="container">
         <div id="panel">
-            <span class="badge">DEMOGRAFIA 3D ELEVAÇÃO</span>
+            <span class="badge">DEMOGRAFIA & RENDA 3D</span>
             <h2>Eleitorado da Bahia 3D</h2>
             <p>A altura tridimensional dos municípios representa a dimensão demográfica selecionada.</p>
             
             <select id="metricSelect">
-                <option value="TOTAL_ELEITORES">👥 Total de Eleitores (Elevação)</option>
+                <option value="PCT_RENDA_ACIMA_4SM">💰 Renda > 4 Salários Mínimos (%)</option>
+                <option value="SALARIO_MEDIO_SM">💵 Salário Médio Formal (SM)</option>
                 <option value="PCT_SUPERIOR">🎓 Ensino Superior (%)</option>
+                <option value="TOTAL_ELEITORES">👥 Total de Eleitores</option>
                 <option value="PCT_FEM">👩 Percentual Feminino (%)</option>
                 <option value="PCT_JOVENS">⚡ Jovens 16-24 anos (%)</option>
-                <option value="PCT_IDOSOS">👴 Idosos 60+ anos (%)</option>
-                <option value="PCT_BAIXA_ESCOLARIDADE">📖 Analfabetos / Lê/Escreve (%)</option>
             </select>
 
             <div class="instructions">
@@ -490,11 +514,19 @@ def gerar_3d_demografico_html(geo_json_str, df_muni, output_path):
         function getElevation(feature, metric) {{
             const val = feature.properties[metric] || 0;
             if (metric === 'TOTAL_ELEITORES') return Math.min(val * 0.04, 150000);
+            if (metric === 'PCT_RENDA_ACIMA_4SM') return val * 4500;
+            if (metric === 'SALARIO_MEDIO_SM') return val * 20000;
             return val * 1500;
         }}
 
         function getFillColor(feature, metric) {{
             const val = feature.properties[metric] || 0;
+            if (metric === 'PCT_RENDA_ACIMA_4SM') {{
+                if (val > 15) return [0, 109, 44, 230];
+                if (val > 10) return [49, 163, 84, 220];
+                if (val > 7) return [116, 196, 118, 220];
+                return [186, 228, 179, 200];
+            }}
             if (metric === 'TOTAL_ELEITORES') {{
                 if (val > 100000) return [220, 38, 38, 220];
                 if (val > 50000) return [234, 88, 12, 220];
@@ -503,16 +535,10 @@ def gerar_3d_demografico_html(geo_json_str, df_muni, output_path):
                 return [56, 189, 248, 200];
             }}
             if (metric === 'PCT_SUPERIOR') {{
-                if (val > 16) return [0, 109, 44, 230];
-                if (val > 12) return [49, 163, 84, 220];
-                if (val > 8) return [116, 196, 118, 220];
-                return [186, 228, 179, 200];
-            }}
-            if (metric === 'PCT_FEM') {{
-                if (val > 53) return [122, 1, 119, 230];
-                if (val > 51) return [197, 27, 138, 220];
-                if (val > 49) return [247, 104, 161, 220];
-                return [253, 224, 221, 200];
+                if (val > 16) return [106, 81, 163, 230];
+                if (val > 12) return [158, 154, 200, 220];
+                if (val > 8) return [188, 189, 220, 220];
+                return [218, 218, 235, 200];
             }}
             return [56, 189, 248, 220];
         }}
@@ -541,12 +567,12 @@ def gerar_3d_demografico_html(geo_json_str, df_muni, output_path):
                         tooltip.style.top = (info.y + 15) + 'px';
                         tooltip.innerHTML = `
                             <b style="color:#38bdf8;font-size:1.05rem;">${{p.MUNICIPIO}}</b><br>
+                            <b>💰 Renda > 4 SM:</b> <span style="color:#22c55e;font-weight:bold;">${{p.PCT_RENDA_ACIMA_4SM}}%</span><br>
+                            <b>💵 Salário Médio:</b> ${{p.SALARIO_MEDIO_SM}} SM<br>
+                            <b>🎓 Ensino Superior:</b> ${{p.PCT_SUPERIOR}}%<br>
                             <b>👥 Eleitores:</b> ${{Number(p.TOTAL_ELEITORES).toLocaleString('pt-BR')}}<br>
                             <b>👩 Mulheres:</b> ${{p.PCT_FEM}}%<br>
-                            <b>🎓 Ensino Superior:</b> ${{p.PCT_SUPERIOR}}%<br>
-                            <b>⚡ Jovens (16-24):</b> ${{p.PCT_JOVENS}}%<br>
-                            <b>👴 Idosos (60+):</b> ${{p.PCT_IDOSOS}}%<br>
-                            <b>👆 Biometria:</b> ${{p.PCT_BIOMETRIA}}%
+                            <b>⚡ Jovens (16-24):</b> ${{p.PCT_JOVENS}}%
                         `;
                     }} else {{
                         tooltip.style.display = 'none';
@@ -583,7 +609,7 @@ def gerar_3d_demografico_html(geo_json_str, df_muni, output_path):
 
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(html_3d)
-    print(f"[OK] Dashboard Demográfico 3D Deck.gl gerado: {output_path}")
+    print(f"[OK] Dashboard Demográfico e Renda 3D Deck.gl gerado: {output_path}")
 
 if __name__ == "__main__":
     generate_demographics_dashboard()
