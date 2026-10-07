@@ -86,6 +86,13 @@ def export_maps_data():
     mapa_path = os.path.join(output_dir, "mapa_interativo_urnas_BA_2026.html")
     gerar_heatmap_dashboard_html(df_locais, mapa_path)
     print(f"[OK] Dashboard unificado disponível em: {mapa_path}")
+    
+    # 3. Gerar pasta docs/index.html para publicação automática no GitHub Pages
+    docs_dir = "docs"
+    os.makedirs(docs_dir, exist_ok=True)
+    docs_path = os.path.join(docs_dir, "index.html")
+    gerar_heatmap_dashboard_html(df_locais, docs_path)
+    print(f"[OK] Arquivo para GitHub Pages gerado: {docs_path}")
 
 def gerar_heatmap_dashboard_html(df, output_path):
     records = []
