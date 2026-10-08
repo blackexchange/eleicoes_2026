@@ -976,7 +976,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
                     <i class="fa-solid fa-check"></i>
                 </button>
                 <button class="mode-btn" data-mode="pct22" id="btnModePct22">
-                    <span><i class="fa-solid fa-percent" style="color:#60a5fa; margin-right:4px;"></i> % Votos 22</span>
+                    <span><i class="fa-solid fa-percent" style="color:#60a5fa; margin-right:4px;"></i> % Direita (Flávio)</span>
                     <i class="fa-solid fa-chevron-right"></i>
                 </button>
                 <button class="mode-btn" data-mode="votos13" id="btnMode13">
@@ -984,7 +984,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
                     <i class="fa-solid fa-chevron-right"></i>
                 </button>
                 <button class="mode-btn" data-mode="pct13" id="btnModePct13">
-                    <span><i class="fa-solid fa-percent" style="color:#f87171; margin-right:4px;"></i> % Votos 13</span>
+                    <span><i class="fa-solid fa-percent" style="color:#f87171; margin-right:4px;"></i> % Esquerda (Lula)</span>
                     <i class="fa-solid fa-chevron-right"></i>
                 </button>
                 <button class="mode-btn" data-mode="abstencao" id="btnModeAbs">
@@ -1193,9 +1193,9 @@ def gerar_heatmap_dashboard_html(df, output_path):
             </div>
             <div class="modal-body">
                 <div class="guide-card" style="border-left: 4px solid #3b82f6;">
-                    <div class="guide-title" style="color: #60a5fa;"><i class="fa-solid fa-chart-simple"></i> 1. Votos Absolutos vs. % Percentual (Domínio)</div>
-                    <p><strong>• Votos Absolutos (Votos 22 / Votos 13):</strong> Reflete o <em>tamanho do colégio eleitoral</em> e o volume bruto de votos. Um colégio gigante com 4.000 eleitores terá uma mancha térmica forte mesmo que o percentual seja de apenas 35%.</p>
-                    <p><strong>• % Percentual (% 22 / % 13):</strong> Mede a <em>taxa de preferência ideológica</em> da comunidade local. Um colégio com 300 eleitores onde um candidato teve 65% acende com intensidade máxima, revelando redutos de forte fidelidade.</p>
+                    <div class="guide-title" style="color: #60a5fa;"><i class="fa-solid fa-chart-simple"></i> 1. Votos Absolutos vs. % Domínio (% Direita / % Esquerda)</div>
+                    <p><strong>• Votos Absolutos (Votos 22 / Votos 13):</strong> Reflete o <em>tamanho do colégio eleitoral</em> e o volume bruto de votos. Um colégio gigante com 4.000 eleitores terá uma mancha térmica forte mesmo que o percentual seja moderado.</p>
+                    <p><strong>• % Direita (Flávio) / % Esquerda (Lula):</strong> Mede a <em>taxa de conversão e preferência política</em> da comunidade local (% sobre os votos válidos). Um colégio com 300 eleitores onde a Direita fez 65% acende com intensidade máxima, revelando redutos de forte fidelidade ideológica.</p>
                 </div>
 
                 <div class="guide-card" style="border-left: 4px solid #c084fc;">
@@ -1626,7 +1626,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
                         heatPoints.push([d.lat, d.lng, intensity]);
                     }}
                 }});
-                legendTitle.textContent = "Percentual de Domínio (22 - Bolsonaro)";
+                legendTitle.textContent = "% Direita (Flávio Bolsonaro)";
                 legendBar.style.background = "linear-gradient(to right, #1e3a8a, #38bdf8, #60a5fa, #bfdbfe)";
             }} else if (currentMode === 'votos13') {{
                 const vals = filtered.map(d => d.v13).filter(v => v > 0).sort((a, b) => a - b);
@@ -1651,7 +1651,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
                         heatPoints.push([d.lat, d.lng, intensity]);
                     }}
                 }});
-                legendTitle.textContent = "Percentual de Domínio (13 - Lula / PT)";
+                legendTitle.textContent = "% Esquerda (Lula / PT)";
                 legendBar.style.background = "linear-gradient(to right, #1e3a8a, #9333ea, #f43f5e, #ef4444)";
             }} else if (currentMode === 'abstencao') {{
                 filtered.forEach(d => {{
