@@ -923,8 +923,10 @@ def gerar_heatmap_dashboard_html(df, output_path):
                     <option value="outros">⚪ Outros Candidatos / Nulos / Brancos</option>
                     <option value="maioria_22">🔵 Colégios onde Bolsonaro (22) Venceu (Maioria)</option>
                     <option value="maioria_13">🔴 Colégios onde Lula (13) Venceu (Maioria)</option>
+                    <option value="pct22_30">🔵 Bolsonaro (22) com mais de 30% dos Votos</option>
                     <option value="pct22_40">🔵 Bolsonaro (22) com mais de 40% dos Votos</option>
                     <option value="pct22_50">🔵 Bolsonaro (22) com mais de 50% dos Votos</option>
+                    <option value="pct13_30">🔴 Lula (13) com mais de 30% dos Votos</option>
                     <option value="pct13_50">🔴 Lula (13) com mais de 50% dos Votos</option>
                     <option value="pct13_70">🔴 Lula (13) com mais de 70% dos Votos</option>
                 </select>
@@ -935,6 +937,13 @@ def gerar_heatmap_dashboard_html(df, output_path):
                 <select id="municipioSelect">
                     <option value="SALVADOR" selected>SALVADOR (Padrão)</option>
                     <option value="">Todos os 417 Municípios da Bahia</option>
+                </select>
+            </div>
+
+            <div>
+                <label><i class="fa-solid fa-landmark"></i> Zona Eleitoral:</label>
+                <select id="zonaSelect">
+                    <option value="">Todas as Zonas Eleitorais</option>
                 </select>
             </div>
 
@@ -1357,6 +1366,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
         // Elementos DOM
         const candidatoSelect = document.getElementById('candidatoSelect');
         const munSelect = document.getElementById('municipioSelect');
+        const zonaSelect = document.getElementById('zonaSelect');
         const urnaFilter = document.getElementById('urnaFilter');
         const searchInput = document.getElementById('searchInput');
         const scaleModeSelect = document.getElementById('scaleModeSelect');
@@ -1421,6 +1431,40 @@ def gerar_heatmap_dashboard_html(df, output_path):
                 munSelect.appendChild(opt);
             }}
         }});
+
+        // Preencher Dropdown de Zonas Eleitorais dinamicamente pelo Município selecionado
+        function populateZonas() {{
+            const selectedMun = munSelect.value.toLowerCase();
+            const relevantData = selectedMun ? rawData.filter(d => d.m.toLowerCase() === selectedMun) : rawData;
+            
+            const allZones = new Set();
+            relevantData.forEach(d => {{
+                if (d.z) {{
+                    d.z.split(',').forEach(z => {{
+                        const cleanZ = z.trim();
+                        if (cleanZ && !isNaN(cleanZ)) {{
+                            allZones.add(parseInt(cleanZ, 10));
+                        }}
+                    }});
+                }}
+            }});
+            
+            const sortedZones = Array.from(allZones).sort((a, b) => a - b);
+            const prevVal = zonaSelect.value;
+            
+            const countLabel = sortedZones.length > 0 ? ` (${{sortedZones.length}} zonas)` : '';
+            zonaSelect.innerHTML = `<option value="">Todas as Zonas Eleitorais${{countLabel}}</option>`;
+            
+            sortedZones.forEach(z => {{
+                const opt = document.createElement('option');
+                opt.value = z.toString();
+                opt.textContent = `Zona ${{z}}`;
+                if (prevVal === z.toString()) {{
+                    opt.selected = true;
+                }}
+                zonaSelect.appendChild(opt);
+            }});
+        }}
 
         // Gradients para Heatmaps
         const gradients = {{
@@ -1569,6 +1613,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
         function updateDashboard() {{
             const selectedCand = candidatoSelect.value;
             const selectedMun = munSelect.value.toLowerCase();
+            const selectedZona = zonaSelect.value;
             const selectedUrna = urnaFilter.value;
             const searchVal = searchInput.value.toLowerCase().trim();
             const scaleMode = scaleModeSelect.value;
@@ -1578,6 +1623,10 @@ def gerar_heatmap_dashboard_html(df, output_path):
             // Filtrar Dados (Efetivo)
             const filtered = rawData.filter(d => {{
                 if (selectedMun && d.m.toLowerCase() !== selectedMun) return false;
+                if (selectedZona) {{
+                    const zonesList = (d.z || '').split(',').map(s => s.trim());
+                    if (!zonesList.includes(selectedZona)) return false;
+                }}
                 if (selectedUrna === 'ue2015' && d.u15 === 0) return false;
                 if (selectedUrna === 'ue2020' && d.u20 === 0) return false;
                 
@@ -1587,8 +1636,10 @@ def gerar_heatmap_dashboard_html(df, output_path):
                 if (selectedCand === 'outros' && d.vo === 0) return false;
                 if (selectedCand === 'maioria_22' && d.v22 <= d.v13) return false;
                 if (selectedCand === 'maioria_13' && d.v13 <= d.v22) return false;
+                if (selectedCand === 'pct22_30' && d.p22 < 30) return false;
                 if (selectedCand === 'pct22_40' && d.p22 < 40) return false;
                 if (selectedCand === 'pct22_50' && d.p22 < 50) return false;
+                if (selectedCand === 'pct13_30' && d.p13 < 30) return false;
                 if (selectedCand === 'pct13_50' && d.p13 < 50) return false;
                 if (selectedCand === 'pct13_70' && d.p13 < 70) return false;
 
@@ -1828,8 +1879,8 @@ def gerar_heatmap_dashboard_html(df, output_path):
             // Atualizar Top Hotspots de acordo com o candidato selecionado
             renderHotspotsList(filtered);
 
-            // Ajustar visualização se filtrar município
-            if (selectedMun && filtered.length > 0) {{
+            // Ajustar visualização se filtrar município ou zona
+            if ((selectedZona || selectedMun) && filtered.length > 0) {{
                 const group = new L.featureGroup(filtered.map(d => L.marker([d.lat, d.lng])));
                 map.fitBounds(group.getBounds().pad(0.08));
             }}
@@ -2001,11 +2052,14 @@ def gerar_heatmap_dashboard_html(df, output_path):
         }});
 
         munSelect.addEventListener('change', () => {{
+            populateZonas();
+            zonaSelect.value = '';
             if (!munSelect.value) {{
                 map.flyTo([-12.9714, -41.5000], 7, {{ duration: 1.2 }});
             }}
             updateDashboard();
         }});
+        zonaSelect.addEventListener('change', updateDashboard);
         urnaFilter.addEventListener('change', updateDashboard);
         searchInput.addEventListener('input', updateDashboard);
 
@@ -2061,7 +2115,8 @@ def gerar_heatmap_dashboard_html(df, output_path):
             }}, 360);
         }});
 
-        // Renderização Inicial com foco em Salvador
+        // Renderização Inicial com foco em Salvador e suas Zonas
+        populateZonas();
         updateDashboard();
     </script>
 </body>
