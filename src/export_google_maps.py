@@ -989,6 +989,17 @@ def gerar_heatmap_dashboard_html(df, output_path):
             </div>
 
             <div>
+                <label><i class="fa-solid fa-users-line"></i> Faixa Etária:</label>
+                <select id="idadeFilter">
+                    <option value="all" selected>Todas as Faixas Etárias (Geral)</option>
+                    <option value="jovens">🧒 Jovens (16 a 24 anos)</option>
+                    <option value="adultos">👔 Adultos Jovens (25 a 44 anos)</option>
+                    <option value="maduros">💼 Meia-Idade / Maduros (45 a 59 anos)</option>
+                    <option value="idosos">👴 Idosos (60+ anos)</option>
+                </select>
+            </div>
+
+            <div>
                 <label><i class="fa-solid fa-filter"></i> Modelo de Urna:</label>
                 <select id="urnaFilter">
                     <option value="all">Todos os Modelos de Urna</option>
@@ -1028,10 +1039,10 @@ def gerar_heatmap_dashboard_html(df, output_path):
                 <div style="margin-bottom: 6px;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <label style="margin: 0;"><i class="fa-solid fa-circle-dot" style="color:#38bdf8;"></i> Raio de Dispersão:</label>
-                        <span class="range-val" id="radiusLabel">35px</span>
+                        <span class="range-val" id="radiusLabel">15px</span>
                     </div>
                     <div class="range-container" style="margin-top: 3px;">
-                        <input type="range" id="radiusSlider" min="15" max="80" value="35" />
+                        <input type="range" id="radiusSlider" min="15" max="80" value="15" />
                     </div>
                 </div>
 
@@ -1078,6 +1089,22 @@ def gerar_heatmap_dashboard_html(df, output_path):
                 </button>
                 <button class="mode-btn" data-mode="demoSuperior" id="btnModeSup">
                     <span><i class="fa-solid fa-graduation-cap" style="color:#a855f7; margin-right:4px;"></i> Ensino Superior</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+                <button class="mode-btn" data-mode="demoJovens" id="btnModeJov">
+                    <span><i class="fa-solid fa-child-reaching" style="color:#38bdf8; margin-right:4px;"></i> Jovens (16-24a)</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+                <button class="mode-btn" data-mode="demoAdultos" id="btnModeAdu">
+                    <span><i class="fa-solid fa-user-tie" style="color:#06b6d4; margin-right:4px;"></i> Adultos (25-44a)</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+                <button class="mode-btn" data-mode="demoMaduros" id="btnModeMad">
+                    <span><i class="fa-solid fa-briefcase" style="color:#10b981; margin-right:4px;"></i> Maduros (45-59a)</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+                <button class="mode-btn" data-mode="demoIdosos" id="btnModeIdo">
+                    <span><i class="fa-solid fa-person-cane" style="color:#f59e0b; margin-right:4px;"></i> Idosos (60+a)</span>
                     <i class="fa-solid fa-chevron-right"></i>
                 </button>
                 <button class="mode-btn" data-mode="demoFem" id="btnModeFem">
@@ -1470,13 +1497,14 @@ def gerar_heatmap_dashboard_html(df, output_path):
         // Estado Global
         let currentMode = 'votos22'; // Padrão: Votos 22
         let showMarkers = true;
-        let currentRadius = 35;
+        let currentRadius = 15;
         let selectedItem = null;
 
         // Elementos DOM
         const candidatoSelect = document.getElementById('candidatoSelect');
         const munSelect = document.getElementById('municipioSelect');
         const zonaSelect = document.getElementById('zonaSelect');
+        const idadeFilter = document.getElementById('idadeFilter');
         const urnaFilter = document.getElementById('urnaFilter');
         const searchInput = document.getElementById('searchInput');
         const scaleModeSelect = document.getElementById('scaleModeSelect');
@@ -1576,58 +1604,29 @@ def gerar_heatmap_dashboard_html(df, output_path):
             }});
         }}
 
-        // Gradients para Heatmaps
+        // Gradiente Térmico Unificado (Azul para Vermelho) para Todos os Heatmaps
+        const thermalBlueToRed = {{
+            0.15: '#1e3a8a', // Azul Profundo (baixa concentração / frio)
+            0.35: '#06b6d4', // Ciano
+            0.55: '#10b981', // Verde Esmeralda
+            0.75: '#fbbf24', // Amarelo
+            0.90: '#f97316', // Laranja
+            1.00: '#ef4444'  // Vermelho Vivo (alta concentração / calor máximo)
+        }};
+
         const gradients = {{
-            votos22: {{
-                0.20: '#1e1b4b',
-                0.45: '#3b82f6',
-                0.75: '#60a5fa',
-                1.00: '#93c5fd'
-            }},
-            pct22: {{
-                0.20: '#1e3a8a',
-                0.45: '#38bdf8',
-                0.75: '#60a5fa',
-                1.00: '#bfdbfe'
-            }},
-            votos13: {{
-                0.15: '#1e3a8a',
-                0.35: '#06b6d4',
-                0.55: '#10b981',
-                0.75: '#fbbf24',
-                0.90: '#f97316',
-                1.00: '#ef4444'
-            }},
-            pct13: {{
-                0.20: '#1e3a8a',
-                0.45: '#9333ea',
-                0.70: '#f43f5e',
-                1.00: '#ef4444'
-            }},
-            abstencao: {{
-                0.20: '#431407',
-                0.45: '#ea580c',
-                0.75: '#fb923c',
-                1.00: '#ffedd5'
-            }},
-            demoSuperior: {{
-                0.20: '#2e1065',
-                0.45: '#7c3aed',
-                0.75: '#c084fc',
-                1.00: '#f3e8ff'
-            }},
-            demoFem: {{
-                0.20: '#831843',
-                0.45: '#db2777',
-                0.75: '#f472b6',
-                1.00: '#fdf2f8'
-            }},
-            urnasUE2015: {{
-                0.20: '#78350f',
-                0.50: '#d97706',
-                0.80: '#f59e0b',
-                1.00: '#fef08a'
-            }}
+            votos22: thermalBlueToRed,
+            pct22: thermalBlueToRed,
+            votos13: thermalBlueToRed,
+            pct13: thermalBlueToRed,
+            abstencao: thermalBlueToRed,
+            demoSuperior: thermalBlueToRed,
+            demoJovens: thermalBlueToRed,
+            demoAdultos: thermalBlueToRed,
+            demoMaduros: thermalBlueToRed,
+            demoIdosos: thermalBlueToRed,
+            demoFem: thermalBlueToRed,
+            urnasUE2015: thermalBlueToRed
         }};
 
         // Função para Abrir Detalhes da Urna/Colégio
@@ -1760,6 +1759,23 @@ def gerar_heatmap_dashboard_html(df, output_path):
                     if (d.vt < minVotes) return false;
                 }}
 
+                // Filtro por Faixa Etária (filtra colégios e votos por perfil etário predominante)
+                const selectedIdade = idadeFilter.value;
+                if (selectedIdade !== 'all') {{
+                    const totalEl = d.del > 0 ? d.del : (d.fem + d.mas);
+                    if (totalEl > 0) {{
+                        const pJov = d.jov / totalEl;
+                        const pAdu = d.adu / totalEl;
+                        const pMad = d.mad / totalEl;
+                        const pIdo = d.ido / totalEl;
+
+                        if (selectedIdade === 'jovens' && pJov < 0.15) return false;
+                        if (selectedIdade === 'adultos' && pAdu < 0.40) return false;
+                        if (selectedIdade === 'maduros' && pMad < 0.27) return false;
+                        if (selectedIdade === 'idosos' && pIdo < 0.24) return false;
+                    }}
+                }}
+
                 if (searchVal) {{
                     const fullText = (d.l + ' ' + d.e + ' ' + d.b + ' ' + d.m).toLowerCase();
                     if (!fullText.includes(searchVal)) return false;
@@ -1819,7 +1835,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
                     }}
                 }});
                 legendTitle.textContent = "Densidade de Votos (22 - Bolsonaro)";
-                legendBar.style.background = "linear-gradient(to right, #1e1b4b, #3b82f6, #60a5fa, #93c5fd)";
+                legendBar.style.background = "linear-gradient(to right, #1e3a8a, #06b6d4, #10b981, #fbbf24, #f97316, #ef4444)";
             }} else if (currentMode === 'pct22') {{
                 filtered.forEach(d => {{
                     if (d.vt >= 20) {{
@@ -1829,7 +1845,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
                     }}
                 }});
                 legendTitle.textContent = "% Direita (Flávio Bolsonaro)";
-                legendBar.style.background = "linear-gradient(to right, #1e3a8a, #38bdf8, #60a5fa, #bfdbfe)";
+                legendBar.style.background = "linear-gradient(to right, #1e3a8a, #06b6d4, #10b981, #fbbf24, #f97316, #ef4444)";
             }} else if (currentMode === 'votos13') {{
                 const vals = filtered.map(d => d.v13).filter(v => v > 0).sort((a, b) => a - b);
                 const maxVal = vals.length > 0 ? vals[vals.length - 1] : 100;
@@ -1854,7 +1870,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
                     }}
                 }});
                 legendTitle.textContent = "% Esquerda (Lula / PT)";
-                legendBar.style.background = "linear-gradient(to right, #1e3a8a, #9333ea, #f43f5e, #ef4444)";
+                legendBar.style.background = "linear-gradient(to right, #1e3a8a, #06b6d4, #10b981, #fbbf24, #f97316, #ef4444)";
             }} else if (currentMode === 'abstencao') {{
                 filtered.forEach(d => {{
                     if (d.apt >= 50) {{
@@ -1864,7 +1880,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
                     }}
                 }});
                 legendTitle.textContent = "Concentração de Abstenção Eleitoral (%)";
-                legendBar.style.background = "linear-gradient(to right, #431407, #ea580c, #fb923c, #ffedd5)";
+                legendBar.style.background = "linear-gradient(to right, #1e3a8a, #06b6d4, #10b981, #fbbf24, #f97316, #ef4444)";
             }} else if (currentMode === 'demoSuperior') {{
                 const vals = filtered.map(d => d.sup).filter(v => v > 0).sort((a, b) => a - b);
                 const maxVal = vals.length > 0 ? vals[vals.length - 1] : 50;
@@ -1877,7 +1893,59 @@ def gerar_heatmap_dashboard_html(df, output_path):
                     }}
                 }});
                 legendTitle.textContent = "Concentração de Ensino Superior (Classe Média/Alta)";
-                legendBar.style.background = "linear-gradient(to right, #2e1065, #7c3aed, #c084fc, #f3e8ff)";
+                legendBar.style.background = "linear-gradient(to right, #1e3a8a, #06b6d4, #10b981, #fbbf24, #f97316, #ef4444)";
+            }} else if (currentMode === 'demoJovens') {{
+                const vals = filtered.map(d => d.jov).filter(v => v > 0).sort((a, b) => a - b);
+                const maxVal = vals.length > 0 ? vals[vals.length - 1] : 50;
+                const p85 = vals.length > 0 ? vals[Math.floor(vals.length * 0.85)] : 50;
+                filtered.forEach(d => {{
+                    if (d.jov > 0) {{
+                        const norm = Math.pow(d.jov / Math.max(p85, 20), 0.75);
+                        const intensity = Math.min(1.0, norm * gain);
+                        heatPoints.push([d.lat, d.lng, intensity]);
+                    }}
+                }});
+                legendTitle.textContent = "Concentração de Eleitorado Jovem (16 a 24 anos)";
+                legendBar.style.background = "linear-gradient(to right, #1e3a8a, #06b6d4, #10b981, #fbbf24, #f97316, #ef4444)";
+            }} else if (currentMode === 'demoAdultos') {{
+                const vals = filtered.map(d => d.adu).filter(v => v > 0).sort((a, b) => a - b);
+                const maxVal = vals.length > 0 ? vals[vals.length - 1] : 100;
+                const p85 = vals.length > 0 ? vals[Math.floor(vals.length * 0.85)] : 100;
+                filtered.forEach(d => {{
+                    if (d.adu > 0) {{
+                        const norm = Math.pow(d.adu / Math.max(p85, 40), 0.75);
+                        const intensity = Math.min(1.0, norm * gain);
+                        heatPoints.push([d.lat, d.lng, intensity]);
+                    }}
+                }});
+                legendTitle.textContent = "Concentração de Adultos Jovens (25 a 44 anos)";
+                legendBar.style.background = "linear-gradient(to right, #1e3a8a, #06b6d4, #10b981, #fbbf24, #f97316, #ef4444)";
+            }} else if (currentMode === 'demoMaduros') {{
+                const vals = filtered.map(d => d.mad).filter(v => v > 0).sort((a, b) => a - b);
+                const maxVal = vals.length > 0 ? vals[vals.length - 1] : 50;
+                const p85 = vals.length > 0 ? vals[Math.floor(vals.length * 0.85)] : 50;
+                filtered.forEach(d => {{
+                    if (d.mad > 0) {{
+                        const norm = Math.pow(d.mad / Math.max(p85, 20), 0.75);
+                        const intensity = Math.min(1.0, norm * gain);
+                        heatPoints.push([d.lat, d.lng, intensity]);
+                    }}
+                }});
+                legendTitle.textContent = "Concentração de Meia-Idade / Maduros (45 a 59 anos)";
+                legendBar.style.background = "linear-gradient(to right, #1e3a8a, #06b6d4, #10b981, #fbbf24, #f97316, #ef4444)";
+            }} else if (currentMode === 'demoIdosos') {{
+                const vals = filtered.map(d => d.ido).filter(v => v > 0).sort((a, b) => a - b);
+                const maxVal = vals.length > 0 ? vals[vals.length - 1] : 50;
+                const p85 = vals.length > 0 ? vals[Math.floor(vals.length * 0.85)] : 50;
+                filtered.forEach(d => {{
+                    if (d.ido > 0) {{
+                        const norm = Math.pow(d.ido / Math.max(p85, 20), 0.75);
+                        const intensity = Math.min(1.0, norm * gain);
+                        heatPoints.push([d.lat, d.lng, intensity]);
+                    }}
+                }});
+                legendTitle.textContent = "Concentração de Eleitorado Idoso (60+ anos)";
+                legendBar.style.background = "linear-gradient(to right, #1e3a8a, #06b6d4, #10b981, #fbbf24, #f97316, #ef4444)";
             }} else if (currentMode === 'demoFem') {{
                 filtered.forEach(d => {{
                     const totalEl = d.del > 0 ? d.del : (d.fem + d.mas);
@@ -1888,7 +1956,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
                     }}
                 }});
                 legendTitle.textContent = "Densidade de Eleitorado Feminino (Mulheres)";
-                legendBar.style.background = "linear-gradient(to right, #831843, #db2777, #f472b6, #fdf2f8)";
+                legendBar.style.background = "linear-gradient(to right, #1e3a8a, #06b6d4, #10b981, #fbbf24, #f97316, #ef4444)";
             }} else if (currentMode === 'urnasUE2015') {{
                 const maxU15 = Math.max(...filtered.map(d => d.u15), 1);
                 filtered.forEach(d => {{
@@ -1898,7 +1966,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
                     }}
                 }});
                 legendTitle.textContent = "Concentração Relativa de Urnas UE2015";
-                legendBar.style.background = "linear-gradient(to right, #78350f, #d97706, #f59e0b, #fef08a)";
+                legendBar.style.background = "linear-gradient(to right, #1e3a8a, #06b6d4, #10b981, #fbbf24, #f97316, #ef4444)";
             }}
 
             // Renderizar / Atualizar Heatmap Layer
@@ -2170,6 +2238,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
             updateDashboard();
         }});
         zonaSelect.addEventListener('change', updateDashboard);
+        idadeFilter.addEventListener('change', updateDashboard);
         urnaFilter.addEventListener('change', updateDashboard);
         searchInput.addEventListener('input', updateDashboard);
 
