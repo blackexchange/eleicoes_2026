@@ -9,8 +9,8 @@ def export_maps_data():
     
     con = duckdb.connect("data/processed/eleicoes.duckdb")
     
-    # 1. Agrupamento completo por Local de Votação (Colégio / Escola) com contagem de votos para Presidente e Modelos de Urna
-    print("[1/4] Extraindo dados agregados de votos e urnas por Colégio Eleitoral...")
+    # 1. Agrupamento completo por Local de Votação (Colégio / Escola) com contagem de votos para Presidente, Modelos de Urna e Demografia
+    print("[1/4] Extraindo dados agregados de votos, urnas e perfil demográfico por Colégio Eleitoral...")
     df_locais = con.execute("""
         WITH votos_agg AS (
             SELECT 
@@ -33,6 +33,32 @@ def export_maps_data():
                     ELSE 'UE2020+'
                 END AS MODELO_URNA
             FROM correspondencias_2026_BA
+        ),
+        demo_agg AS (
+            SELECT 
+                NR_ZONA,
+                NR_SECAO,
+                SUM(CASE WHEN DS_GENERO LIKE '%FEMININO%' THEN QT_ELEITORES ELSE 0 END) AS DEMO_FEM,
+                SUM(CASE WHEN DS_GENERO LIKE '%MASCULINO%' THEN QT_ELEITORES ELSE 0 END) AS DEMO_MASC,
+                
+                SUM(CASE WHEN DS_FAIXA_ETARIA IN ('16 anos', '17 anos', '18 anos', '19 anos', '20 anos', '21 a 24 anos') THEN QT_ELEITORES ELSE 0 END) AS DEMO_JOVENS,
+                SUM(CASE WHEN DS_FAIXA_ETARIA IN ('25 a 29 anos', '30 a 34 anos', '35 a 39 anos', '40 a 44 anos') THEN QT_ELEITORES ELSE 0 END) AS DEMO_ADULTOS,
+                SUM(CASE WHEN DS_FAIXA_ETARIA IN ('45 a 49 anos', '50 a 54 anos', '55 a 59 anos') THEN QT_ELEITORES ELSE 0 END) AS DEMO_MADUROS,
+                SUM(CASE WHEN DS_FAIXA_ETARIA IN ('60 a 64 anos', '65 a 69 anos', '70 a 74 anos', '75 a 79 anos', '80 a 84 anos', '85 a 89 anos', '90 a 94 anos', '95 a 99 anos', '100 anos ou mais') THEN QT_ELEITORES ELSE 0 END) AS DEMO_IDOSOS,
+                
+                SUM(CASE WHEN DS_ESTADO_CIVIL LIKE '%SOLTEIRO%' THEN QT_ELEITORES ELSE 0 END) AS DEMO_SOLTEIROS,
+                SUM(CASE WHEN DS_ESTADO_CIVIL LIKE '%CASADO%' THEN QT_ELEITORES ELSE 0 END) AS DEMO_CASADOS,
+                SUM(CASE WHEN DS_ESTADO_CIVIL LIKE '%DIVORCIADO%' OR DS_ESTADO_CIVIL LIKE '%SEPARADO%' THEN QT_ELEITORES ELSE 0 END) AS DEMO_DIVORCIADOS,
+                SUM(CASE WHEN DS_ESTADO_CIVIL LIKE '%VI%' THEN QT_ELEITORES ELSE 0 END) AS DEMO_VIUVOS,
+                
+                SUM(CASE WHEN DS_GRAU_ESCOLARIDADE LIKE '%SUPERIOR%' THEN QT_ELEITORES ELSE 0 END) AS DEMO_SUPERIOR,
+                SUM(CASE WHEN DS_GRAU_ESCOLARIDADE LIKE '%MEDIO%' OR DS_GRAU_ESCOLARIDADE LIKE '%M_DIO%' THEN QT_ELEITORES ELSE 0 END) AS DEMO_MEDIO,
+                SUM(CASE WHEN DS_GRAU_ESCOLARIDADE LIKE '%FUNDAMENTAL%' THEN QT_ELEITORES ELSE 0 END) AS DEMO_FUNDAMENTAL,
+                SUM(CASE WHEN DS_GRAU_ESCOLARIDADE LIKE '%ANALFABETO%' OR DS_GRAU_ESCOLARIDADE LIKE '%ESCREVE%' THEN QT_ELEITORES ELSE 0 END) AS DEMO_BAIXA_ESCOLARIDADE,
+                
+                SUM(QT_ELEITORES) AS DEMO_TOTAL_ELEITORES
+            FROM perfil_eleitorado_2026_BA
+            GROUP BY NR_ZONA, NR_SECAO
         ),
         locais_clean AS (
             SELECT 
@@ -69,20 +95,38 @@ def export_maps_data():
             COALESCE(SUM(v.VOTOS_OUTROS), 0) AS VOTOS_OUTROS,
             COALESCE(SUM(v.TOTAL_VOTOS), 0) AS TOTAL_VOTOS,
             ROUND(CASE WHEN SUM(v.TOTAL_VOTOS) > 0 THEN (SUM(v.VOTOS_13) * 100.0 / SUM(v.TOTAL_VOTOS)) ELSE 0 END, 2) AS PCT_VOTOS_13,
-            ROUND(CASE WHEN SUM(v.TOTAL_VOTOS) > 0 THEN (SUM(v.VOTOS_22) * 100.0 / SUM(v.TOTAL_VOTOS)) ELSE 0 END, 2) AS PCT_VOTOS_22
+            ROUND(CASE WHEN SUM(v.TOTAL_VOTOS) > 0 THEN (SUM(v.VOTOS_22) * 100.0 / SUM(v.TOTAL_VOTOS)) ELSE 0 END, 2) AS PCT_VOTOS_22,
+            
+            -- Demografia
+            COALESCE(SUM(d.DEMO_FEM), 0) AS DEMO_FEM,
+            COALESCE(SUM(d.DEMO_MASC), 0) AS DEMO_MASC,
+            COALESCE(SUM(d.DEMO_JOVENS), 0) AS DEMO_JOVENS,
+            COALESCE(SUM(d.DEMO_ADULTOS), 0) AS DEMO_ADULTOS,
+            COALESCE(SUM(d.DEMO_MADUROS), 0) AS DEMO_MADUROS,
+            COALESCE(SUM(d.DEMO_IDOSOS), 0) AS DEMO_IDOSOS,
+            COALESCE(SUM(d.DEMO_SOLTEIROS), 0) AS DEMO_SOLTEIROS,
+            COALESCE(SUM(d.DEMO_CASADOS), 0) AS DEMO_CASADOS,
+            COALESCE(SUM(d.DEMO_DIVORCIADOS), 0) AS DEMO_DIVORCIADOS,
+            COALESCE(SUM(d.DEMO_VIUVOS), 0) AS DEMO_VIUVOS,
+            COALESCE(SUM(d.DEMO_SUPERIOR), 0) AS DEMO_SUPERIOR,
+            COALESCE(SUM(d.DEMO_MEDIO), 0) AS DEMO_MEDIO,
+            COALESCE(SUM(d.DEMO_FUNDAMENTAL), 0) AS DEMO_FUNDAMENTAL,
+            COALESCE(SUM(d.DEMO_BAIXA_ESCOLARIDADE), 0) AS DEMO_BAIXA_ESCOLARIDADE,
+            COALESCE(SUM(d.DEMO_TOTAL_ELEITORES), 0) AS DEMO_TOTAL_ELEITORES
         FROM locais_clean l
         LEFT JOIN votos_agg v ON l.NR_ZONA = v.NR_ZONA AND l.NR_SECAO = v.NR_SECAO
         LEFT JOIN corresp_info c ON l.NR_ZONA = c.NR_ZONA AND l.NR_SECAO = c.NR_SECAO
+        LEFT JOIN demo_agg d ON l.NR_ZONA = d.NR_ZONA AND l.NR_SECAO = d.NR_SECAO
         GROUP BY l.NM_MUNICIPIO, l.NM_LOCAL_VOTACAO, l.DS_ENDERECO, l.NM_BAIRRO, l.NR_CEP
         ORDER BY VOTOS_13 DESC
     """).df()
     
     arquivo_locais = os.path.join(output_dir, "locais_votacao_heatmap_votos_urnas_BA_2026.csv")
     df_locais.to_csv(arquivo_locais, index=False, encoding="utf-8")
-    print(f"[OK] CSV de Locais de Votação com Votos e Urnas gerado: {arquivo_locais} ({len(df_locais)} registros)")
+    print(f"[OK] CSV de Locais de Votação com Votos, Urnas e Demografia gerado: {arquivo_locais} ({len(df_locais)} registros)")
     
     # 2. Gerar Mapa Interativo e Heatmap das Urnas e Votos (Arquivo Único Oficial)
-    print("[2/4] Construindo Dashboard Interativo com Heatmap e Painel Detalhado de Urnas...")
+    print("[2/4] Construindo Dashboard Interativo com Heatmap, Demografia e Painel Detalhado...")
     mapa_path = os.path.join(output_dir, "mapa_interativo_urnas_BA_2026.html")
     gerar_heatmap_dashboard_html(df_locais, mapa_path)
     print(f"[OK] Dashboard unificado disponível em: {mapa_path}")
@@ -113,7 +157,23 @@ def gerar_heatmap_dashboard_html(df, output_path):
             "vo": int(row["VOTOS_OUTROS"]),
             "vt": int(row["TOTAL_VOTOS"]),
             "p13": float(row["PCT_VOTOS_13"]),
-            "p22": float(row["PCT_VOTOS_22"])
+            "p22": float(row["PCT_VOTOS_22"]),
+            # Demografia
+            "fem": int(row["DEMO_FEM"]),
+            "mas": int(row["DEMO_MASC"]),
+            "jov": int(row["DEMO_JOVENS"]),
+            "adu": int(row["DEMO_ADULTOS"]),
+            "mad": int(row["DEMO_MADUROS"]),
+            "ido": int(row["DEMO_IDOSOS"]),
+            "sol": int(row["DEMO_SOLTEIROS"]),
+            "cas": int(row["DEMO_CASADOS"]),
+            "div": int(row["DEMO_DIVORCIADOS"]),
+            "viu": int(row["DEMO_VIUVOS"]),
+            "sup": int(row["DEMO_SUPERIOR"]),
+            "med": int(row["DEMO_MEDIO"]),
+            "fun": int(row["DEMO_FUNDAMENTAL"]),
+            "bax": int(row["DEMO_BAIXA_ESCOLARIDADE"]),
+            "del": int(row["DEMO_TOTAL_ELEITORES"])
         })
     
     data_json = json.dumps(records, ensure_ascii=False)
@@ -137,7 +197,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Interativo de Urnas e Heatmap de Votos - Bahia 2026</title>
+    <title>Painel Interativo de Urnas, Votos e Demografia - Salvador & Bahia 2026</title>
     <!-- Leaflet & MarkerCluster CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.min.css" />
@@ -154,6 +214,8 @@ def gerar_heatmap_dashboard_html(df, output_path):
             --accent-pl: #3b82f6;
             --accent-amber: #f59e0b;
             --accent-emerald: #10b981;
+            --accent-purple: #a855f7;
+            --accent-pink: #ec4899;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --font-main: 'Outfit', sans-serif;
@@ -170,8 +232,8 @@ def gerar_heatmap_dashboard_html(df, output_path):
         }}
         /* Sidebar Styling */
         #sidebar {{
-            width: 440px;
-            min-width: 440px;
+            width: 450px;
+            min-width: 450px;
             background: var(--bg-card);
             border-right: 1px solid var(--border-color);
             display: flex;
@@ -208,6 +270,11 @@ def gerar_heatmap_dashboard_html(df, output_path):
             color: #f87171;
             border: 1px solid rgba(239, 68, 68, 0.3);
         }}
+        .badge-salvador {{
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+            border-color: rgba(56, 189, 248, 0.3);
+        }}
         .badge-amber {{
             background: rgba(245, 158, 11, 0.15);
             color: #fbbf24;
@@ -233,12 +300,12 @@ def gerar_heatmap_dashboard_html(df, output_path):
         .kpi-grid {{
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            gap: 8px;
         }}
         .kpi-card {{
             background: var(--bg-main);
-            padding: 12px 14px;
-            border-radius: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
             border: 1px solid var(--border-color);
             position: relative;
             overflow: hidden;
@@ -246,14 +313,14 @@ def gerar_heatmap_dashboard_html(df, output_path):
         }}
         .kpi-card:hover {{
             transform: translateY(-2px);
-            border-color: #3b82f6;
+            border-color: #38bdf8;
         }}
         .kpi-card.pt-glow {{
             border-color: rgba(239, 68, 68, 0.4);
             box-shadow: 0 0 15px rgba(239, 68, 68, 0.08);
         }}
         .kpi-title {{
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             text-transform: uppercase;
             letter-spacing: 0.04em;
             color: var(--text-muted);
@@ -263,18 +330,20 @@ def gerar_heatmap_dashboard_html(df, output_path):
             justify-content: space-between;
         }}
         .kpi-val {{
-            font-size: 1.35rem;
+            font-size: 1.25rem;
             font-weight: 800;
             font-family: var(--font-mono);
             color: #ffffff;
-            margin-top: 4px;
+            margin-top: 3px;
         }}
         .kpi-val.red {{ color: #f87171; }}
         .kpi-val.blue {{ color: #60a5fa; }}
         .kpi-val.amber {{ color: #fbbf24; }}
         .kpi-val.emerald {{ color: #34d399; }}
+        .kpi-val.purple {{ color: #c084fc; }}
+        .kpi-val.pink {{ color: #f472b6; }}
         .kpi-sub {{
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
             margin-top: 2px;
         }}
@@ -287,10 +356,10 @@ def gerar_heatmap_dashboard_html(df, output_path):
             padding: 14px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }}
         .panel-header {{
-            font-size: 0.78rem;
+            font-size: 0.76rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -300,21 +369,21 @@ def gerar_heatmap_dashboard_html(df, output_path):
             gap: 6px;
         }}
 
-        /* Mode Selector Buttons */
+        /* Mode Selector Buttons Grid */
         .mode-selector {{
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, 1fr);
             gap: 6px;
         }}
         .mode-btn {{
             background: #111827;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 10px 12px;
+            padding: 8px 10px;
             color: #cbd5e1;
             cursor: pointer;
             text-align: left;
-            font-size: 0.82rem;
+            font-size: 0.76rem;
             font-weight: 600;
             display: flex;
             align-items: center;
@@ -337,7 +406,17 @@ def gerar_heatmap_dashboard_html(df, output_path):
             border-color: #3b82f6;
             box-shadow: 0 0 12px rgba(59, 130, 246, 0.25);
         }}
-        .mode-btn.active.mode-u15 {{
+        .mode-btn.active.mode-purple {{
+            background: rgba(168, 85, 247, 0.15);
+            border-color: #a855f7;
+            box-shadow: 0 0 12px rgba(168, 85, 247, 0.25);
+        }}
+        .mode-btn.active.mode-pink {{
+            background: rgba(236, 72, 153, 0.15);
+            border-color: #ec4899;
+            box-shadow: 0 0 12px rgba(236, 72, 153, 0.25);
+        }}
+        .mode-btn.active.mode-amber {{
             background: rgba(245, 158, 11, 0.15);
             border-color: #f59e0b;
             box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
@@ -345,25 +424,25 @@ def gerar_heatmap_dashboard_html(df, output_path):
 
         /* Inputs & Controls */
         label {{
-            font-size: 0.75rem;
+            font-size: 0.74rem;
             font-weight: 600;
             color: #94a3b8;
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }}
         select, input[type="text"] {{
             width: 100%;
-            padding: 9px 12px;
+            padding: 8px 12px;
             background: #0b0f19;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             color: #f8fafc;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             outline: none;
             transition: border-color 0.2s;
         }}
         select:focus, input[type="text"]:focus {{
-            border-color: #ef4444;
+            border-color: #38bdf8;
         }}
 
         /* Range Slider */
@@ -374,15 +453,15 @@ def gerar_heatmap_dashboard_html(df, output_path):
         }}
         input[type="range"] {{
             flex: 1;
-            accent-color: #ef4444;
+            accent-color: #38bdf8;
             height: 6px;
             background: #1e293b;
             border-radius: 3px;
         }}
         .range-val {{
             font-family: var(--font-mono);
-            font-size: 0.78rem;
-            color: #f87171;
+            font-size: 0.75rem;
+            color: #38bdf8;
             font-weight: 700;
             min-width: 45px;
             text-align: right;
@@ -393,12 +472,12 @@ def gerar_heatmap_dashboard_html(df, output_path):
             background: #0d1322;
             border: 1px solid #1e293b;
             border-radius: 8px;
-            padding: 10px 12px;
+            padding: 8px 10px;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 3px;
         }}
         .hotspot-item:hover {{
             background: #182238;
@@ -406,7 +485,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
             transform: translateX(3px);
         }}
         .hotspot-title {{
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             font-weight: 700;
             color: #f8fafc;
             white-space: nowrap;
@@ -414,7 +493,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
             text-overflow: ellipsis;
         }}
         .hotspot-sub {{
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             color: #94a3b8;
             display: flex;
             justify-content: space-between;
@@ -479,15 +558,15 @@ def gerar_heatmap_dashboard_html(df, output_path):
             font-family: var(--font-mono);
         }}
 
-        /* Slide-in Detail Drawer for Polling Place & Urnas */
+        /* Slide-in Detail Drawer for Polling Place, Urnas & Demographics */
         #detailDrawer {{
             position: absolute;
             top: 20px;
-            right: -480px;
-            width: 440px;
+            right: -520px;
+            width: 480px;
             max-height: calc(100vh - 40px);
-            background: rgba(15, 23, 42, 0.96);
-            backdrop-filter: blur(12px);
+            background: rgba(15, 23, 42, 0.97);
+            backdrop-filter: blur(14px);
             border: 1px solid #334155;
             border-radius: 16px;
             box-shadow: -10px 15px 40px rgba(0,0,0,0.7);
@@ -497,7 +576,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
             overflow-y: auto;
             transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             padding: 20px;
-            gap: 14px;
+            gap: 12px;
         }}
         #detailDrawer.open {{
             right: 20px;
@@ -531,13 +610,13 @@ def gerar_heatmap_dashboard_html(df, output_path):
             background: #0b0f19;
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 14px;
+            padding: 12px 14px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }}
         .detail-card-title {{
-            font-size: 0.75rem;
+            font-size: 0.74rem;
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -551,8 +630,8 @@ def gerar_heatmap_dashboard_html(df, output_path):
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 12px;
-            border-radius: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
             border: 1px solid var(--border-color);
             background: #111827;
         }}
@@ -563,6 +642,25 @@ def gerar_heatmap_dashboard_html(df, output_path):
         .candidate-card.bolsonaro {{
             border-color: rgba(59, 130, 246, 0.4);
             background: rgba(59, 130, 246, 0.08);
+        }}
+
+        .demo-bar-row {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.76rem;
+            color: #cbd5e1;
+            margin-bottom: 2px;
+        }}
+        .demo-bar-track {{
+            width: 100%;
+            height: 6px;
+            background: #1f2937;
+            border-radius: 3px;
+            overflow: hidden;
+            display: flex;
+            margin-top: 2px;
+            margin-bottom: 6px;
         }}
 
         /* Custom Leaflet Popups */
@@ -578,26 +676,26 @@ def gerar_heatmap_dashboard_html(df, output_path):
         .popup-card {{
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
             min-width: 280px;
             max-width: 320px;
         }}
         .popup-school {{
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             font-weight: 800;
             color: #ffffff;
             line-height: 1.3;
         }}
         .popup-city {{
-            font-size: 0.75rem;
+            font-size: 0.74rem;
             color: #94a3b8;
-            margin-top: 2px;
+            margin-top: 1px;
         }}
         .popup-metric-row {{
             display: flex;
             justify-content: space-between;
-            font-size: 0.8rem;
-            padding: 3px 0;
+            font-size: 0.78rem;
+            padding: 2px 0;
         }}
         .vote-bar-container {{
             width: 100%;
@@ -622,7 +720,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
             background: #1e293b;
             color: #f8fafc;
             text-decoration: none;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             font-weight: 600;
             border: 1px solid #334155;
             cursor: pointer;
@@ -639,56 +737,85 @@ def gerar_heatmap_dashboard_html(df, output_path):
     <div id="sidebar">
         <!-- Header -->
         <div>
-            <div style="display: flex; gap: 8px;">
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <span class="badge-header badge-salvador"><i class="fa-solid fa-location-dot"></i> Salvador (Padrão)</span>
                 <span class="badge-header"><i class="fa-solid fa-fire"></i> Heatmap 2026</span>
-                <span class="badge-header badge-amber"><i class="fa-solid fa-check-to-slot"></i> Urnas Eleitorais</span>
+                <span class="badge-header badge-amber"><i class="fa-solid fa-users"></i> Demografia</span>
             </div>
-            <h1>Concentração de Votos (13) & Urnas</h1>
-            <p class="subtitle">Clique em qualquer urna ou ponto no mapa para inspecionar os votos e modelos de urna.</p>
+            <h1>Urnas, Votos & Demografia</h1>
+            <p class="subtitle">Cruzamento geográfico de seções, perfil do eleitorado (gênero, idade, escolaridade) e votação presidencial.</p>
         </div>
 
-        <!-- KPI Cards -->
-        <div class="kpi-grid">
-            <div class="kpi-card pt-glow">
-                <div class="kpi-title">Votos 13 (Lula / PT) <i class="fa-solid fa-fire" style="color:#f87171;"></i></div>
-                <div class="kpi-val red" id="kpiVotos13">{total_votos_13:,}</div>
-                <div class="kpi-sub" id="kpiPct13">{pct_13_global}% dos votos válidos</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-title">Votos 22 (Flávio / PL) <i class="fa-solid fa-flag" style="color:#60a5fa;"></i></div>
-                <div class="kpi-val blue" id="kpiVotos22">{total_votos_22:,}</div>
-                <div class="kpi-sub" id="kpiPct22">{round((total_votos_22/total_votos_geral)*100, 1)}% dos válidos</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-title">Locais Mapeados <i class="fa-solid fa-school" style="color:#38bdf8;"></i></div>
-                <div class="kpi-val emerald" id="kpiLocais">{total_locais:,}</div>
-                <div class="kpi-sub" id="kpiSecoes">{total_secoes:,} seções eleitorais</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-title">Urnas UE2015 <i class="fa-solid fa-box-archive" style="color:#fbbf24;"></i></div>
-                <div class="kpi-val amber" id="kpiUE2015">{total_ue2015:,}</div>
-                <div class="kpi-sub" id="kpiUE2020">{total_ue2020:,} urnas UE2020+</div>
+        <!-- KPIs Eleitorais & Demográficos -->
+        <div>
+            <div class="kpi-grid">
+                <div class="kpi-card pt-glow">
+                    <div class="kpi-title">Votos 13 (Lula) <i class="fa-solid fa-fire" style="color:#f87171;"></i></div>
+                    <div class="kpi-val red" id="kpiVotos13">-</div>
+                    <div class="kpi-sub" id="kpiPct13">- dos válidos</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Votos 22 (Flávio) <i class="fa-solid fa-flag" style="color:#60a5fa;"></i></div>
+                    <div class="kpi-val blue" id="kpiVotos22">-</div>
+                    <div class="kpi-sub" id="kpiPct22">- dos válidos</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Locais & Urnas <i class="fa-solid fa-school" style="color:#38bdf8;"></i></div>
+                    <div class="kpi-val emerald" id="kpiLocais">-</div>
+                    <div class="kpi-sub" id="kpiSecoes">- seções</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Mulheres (Gênero) <i class="fa-solid fa-venus" style="color:#f472b6;"></i></div>
+                    <div class="kpi-val pink" id="kpiPctFem">-</div>
+                    <div class="kpi-sub" id="kpiTotalFem">- eleitoras</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Ensino Superior <i class="fa-solid fa-graduation-cap" style="color:#c084fc;"></i></div>
+                    <div class="kpi-val purple" id="kpiPctSup">-</div>
+                    <div class="kpi-sub" id="kpiTotalSup">- eleitores</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Idosos (60+ Anos) <i class="fa-solid fa-person-cane" style="color:#fbbf24;"></i></div>
+                    <div class="kpi-val amber" id="kpiPctIdo">-</div>
+                    <div class="kpi-sub" id="kpiTotalIdo">- eleitores</div>
+                </div>
             </div>
         </div>
 
-        <!-- Seletor de Camada Heatmap -->
+        <!-- Seletor de Camada Heatmap (Eleitoral + Demográfico) -->
         <div class="control-panel">
-            <div class="panel-header"><i class="fa-solid fa-layer-group"></i> Camada do Heatmap</div>
+            <div class="panel-header"><i class="fa-solid fa-layer-group"></i> Camada Ativa do Heatmap</div>
             <div class="mode-selector">
                 <button class="mode-btn active" data-mode="votos13" id="btnMode13">
-                    <span><i class="fa-solid fa-fire text-red-500" style="color:#ef4444; margin-right:6px;"></i> Volume Total de Votos no 13</span>
+                    <span><i class="fa-solid fa-fire text-red-500" style="color:#ef4444; margin-right:4px;"></i> Votos no 13</span>
                     <i class="fa-solid fa-check"></i>
                 </button>
                 <button class="mode-btn" data-mode="pct13" id="btnModePct13">
-                    <span><i class="fa-solid fa-percent" style="color:#f87171; margin-right:6px;"></i> Intensidade de Domínio (% Votos 13)</span>
+                    <span><i class="fa-solid fa-percent" style="color:#f87171; margin-right:4px;"></i> % Votos 13</span>
                     <i class="fa-solid fa-chevron-right"></i>
                 </button>
                 <button class="mode-btn mode-22" data-mode="votos22" id="btnMode22">
-                    <span><i class="fa-solid fa-chart-column" style="color:#3b82f6; margin-right:6px;"></i> Volume Total de Votos no 22</span>
+                    <span><i class="fa-solid fa-chart-column" style="color:#3b82f6; margin-right:4px;"></i> Votos no 22</span>
                     <i class="fa-solid fa-chevron-right"></i>
                 </button>
-                <button class="mode-btn mode-u15" data-mode="urnasUE2015" id="btnModeU15">
-                    <span><i class="fa-solid fa-box-archive" style="color:#f59e0b; margin-right:6px;"></i> Concentração de Urnas UE2015</span>
+                <button class="mode-btn mode-purple" data-mode="demoSuperior" id="btnModeSup">
+                    <span><i class="fa-solid fa-graduation-cap" style="color:#a855f7; margin-right:4px;"></i> Ensino Superior</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+                <button class="mode-btn mode-pink" data-mode="demoFem" id="btnModeFem">
+                    <span><i class="fa-solid fa-venus" style="color:#ec4899; margin-right:4px;"></i> Mulheres (%)</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+                <button class="mode-btn mode-amber" data-mode="demoIdo" id="btnModeIdo">
+                    <span><i class="fa-solid fa-person-cane" style="color:#f59e0b; margin-right:4px;"></i> Idosos (60+)</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+                <button class="mode-btn mode-amber" data-mode="demoJov" id="btnModeJov">
+                    <span><i class="fa-solid fa-user-group" style="color:#38bdf8; margin-right:4px;"></i> Jovens (16-24)</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+                <button class="mode-btn mode-amber" data-mode="urnasUE2015" id="btnModeU15">
+                    <span><i class="fa-solid fa-box-archive" style="color:#f59e0b; margin-right:4px;"></i> Urnas UE2015</span>
                     <i class="fa-solid fa-chevron-right"></i>
                 </button>
             </div>
@@ -701,6 +828,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
             <div>
                 <label><i class="fa-solid fa-city"></i> Município:</label>
                 <select id="municipioSelect">
+                    <option value="SALVADOR" selected>SALVADOR (Padrão)</option>
                     <option value="">Todos os 417 Municípios da Bahia</option>
                 </select>
             </div>
@@ -720,10 +848,10 @@ def gerar_heatmap_dashboard_html(df, output_path):
             </div>
 
             <!-- Calibração de Sensibilidade do Heatmap -->
-            <div style="border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: 4px;">
-                <div class="panel-header" style="margin-bottom: 8px;"><i class="fa-solid fa-wand-magic-sparkles" style="color:#f59e0b;"></i> Calibração do Heatmap</div>
+            <div style="border-top: 1px solid var(--border-color); padding-top: 8px; margin-top: 2px;">
+                <div class="panel-header" style="margin-bottom: 6px;"><i class="fa-solid fa-wand-magic-sparkles" style="color:#f59e0b;"></i> Calibração Térmica</div>
                 
-                <div style="margin-bottom: 8px;">
+                <div style="margin-bottom: 6px;">
                     <label><i class="fa-solid fa-chart-line"></i> Escala de Comparação:</label>
                     <select id="scaleModeSelect">
                         <option value="relativo" selected>🎯 Relativa ao Filtro Atual (Recomendado)</option>
@@ -732,22 +860,22 @@ def gerar_heatmap_dashboard_html(df, output_path):
                     </select>
                 </div>
 
-                <div style="margin-bottom: 8px;">
+                <div style="margin-bottom: 6px;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <label style="margin: 0;"><i class="fa-solid fa-bolt" style="color:#ef4444;"></i> Sensibilidade / Ganho Térmico:</label>
                         <span class="range-val" id="gainLabel">1.8x</span>
                     </div>
-                    <div class="range-container" style="margin-top: 4px;">
+                    <div class="range-container" style="margin-top: 3px;">
                         <input type="range" id="gainSlider" min="0.5" max="4.0" step="0.1" value="1.8" />
                     </div>
                 </div>
 
-                <div style="margin-bottom: 8px;">
+                <div style="margin-bottom: 6px;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <label style="margin: 0;"><i class="fa-solid fa-circle-dot" style="color:#38bdf8;"></i> Raio de Dispersão:</label>
                         <span class="range-val" id="radiusLabel">35px</span>
                     </div>
-                    <div class="range-container" style="margin-top: 4px;">
+                    <div class="range-container" style="margin-top: 3px;">
                         <input type="range" id="radiusSlider" min="15" max="80" value="35" />
                     </div>
                 </div>
@@ -757,13 +885,13 @@ def gerar_heatmap_dashboard_html(df, output_path):
                         <label style="margin: 0;"><i class="fa-solid fa-filter-circle-dollar"></i> Mínimo de Votos no 13:</label>
                         <span class="range-val" id="minVotesLabel">0</span>
                     </div>
-                    <div class="range-container" style="margin-top: 4px;">
+                    <div class="range-container" style="margin-top: 3px;">
                         <input type="range" id="minVotesSlider" min="0" max="2500" step="50" value="0" />
                     </div>
                 </div>
             </div>
 
-            <button class="toggle-layer-btn active" id="toggleMarkersBtn" style="margin-top: 6px;">
+            <button class="toggle-layer-btn active" id="toggleMarkersBtn" style="margin-top: 4px;">
                 <span><i class="fa-solid fa-location-dot"></i> Exibir Marcadores / Colégios</span>
                 <i class="fa-solid fa-eye" id="markersEyeIcon"></i>
             </button>
@@ -771,14 +899,14 @@ def gerar_heatmap_dashboard_html(df, output_path):
 
         <!-- Top Hotspots Votos 13 -->
         <div class="control-panel">
-            <div class="panel-header"><i class="fa-solid fa-trophy" style="color:#ef4444;"></i> Top Colégios em Votos (13)</div>
-            <div id="hotspotsList" style="display: flex; flex-direction: column; gap: 8px;">
+            <div class="panel-header"><i class="fa-solid fa-trophy" style="color:#ef4444;"></i> Top Colégios do Filtro (Votos 13)</div>
+            <div id="hotspotsList" style="display: flex; flex-direction: column; gap: 6px;">
                 <!-- Dinâmico via JS -->
             </div>
         </div>
 
         <div style="margin-top: auto; font-size: 0.72rem; color: #64748b; line-height: 1.4; padding-top: 10px; border-top: 1px solid var(--border-color);">
-            <i class="fa-solid fa-shield-halved"></i> <strong>Fonte Oficial:</strong> Dados Abertos do TSE 2026 (Boletins de Urna, Locais de Votação e Correspondências de Urnas).
+            <i class="fa-solid fa-shield-halved"></i> <strong>Fonte Oficial:</strong> Dados Abertos do TSE 2026 (Boletins de Urna, Perfil do Eleitorado e Correspondências).
         </div>
     </div>
 
@@ -811,15 +939,15 @@ def gerar_heatmap_dashboard_html(df, output_path):
                 <div class="detail-card-title"><i class="fa-solid fa-box-archive" style="color:#fbbf24;"></i> Urnas e Seções do Local</div>
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
                     <div style="background:#111827; padding:8px 10px; border-radius:8px; text-align:center;">
-                        <div style="font-size:0.7rem; color:#94a3b8;">Seções</div>
+                        <div style="font-size:0.68rem; color:#94a3b8;">Seções</div>
                         <div id="drawerSecVal" style="font-size:1.15rem; font-weight:800; color:#ffffff; font-family:var(--font-mono);">0</div>
                     </div>
                     <div style="background:#111827; padding:8px 10px; border-radius:8px; text-align:center; border: 1px solid rgba(245, 158, 11, 0.3);">
-                        <div style="font-size:0.7rem; color:#fbbf24;">Urnas UE2015</div>
+                        <div style="font-size:0.68rem; color:#fbbf24;">Urnas UE2015</div>
                         <div id="drawerU15Val" style="font-size:1.15rem; font-weight:800; color:#fbbf24; font-family:var(--font-mono);">0</div>
                     </div>
                     <div style="background:#111827; padding:8px 10px; border-radius:8px; text-align:center; border: 1px solid rgba(56, 189, 248, 0.3);">
-                        <div style="font-size:0.7rem; color:#38bdf8;">Urnas UE2020+</div>
+                        <div style="font-size:0.68rem; color:#38bdf8;">Urnas UE2020+</div>
                         <div id="drawerU20Val" style="font-size:1.15rem; font-weight:800; color:#38bdf8; font-family:var(--font-mono);">0</div>
                     </div>
                 </div>
@@ -829,51 +957,103 @@ def gerar_heatmap_dashboard_html(df, output_path):
             <div class="detail-card">
                 <div class="detail-card-title"><i class="fa-solid fa-chart-pie" style="color:#ef4444;"></i> Votação para Presidente no Local</div>
                 
-                <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; flex-direction: column; gap: 6px;">
                     <div class="candidate-card lula">
                         <div>
-                            <div style="font-size: 0.85rem; font-weight: 800; color: #f87171;"><i class="fa-solid fa-circle-check"></i> Lula (13) - PT</div>
-                            <div style="font-size: 0.72rem; color: #94a3b8;">Votos válidos recebidos</div>
+                            <div style="font-size: 0.82rem; font-weight: 800; color: #f87171;"><i class="fa-solid fa-circle-check"></i> Lula (13) - PT</div>
+                            <div style="font-size: 0.7rem; color: #94a3b8;">Votos válidos recebidos</div>
                         </div>
                         <div style="text-align: right;">
-                            <div id="drawerV13Val" style="font-size: 1.15rem; font-weight: 800; color: #f87171; font-family: var(--font-mono);">0</div>
-                            <div id="drawerP13Val" style="font-size: 0.75rem; font-weight: 700; color: #fca5a5;">0%</div>
+                            <div id="drawerV13Val" style="font-size: 1.1rem; font-weight: 800; color: #f87171; font-family: var(--font-mono);">0</div>
+                            <div id="drawerP13Val" style="font-size: 0.74rem; font-weight: 700; color: #fca5a5;">0%</div>
                         </div>
                     </div>
 
                     <div class="candidate-card bolsonaro">
                         <div>
-                            <div style="font-size: 0.85rem; font-weight: 800; color: #60a5fa;"><i class="fa-solid fa-circle-check"></i> Bolsonaro (22) - PL</div>
-                            <div style="font-size: 0.72rem; color: #94a3b8;">Votos válidos recebidos</div>
+                            <div style="font-size: 0.82rem; font-weight: 800; color: #60a5fa;"><i class="fa-solid fa-circle-check"></i> Bolsonaro (22) - PL</div>
+                            <div style="font-size: 0.7rem; color: #94a3b8;">Votos válidos recebidos</div>
                         </div>
                         <div style="text-align: right;">
-                            <div id="drawerV22Val" style="font-size: 1.15rem; font-weight: 800; color: #60a5fa; font-family: var(--font-mono);">0</div>
-                            <div id="drawerP22Val" style="font-size: 0.75rem; font-weight: 700; color: #93c5fd;">0%</div>
+                            <div id="drawerV22Val" style="font-size: 1.1rem; font-weight: 800; color: #60a5fa; font-family: var(--font-mono);">0</div>
+                            <div id="drawerP22Val" style="font-size: 0.74rem; font-weight: 700; color: #93c5fd;">0%</div>
                         </div>
                     </div>
 
                     <div class="candidate-card" style="background:#111827;">
                         <div>
-                            <div style="font-size: 0.85rem; font-weight: 700; color: #cbd5e1;"><i class="fa-solid fa-circle-minus"></i> Outros / Brancos / Nulos</div>
-                            <div style="font-size: 0.72rem; color: #94a3b8;">Demais votos registrados</div>
+                            <div style="font-size: 0.82rem; font-weight: 700; color: #cbd5e1;"><i class="fa-solid fa-circle-minus"></i> Outros / Brancos / Nulos</div>
+                            <div style="font-size: 0.7rem; color: #94a3b8;">Demais votos registrados</div>
                         </div>
                         <div style="text-align: right;">
-                            <div id="drawerVoVal" style="font-size: 1.15rem; font-weight: 800; color: #cbd5e1; font-family: var(--font-mono);">0</div>
-                            <div id="drawerPoVal" style="font-size: 0.75rem; font-weight: 700; color: #94a3b8;">0%</div>
+                            <div id="drawerVoVal" style="font-size: 1.1rem; font-weight: 800; color: #cbd5e1; font-family: var(--font-mono);">0</div>
+                            <div id="drawerPoVal" style="font-size: 0.74rem; font-weight: 700; color: #94a3b8;">0%</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Barra Visual -->
-                <div style="margin-top: 4px;">
-                    <div style="display:flex; justify-content:space-between; font-size:0.75rem; font-weight:700; color:#94a3b8; margin-bottom:4px;">
+                <div style="margin-top: 2px;">
+                    <div style="display:flex; justify-content:space-between; font-size:0.72rem; font-weight:700; color:#94a3b8; margin-bottom:3px;">
                         <span>Total de Votos no Local:</span>
                         <span id="drawerVtVal" style="color:#ffffff; font-family:var(--font-mono);">0</span>
                     </div>
-                    <div class="vote-bar-container" style="height: 10px;">
+                    <div class="vote-bar-container" style="height: 8px;">
                         <div class="vote-bar-13" id="drawerBar13" style="width: 0%;"></div>
                         <div class="vote-bar-22" id="drawerBar22" style="width: 0%;"></div>
                         <div class="vote-bar-outros" id="drawerBarOutros" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Perfil Demográfico do Colégio -->
+            <div class="detail-card">
+                <div class="detail-card-title"><i class="fa-solid fa-users" style="color:#a855f7;"></i> Perfil Demográfico do Eleitorado Local</div>
+                
+                <!-- Gênero -->
+                <div>
+                    <div class="demo-bar-row">
+                        <span><i class="fa-solid fa-venus" style="color:#f472b6;"></i> Mulheres: <strong id="drawerFemVal">0%</strong></span>
+                        <span><i class="fa-solid fa-mars" style="color:#60a5fa;"></i> Homens: <strong id="drawerMascVal">0%</strong></span>
+                    </div>
+                    <div class="demo-bar-track">
+                        <div id="drawerBarFem" style="background:#ec4899; width:50%;"></div>
+                        <div id="drawerBarMasc" style="background:#3b82f6; width:50%;"></div>
+                    </div>
+                </div>
+
+                <!-- Faixa Etária -->
+                <div style="margin-top: 4px;">
+                    <div style="font-size:0.72rem; font-weight:700; color:#94a3b8; margin-bottom:3px;"><i class="fa-solid fa-cake-candles"></i> Faixa Etária:</div>
+                    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:4px; text-align:center; font-size:0.68rem;">
+                        <div style="background:#111827; padding:4px; border-radius:6px;">
+                            <div style="color:#38bdf8;">Jovens (16-24)</div>
+                            <strong id="drawerJovVal" style="color:#fff;">0%</strong>
+                        </div>
+                        <div style="background:#111827; padding:4px; border-radius:6px;">
+                            <div style="color:#34d399;">Adultos (25-44)</div>
+                            <strong id="drawerAduVal" style="color:#fff;">0%</strong>
+                        </div>
+                        <div style="background:#111827; padding:4px; border-radius:6px;">
+                            <div style="color:#fbbf24;">Maduros (45-59)</div>
+                            <strong id="drawerMadVal" style="color:#fff;">0%</strong>
+                        </div>
+                        <div style="background:#111827; padding:4px; border-radius:6px;">
+                            <div style="color:#f87171;">Idosos (60+)</div>
+                            <strong id="drawerIdoVal" style="color:#fff;">0%</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Escolaridade & Estado Civil -->
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin-top:4px; font-size:0.72rem;">
+                    <div style="background:#111827; padding:6px 8px; border-radius:8px;">
+                        <div style="color:#c084fc; font-weight:700;"><i class="fa-solid fa-graduation-cap"></i> Ensino Superior:</div>
+                        <div id="drawerSupVal" style="font-size:0.9rem; font-weight:800; color:#fff; font-family:var(--font-mono); margin-top:2px;">0%</div>
+                    </div>
+                    <div style="background:#111827; padding:6px 8px; border-radius:8px;">
+                        <div style="color:#fbbf24; font-weight:700;"><i class="fa-solid fa-ring"></i> Solteiros:</div>
+                        <div id="drawerSolVal" style="font-size:0.9rem; font-weight:800; color:#fff; font-family:var(--font-mono); margin-top:2px;">0%</div>
                     </div>
                 </div>
             </div>
@@ -897,10 +1077,10 @@ def gerar_heatmap_dashboard_html(df, output_path):
         // Formatação de números padrão BR
         const fmt = num => (num || 0).toLocaleString('pt-BR');
 
-        // Inicializar Mapa centrado na Bahia
+        // Inicializar Mapa centrado em Salvador (Padrão)
         const map = L.map('map', {{
             center: [-12.9714, -38.5014],
-            zoom: 7,
+            zoom: 12,
             preferCanvas: true
         }});
 
@@ -1005,16 +1185,32 @@ def gerar_heatmap_dashboard_html(df, output_path):
         const drawerBar13 = document.getElementById('drawerBar13');
         const drawerBar22 = document.getElementById('drawerBar22');
         const drawerBarOutros = document.getElementById('drawerBarOutros');
+        
+        // Demografia Drawer Elements
+        const drawerFemVal = document.getElementById('drawerFemVal');
+        const drawerMascVal = document.getElementById('drawerMascVal');
+        const drawerBarFem = document.getElementById('drawerBarFem');
+        const drawerBarMasc = document.getElementById('drawerBarMasc');
+        const drawerJovVal = document.getElementById('drawerJovVal');
+        const drawerAduVal = document.getElementById('drawerAduVal');
+        const drawerMadVal = document.getElementById('drawerMadVal');
+        const drawerIdoVal = document.getElementById('drawerIdoVal');
+        const drawerSupVal = document.getElementById('drawerSupVal');
+        const drawerSolVal = document.getElementById('drawerSolVal');
+
         const drawerCenterBtn = document.getElementById('drawerCenterBtn');
         const drawerGmapsBtn = document.getElementById('drawerGmapsBtn');
 
-        // Preencher Dropdown de Municípios
+        // Preencher Dropdown de Municípios com Salvador pré-selecionado
         const municipios = [...new Set(rawData.map(d => d.m))].sort();
+        munSelect.innerHTML = '<option value="SALVADOR" selected>SALVADOR (Padrão)</option><option value="">Todos os 417 Municípios da Bahia</option>';
         municipios.forEach(m => {{
-            const opt = document.createElement('option');
-            opt.value = m;
-            opt.textContent = m;
-            munSelect.appendChild(opt);
+            if (m !== 'SALVADOR') {{
+                const opt = document.createElement('option');
+                opt.value = m;
+                opt.textContent = m;
+                munSelect.appendChild(opt);
+            }}
         }});
 
         // Gradients para Heatmaps
@@ -1038,6 +1234,30 @@ def gerar_heatmap_dashboard_html(df, output_path):
                 0.45: '#3b82f6',
                 0.75: '#60a5fa',
                 1.00: '#93c5fd'
+            }},
+            demoSuperior: {{
+                0.20: '#2e1065',
+                0.45: '#7c3aed',
+                0.75: '#c084fc',
+                1.00: '#f3e8ff'
+            }},
+            demoFem: {{
+                0.20: '#831843',
+                0.45: '#db2777',
+                0.75: '#f472b6',
+                1.00: '#fdf2f8'
+            }},
+            demoIdo: {{
+                0.20: '#78350f',
+                0.45: '#d97706',
+                0.75: '#fbbf24',
+                1.00: '#fef08a'
+            }},
+            demoJov: {{
+                0.20: '#083344',
+                0.45: '#0891b2',
+                0.75: '#38bdf8',
+                1.00: '#e0f2fe'
             }},
             urnasUE2015: {{
                 0.20: '#78350f',
@@ -1074,6 +1294,30 @@ def gerar_heatmap_dashboard_html(df, output_path):
             drawerBar13.style.width = d.p13 + '%';
             drawerBar22.style.width = d.p22 + '%';
             drawerBarOutros.style.width = Math.max(0, 100 - d.p13 - d.p22) + '%';
+
+            // Dados Demográficos do Colégio
+            const totalEleit = d.del > 0 ? d.del : (d.fem + d.mas);
+            const pFem = totalEleit > 0 ? ((d.fem / totalEleit) * 100).toFixed(1) : '0.0';
+            const pMasc = totalEleit > 0 ? ((d.mas / totalEleit) * 100).toFixed(1) : '0.0';
+            const pJov = totalEleit > 0 ? ((d.jov / totalEleit) * 100).toFixed(1) : '0.0';
+            const pAdu = totalEleit > 0 ? ((d.adu / totalEleit) * 100).toFixed(1) : '0.0';
+            const pMad = totalEleit > 0 ? ((d.mad / totalEleit) * 100).toFixed(1) : '0.0';
+            const pIdo = totalEleit > 0 ? ((d.ido / totalEleit) * 100).toFixed(1) : '0.0';
+            const pSup = totalEleit > 0 ? ((d.sup / totalEleit) * 100).toFixed(1) : '0.0';
+            const pSol = totalEleit > 0 ? ((d.sol / totalEleit) * 100).toFixed(1) : '0.0';
+
+            drawerFemVal.textContent = pFem + '% (' + fmt(d.fem) + ')';
+            drawerMascVal.textContent = pMasc + '% (' + fmt(d.mas) + ')';
+            drawerBarFem.style.width = pFem + '%';
+            drawerBarMasc.style.width = pMasc + '%';
+
+            drawerJovVal.textContent = pJov + '%';
+            drawerAduVal.textContent = pAdu + '%';
+            drawerMadVal.textContent = pMad + '%';
+            drawerIdoVal.textContent = pIdo + '%';
+
+            drawerSupVal.textContent = pSup + '% (' + fmt(d.sup) + ')';
+            drawerSolVal.textContent = pSol + '% (' + fmt(d.sol) + ')';
 
             drawerGmapsBtn.href = `https://www.google.com/maps?q=${{d.lat}},${{d.lng}}`;
 
@@ -1137,21 +1381,35 @@ def gerar_heatmap_dashboard_html(df, output_path):
             const totalV13 = filtered.reduce((acc, c) => acc + c.v13, 0);
             const totalV22 = filtered.reduce((acc, c) => acc + c.v22, 0);
             const totalGeral = filtered.reduce((acc, c) => acc + c.vt, 0);
-            const totalU15 = filtered.reduce((acc, c) => acc + c.u15, 0);
-            const totalU20 = filtered.reduce((acc, c) => acc + c.u20, 0);
             const totalSec = filtered.reduce((acc, c) => acc + c.sec, 0);
+            
+            const totalEleitRecorte = filtered.reduce((acc, c) => acc + (c.del > 0 ? c.del : (c.fem + c.mas)), 0);
+            const totalFemRecorte = filtered.reduce((acc, c) => acc + c.fem, 0);
+            const totalSupRecorte = filtered.reduce((acc, c) => acc + c.sup, 0);
+            const totalIdoRecorte = filtered.reduce((acc, c) => acc + c.ido, 0);
 
             document.getElementById('kpiVotos13').textContent = fmt(totalV13);
             document.getElementById('kpiVotos22').textContent = fmt(totalV22);
             document.getElementById('kpiLocais').textContent = fmt(filtered.length);
-            document.getElementById('kpiSecoes').textContent = fmt(totalSec) + ' seções eleitorais';
-            document.getElementById('kpiUE2015').textContent = fmt(totalU15);
-            document.getElementById('kpiUE2020').textContent = fmt(totalU20) + ' urnas UE2020+';
+            document.getElementById('kpiSecoes').textContent = fmt(totalSec) + ' seções';
 
             const pct13 = totalGeral > 0 ? ((totalV13 / totalGeral) * 100).toFixed(1) : '0.0';
             const pct22 = totalGeral > 0 ? ((totalV22 / totalGeral) * 100).toFixed(1) : '0.0';
-            document.getElementById('kpiPct13').textContent = pct13 + '% dos votos válidos';
+            document.getElementById('kpiPct13').textContent = pct13 + '% dos válidos';
             document.getElementById('kpiPct22').textContent = pct22 + '% dos válidos';
+
+            const pctFem = totalEleitRecorte > 0 ? ((totalFemRecorte / totalEleitRecorte) * 100).toFixed(1) : '0.0';
+            const pctSup = totalEleitRecorte > 0 ? ((totalSupRecorte / totalEleitRecorte) * 100).toFixed(1) : '0.0';
+            const pctIdo = totalEleitRecorte > 0 ? ((totalIdoRecorte / totalEleitRecorte) * 100).toFixed(1) : '0.0';
+
+            document.getElementById('kpiPctFem').textContent = pctFem + '%';
+            document.getElementById('kpiTotalFem').textContent = fmt(totalFemRecorte) + ' eleitoras';
+
+            document.getElementById('kpiPctSup').textContent = pctSup + '%';
+            document.getElementById('kpiTotalSup').textContent = fmt(totalSupRecorte) + ' c/ Superior';
+
+            document.getElementById('kpiPctIdo').textContent = pctIdo + '%';
+            document.getElementById('kpiTotalIdo').textContent = fmt(totalIdoRecorte) + ' idosos';
 
             // Preparar Pontos do Heatmap com Normalização Relativa ao Filtro Aplicado
             const heatPoints = [];
@@ -1164,12 +1422,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
 
                 filtered.forEach(d => {{
                     if (d.v13 > 0) {{
-                        let norm = 0;
-                        if (scaleMode === 'sqrt') {{
-                            norm = Math.sqrt(d.v13 / maxVal);
-                        }} else {{
-                            norm = Math.pow(d.v13 / refBase, 0.75);
-                        }}
+                        let norm = scaleMode === 'sqrt' ? Math.sqrt(d.v13 / maxVal) : Math.pow(d.v13 / refBase, 0.75);
                         const intensity = Math.min(1.0, norm * gain);
                         heatPoints.push([d.lat, d.lng, intensity]);
                     }}
@@ -1201,6 +1454,56 @@ def gerar_heatmap_dashboard_html(df, output_path):
                 }});
                 legendTitle.textContent = "Densidade Relativa de Votos (22 - Bolsonaro)";
                 legendBar.style.background = "linear-gradient(to right, #1e1b4b, #3b82f6, #60a5fa, #93c5fd)";
+            }} else if (currentMode === 'demoSuperior') {{
+                const vals = filtered.map(d => d.sup).filter(v => v > 0).sort((a, b) => a - b);
+                const maxVal = vals.length > 0 ? vals[vals.length - 1] : 50;
+                const p85 = vals.length > 0 ? vals[Math.floor(vals.length * 0.85)] : 50;
+                filtered.forEach(d => {{
+                    if (d.sup > 0) {{
+                        const norm = Math.pow(d.sup / Math.max(p85, 20), 0.75);
+                        const intensity = Math.min(1.0, norm * gain);
+                        heatPoints.push([d.lat, d.lng, intensity]);
+                    }}
+                }});
+                legendTitle.textContent = "Concentração de Ensino Superior (Classe Média/Alta)";
+                legendBar.style.background = "linear-gradient(to right, #2e1065, #7c3aed, #c084fc, #f3e8ff)";
+            }} else if (currentMode === 'demoFem') {{
+                filtered.forEach(d => {{
+                    const totalEl = d.del > 0 ? d.del : (d.fem + d.mas);
+                    if (totalEl > 20) {{
+                        const pFemLocal = d.fem / totalEl;
+                        const intensity = Math.min(1.0, Math.pow(pFemLocal, 1.5) * gain);
+                        heatPoints.push([d.lat, d.lng, intensity]);
+                    }}
+                }});
+                legendTitle.textContent = "Densidade de Eleitorado Feminino (Mulheres)";
+                legendBar.style.background = "linear-gradient(to right, #831843, #db2777, #f472b6, #fdf2f8)";
+            }} else if (currentMode === 'demoIdo') {{
+                const vals = filtered.map(d => d.ido).filter(v => v > 0).sort((a, b) => a - b);
+                const maxVal = vals.length > 0 ? vals[vals.length - 1] : 50;
+                const p85 = vals.length > 0 ? vals[Math.floor(vals.length * 0.85)] : 50;
+                filtered.forEach(d => {{
+                    if (d.ido > 0) {{
+                        const norm = Math.pow(d.ido / Math.max(p85, 20), 0.75);
+                        const intensity = Math.min(1.0, norm * gain);
+                        heatPoints.push([d.lat, d.lng, intensity]);
+                    }}
+                }});
+                legendTitle.textContent = "Concentração de Eleitores Idosos (60+ Anos)";
+                legendBar.style.background = "linear-gradient(to right, #78350f, #d97706, #fbbf24, #fef08a)";
+            }} else if (currentMode === 'demoJov') {{
+                const vals = filtered.map(d => d.jov).filter(v => v > 0).sort((a, b) => a - b);
+                const maxVal = vals.length > 0 ? vals[vals.length - 1] : 50;
+                const p85 = vals.length > 0 ? vals[Math.floor(vals.length * 0.85)] : 50;
+                filtered.forEach(d => {{
+                    if (d.jov > 0) {{
+                        const norm = Math.pow(d.jov / Math.max(p85, 20), 0.75);
+                        const intensity = Math.min(1.0, norm * gain);
+                        heatPoints.push([d.lat, d.lng, intensity]);
+                    }}
+                }});
+                legendTitle.textContent = "Concentração de Eleitores Jovens (16 a 24 Anos)";
+                legendBar.style.background = "linear-gradient(to right, #083344, #0891b2, #38bdf8, #e0f2fe)";
             }} else if (currentMode === 'urnasUE2015') {{
                 const maxU15 = Math.max(...filtered.map(d => d.u15), 1);
                 filtered.forEach(d => {{
@@ -1240,6 +1543,10 @@ def gerar_heatmap_dashboard_html(df, output_path):
                         fillOpacity: 0.85
                     }});
 
+                    const totalEl = d.del > 0 ? d.del : (d.fem + d.mas);
+                    const pFem = totalEl > 0 ? ((d.fem / totalEl) * 100).toFixed(0) : '0';
+                    const pSup = totalEl > 0 ? ((d.sup / totalEl) * 100).toFixed(0) : '0';
+
                     const popupContent = `
                         <div class="popup-card">
                             <div class="popup-header">
@@ -1247,30 +1554,26 @@ def gerar_heatmap_dashboard_html(df, output_path):
                                 <div class="popup-city"><i class="fa-solid fa-map-pin"></i> ${{d.b ? d.b + ', ' : ''}}${{d.m}}</div>
                             </div>
                             
-                            <div style="font-size:0.75rem; color:#cbd5e1; margin-top:2px;">
+                            <div style="font-size:0.74rem; color:#cbd5e1; margin-top:1px;">
                                 <strong>Endereço:</strong> ${{d.e || 'Não informado'}}
                             </div>
 
-                            <div style="background:#0f172a; padding:8px 10px; border-radius:8px; border:1px solid #1f293d; margin-top:4px;">
+                            <div style="background:#0f172a; padding:6px 10px; border-radius:8px; border:1px solid #1f293d; margin-top:3px;">
                                 <div class="popup-metric-row">
-                                    <span style="color:#94a3b8;">Total de Seções:</span>
-                                    <span style="font-weight:700;">${{d.sec}}</span>
+                                    <span style="color:#94a3b8;">Seções:</span>
+                                    <span style="font-weight:700;">${{d.sec}} (Urnas 15: <span style="color:#fbbf24;">${{d.u15}}</span> | 20: <span style="color:#38bdf8;">${{d.u20}}</span>)</span>
                                 </div>
                                 <div class="popup-metric-row">
-                                    <span style="color:#f59e0b;">Urnas UE2015:</span>
-                                    <span style="font-weight:700; color:#fbbf24;">${{d.u15}}</span>
+                                    <span style="color:#f472b6;">Mulheres: <strong>${{pFem}}%</strong></span>
+                                    <span style="color:#c084fc;">Superior: <strong>${{pSup}}%</strong></span>
                                 </div>
-                                <div class="popup-metric-row">
-                                    <span style="color:#38bdf8;">Urnas UE2020+:</span>
-                                    <span style="font-weight:700; color:#38bdf8;">${{d.u20}}</span>
-                                </div>
-                                <div class="popup-metric-row" style="border-top:1px solid #23314e; padding-top:4px; margin-top:4px;">
-                                    <span style="font-weight:700;">Total Votos Presidente:</span>
+                                <div class="popup-metric-row" style="border-top:1px solid #23314e; padding-top:3px; margin-top:2px;">
+                                    <span style="font-weight:700;">Votos Presidente:</span>
                                     <span style="font-weight:800; font-family:var(--font-mono);">${{fmt(d.vt)}}</span>
                                 </div>
                             </div>
 
-                            <div style="margin-top:4px;">
+                            <div style="margin-top:2px;">
                                 <div class="popup-metric-row">
                                     <span style="color:#f87171; font-weight:700;"><i class="fa-solid fa-square" style="color:#ef4444;"></i> Lula (13):</span>
                                     <span style="font-weight:800; color:#f87171;">${{fmt(d.v13)}} (${{d.p13}}%)</span>
@@ -1278,10 +1581,6 @@ def gerar_heatmap_dashboard_html(df, output_path):
                                 <div class="popup-metric-row">
                                     <span style="color:#60a5fa; font-weight:700;"><i class="fa-solid fa-square" style="color:#3b82f6;"></i> Bolsonaro (22):</span>
                                     <span style="font-weight:800; color:#60a5fa;">${{fmt(d.v22)}} (${{d.p22}}%)</span>
-                                </div>
-                                <div class="popup-metric-row">
-                                    <span style="color:#94a3b8;">Outros / Nulos:</span>
-                                    <span style="color:#cbd5e1;">${{fmt(d.vo)}}</span>
                                 </div>
 
                                 <div class="vote-bar-container">
@@ -1291,8 +1590,8 @@ def gerar_heatmap_dashboard_html(df, output_path):
                                 </div>
                             </div>
 
-                            <button onclick="window.openItemDrawerFromPopup('${{d.lat}}', '${{d.lng}}')" style="margin-top:8px; padding:6px 10px; background:#0284c7; border:none; border-radius:6px; color:#fff; font-size:0.75rem; font-weight:700; cursor:pointer; width:100%; display:flex; align-items:center; justify-content:center; gap:6px;">
-                                <i class="fa-solid fa-folder-open"></i> Ver Detalhes Completos da Urna
+                            <button onclick="window.openItemDrawerFromPopup('${{d.lat}}', '${{d.lng}}')" style="margin-top:6px; padding:6px 10px; background:#0284c7; border:none; border-radius:6px; color:#fff; font-size:0.74rem; font-weight:700; cursor:pointer; width:100%; display:flex; align-items:center; justify-content:center; gap:6px;">
+                                <i class="fa-solid fa-folder-open"></i> Ver Detalhes Completos e Demografia
                             </button>
                         </div>
                     `;
@@ -1314,7 +1613,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
             // Ajustar visualização se filtrar município
             if (selectedMun && filtered.length > 0) {{
                 const group = new L.featureGroup(filtered.map(d => L.marker([d.lat, d.lng])));
-                map.fitBounds(group.getBounds().pad(0.1));
+                map.fitBounds(group.getBounds().pad(0.08));
             }}
         }}
 
@@ -1343,13 +1642,12 @@ def gerar_heatmap_dashboard_html(df, output_path):
                 }}
             }});
 
-            // Se o clique foi próximo (aprox. 0.03 graus ~ 3km)
             if (closest && minDist < 0.04) {{
                 openItemDetails(closest, true);
             }}
         }});
 
-        // Renderizar Lista dos Top Colégios com maior concentração de votos no 13
+        // Renderizar Lista dos Top Colégios do Filtro Atual
         function renderHotspotsList(filtered) {{
             hotspotsList.innerHTML = '';
             const top10 = [...filtered].sort((a, b) => b.v13 - a.v13).slice(0, 6);
@@ -1360,7 +1658,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
                 item.innerHTML = `
                     <div class="hotspot-title">#${{idx + 1}} ${{d.l}}</div>
                     <div class="hotspot-sub">
-                        <span><i class="fa-solid fa-location-dot"></i> ${{d.m}}</span>
+                        <span><i class="fa-solid fa-location-dot"></i> ${{d.b ? d.b + ', ' : ''}}${{d.m}}</span>
                         <span style="color:#f87171; font-weight:700;">${{fmt(d.v13)}} votos (${{d.p13}}%)</span>
                     </div>
                 `;
@@ -1433,7 +1731,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
         urnaFilter.addEventListener('change', updateDashboard);
         searchInput.addEventListener('input', updateDashboard);
 
-        // Renderização Inicial
+        // Renderização Inicial com foco em Salvador
         updateDashboard();
     </script>
 </body>
