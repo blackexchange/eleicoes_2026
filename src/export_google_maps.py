@@ -200,7 +200,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bahia à Direita &bull; Mapeamento Eleitoral 2026</title>
+    <title>Bahia à Direita • Mapeamento Eleitoral 2026</title>
     <!-- Leaflet & MarkerCluster CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.min.css" />
