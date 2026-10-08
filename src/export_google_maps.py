@@ -893,8 +893,14 @@ def gerar_heatmap_dashboard_html(df, output_path):
             </div>
         </div>
 
-        <div style="margin-top: auto; font-size: 0.72rem; color: #64748b; line-height: 1.4; padding-top: 10px; border-top: 1px solid var(--border-color);">
-            <i class="fa-solid fa-shield-halved"></i> <strong>Fonte Oficial:</strong> Dados Abertos do TSE 2026 (Boletins de Urna, Comparecimento/Abstenção, Perfil Eleitorado e Correspondências).
+        <div style="margin-top: auto; font-size: 0.72rem; color: #64748b; line-height: 1.5; padding-top: 10px; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 4px;">
+            <div><i class="fa-solid fa-shield-halved"></i> <strong>Fonte Oficial:</strong> Dados Abertos do TSE 2026 (Boletins de Urna, Comparecimento/Abstenção, Perfil Eleitorado e Correspondências).</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px; padding-top: 4px; border-top: 1px dashed #1e293b;">
+                <span style="color: #94a3b8;"><i class="fa-solid fa-code" style="color:#38bdf8;"></i> Desenvolvido por: <strong style="color: #f8fafc;">By Neville</strong></span>
+                <a href="mailto:rodvillex@gmail.com" style="color: #38bdf8; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; font-weight: 600;" title="Enviar e-mail">
+                    <i class="fa-solid fa-envelope"></i> rodvillex@gmail.com
+                </a>
+            </div>
         </div>
     </div>
 
