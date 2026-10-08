@@ -207,6 +207,8 @@ def gerar_heatmap_dashboard_html(df, output_path):
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Chart.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
     <style>
         :root {{
             --bg-main: #0b0f19;
@@ -856,20 +858,59 @@ def gerar_heatmap_dashboard_html(df, output_path):
             justify-content: flex-end;
             background: #0b0f19;
         }}
+
+        /* Analytics Modal & Chart Styling */
+        .modal-content-large {{
+            max-width: 980px;
+            width: 95%;
+        }}
+        .analytics-grid {{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }}
+        @media (max-width: 860px) {{
+            .analytics-grid {{
+                grid-template-columns: 1fr;
+            }}
+        }}
+        .chart-box {{
+            background: #0b0f19;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-height: 300px;
+        }}
+        .chart-box-title {{
+            font-size: 0.82rem;
+            font-weight: 800;
+            color: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }}
     </style>
 </head>
 <body>
     <div id="sidebar">
-        <!-- Title Header Impactante c/ Botão de Ajuda -->
+        <!-- Title Header Impactante c/ Botões de Gráficos e Ajuda -->
         <div class="title-container">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
                 <div>
                     <h1>Bahia à Direita</h1>
                     <div class="title-subtitle">Mapeamento Eleitoral 2026</div>
                 </div>
-                <button id="btnOpenHelp" class="btn-help" title="Entenda todos os indicadores e a metodologia">
-                    <i class="fa-solid fa-circle-question"></i> Guia
-                </button>
+                <div style="display: flex; gap: 6px;">
+                    <button id="btnOpenAnalytics" class="btn-help" style="background:#1e1b4b; border-color:#6366f1; color:#a5b4fc;" title="Gráficos de Correlação: Ensino Superior x Zonas Eleitorais">
+                        <i class="fa-solid fa-chart-line"></i> Gráficos
+                    </button>
+                    <button id="btnOpenHelp" class="btn-help" title="Entenda todos os indicadores e a metodologia">
+                        <i class="fa-solid fa-circle-question"></i> Guia
+                    </button>
+                </div>
             </div>
             <p class="subtitle">Análise geoespacial de urnas, votação presidencial, abstenção e perfil demográfico.</p>
         </div>
@@ -1276,6 +1317,75 @@ def gerar_heatmap_dashboard_html(df, output_path):
             </div>
             <div class="modal-footer">
                 <button class="btn-action" id="btnModalOk" style="background: #0284c7; border-color: #38bdf8; padding: 8px 20px;"><i class="fa-solid fa-check"></i> Entendi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Gráficos e Analytics (Ensino Superior x Zonas x Votos) -->
+    <div class="modal-overlay" id="analyticsModal">
+        <div class="modal-content modal-content-large">
+            <div class="modal-header">
+                <h2><i class="fa-solid fa-chart-line" style="color: #6366f1;"></i> Correlação: Ensino Superior vs. Votação por Zona</h2>
+                <button class="drawer-close-btn" id="btnCloseAnalytics" title="Fechar"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <!-- Barra de Controle do Gráfico -->
+                <div style="display: flex; justify-content: space-between; align-items: center; background: #0b0f19; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border-color); flex-wrap: wrap; gap: 8px;">
+                    <div style="font-size: 0.82rem; color: #94a3b8;">
+                        <i class="fa-solid fa-filter" style="color:#38bdf8;"></i> Recorte Geográfico das Zonas:
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn-action" id="btnScopeMun" style="background:#0284c7; border-color:#38bdf8; font-size:0.75rem; padding:6px 12px;"><i class="fa-solid fa-city"></i> Município Selecionado</button>
+                        <button class="btn-action" id="btnScopeBahia" style="background:#1e293b; border-color:#334155; font-size:0.75rem; padding:6px 12px;"><i class="fa-solid fa-earth-americas"></i> Toda a Bahia</button>
+                    </div>
+                </div>
+
+                <!-- Cards com Destaques Estatísticos -->
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                    <div class="guide-card" style="border-left: 4px solid #3b82f6;">
+                        <div style="font-size:0.72rem; font-weight:700; color:#94a3b8;">Correlação c/ Direita (Flávio)</div>
+                        <div id="statCorr22" style="font-size:1.1rem; font-weight:800; color:#60a5fa; font-family:var(--font-mono); margin-top:2px;">Forte Positiva (+)</div>
+                        <div style="font-size:0.68rem; color:#64748b;">Mais escolaridade ➔ Mais votos no 22</div>
+                    </div>
+                    <div class="guide-card" style="border-left: 4px solid #ef4444;">
+                        <div style="font-size:0.72rem; font-weight:700; color:#94a3b8;">Correlação c/ Esquerda (Lula)</div>
+                        <div id="statCorr13" style="font-size:1.1rem; font-weight:800; color:#f87171; font-family:var(--font-mono); margin-top:2px;">Forte Negativa (-)</div>
+                        <div style="font-size:0.68rem; color:#64748b;">Mais escolaridade ➔ Menos votos no 13</div>
+                    </div>
+                    <div class="guide-card" style="border-left: 4px solid #a855f7;">
+                        <div style="font-size:0.72rem; font-weight:700; color:#94a3b8;">Zona Líder em Superior</div>
+                        <div id="statTopSupZone" style="font-size:0.92rem; font-weight:800; color:#c084fc; margin-top:2px;">Zona 1</div>
+                        <div id="statTopSupPct" style="font-size:0.68rem; color:#cbd5e1;">41.8% com Ensino Superior</div>
+                    </div>
+                </div>
+
+                <!-- Grid com 2 Gráficos -->
+                <div class="analytics-grid">
+                    <!-- Gráfico 1: Scatter Plot -->
+                    <div class="chart-box">
+                        <div class="chart-box-title">
+                            <span><i class="fa-solid fa-braille" style="color:#38bdf8;"></i> Dispersão: % Ensino Superior x % Votos</span>
+                            <span style="font-size:0.7rem; color:#94a3b8; font-weight:normal;">Cada ponto = 1 Zona</span>
+                        </div>
+                        <div style="position: relative; flex: 1; min-height: 250px;">
+                            <canvas id="scatterChartCanvas"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico 2: Ranking por Zona -->
+                    <div class="chart-box">
+                        <div class="chart-box-title">
+                            <span><i class="fa-solid fa-ranking-star" style="color:#a855f7;"></i> Votos por Zona (Ordenadas por % Superior)</span>
+                            <span style="font-size:0.7rem; color:#94a3b8; font-weight:normal;">Maior % Superior ➔ Menor</span>
+                        </div>
+                        <div style="position: relative; flex: 1; min-height: 250px;">
+                            <canvas id="rankingChartCanvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-action" id="btnAnalyticsOk" style="background: #0284c7; border-color: #38bdf8; padding: 8px 20px;"><i class="fa-solid fa-check"></i> Fechar Gráficos</button>
             </div>
         </div>
     </div>
@@ -2113,6 +2223,241 @@ def gerar_heatmap_dashboard_html(df, output_path):
             setTimeout(() => {{
                 map.invalidateSize();
             }}, 360);
+        }});
+
+        // ==========================================
+        // MÓDULO DE ANALYTICS & GRÁFICOS (CHART.JS)
+        // ==========================================
+        const analyticsModal = document.getElementById('analyticsModal');
+        const btnOpenAnalytics = document.getElementById('btnOpenAnalytics');
+        const btnCloseAnalytics = document.getElementById('btnCloseAnalytics');
+        const btnAnalyticsOk = document.getElementById('btnAnalyticsOk');
+        const btnScopeMun = document.getElementById('btnScopeMun');
+        const btnScopeBahia = document.getElementById('btnScopeBahia');
+
+        let scatterChartInst = null;
+        let rankingChartInst = null;
+        let chartScopeMunOnly = true;
+
+        function getZoneAnalytics(scopeMunOnly = true) {{
+            const selectedMun = munSelect.value.toLowerCase();
+            const relevantData = (scopeMunOnly && selectedMun) ? rawData.filter(d => d.m.toLowerCase() === selectedMun) : rawData;
+            
+            const zonesMap = {{}};
+            relevantData.forEach(d => {{
+                if (!d.z) return;
+                const zList = d.z.split(',').map(s => s.trim()).filter(s => s && !isNaN(s));
+                zList.forEach(zStr => {{
+                    const z = parseInt(zStr, 10);
+                    if (!zonesMap[z]) {{
+                        zonesMap[z] = {{
+                            zona: z,
+                            v13: 0,
+                            v22: 0,
+                            vt: 0,
+                            sup: 0,
+                            del: 0,
+                            mun: d.m
+                        }};
+                    }}
+                    zonesMap[z].v13 += (d.v13 / zList.length);
+                    zonesMap[z].v22 += (d.v22 / zList.length);
+                    zonesMap[z].vt += (d.vt / zList.length);
+                    zonesMap[z].sup += (d.sup / zList.length);
+                    const totalEl = d.del > 0 ? d.del : (d.fem + d.mas);
+                    zonesMap[z].del += (totalEl / zList.length);
+                }});
+            }});
+
+            const zoneList = Object.values(zonesMap).map(z => {{
+                const p13 = z.vt > 0 ? (z.v13 / z.vt) * 100 : 0;
+                const p22 = z.vt > 0 ? (z.v22 / z.vt) * 100 : 0;
+                const pSup = z.del > 0 ? (z.sup / z.del) * 100 : 0;
+                return {{
+                    zona: z.zona,
+                    label: `Zona ${{z.zona}} (${{z.mun}})`,
+                    p13: parseFloat(p13.toFixed(1)),
+                    p22: parseFloat(p22.toFixed(1)),
+                    pSup: parseFloat(pSup.toFixed(1)),
+                    vt: Math.round(z.vt),
+                    v22: Math.round(z.v22),
+                    v13: Math.round(z.v13),
+                    sup: Math.round(z.sup),
+                    mun: z.mun
+                }};
+            }});
+
+            return zoneList;
+        }}
+
+        function renderAnalyticsCharts() {{
+            const data = getZoneAnalytics(chartScopeMunOnly);
+            if (!data || data.length === 0) return;
+
+            // Ordenar para Ranking (Maior % Superior ➔ Menor)
+            const sortedBySup = [...data].sort((a, b) => b.pSup - a.pSup);
+            const topSup = sortedBySup[0];
+
+            document.getElementById('statTopSupZone').textContent = topSup ? `Zona ${{topSup.zona}} (${{topSup.mun}})` : '-';
+            document.getElementById('statTopSupPct').textContent = topSup ? `${{topSup.pSup}}% c/ Ensino Superior` : '-';
+
+            // 1. Gráfico de Dispersão (Scatter Plot)
+            const scatterCtx = document.getElementById('scatterChartCanvas').getContext('2d');
+            if (scatterChartInst) {{
+                scatterChartInst.destroy();
+            }}
+
+            const scatter22Data = data.map(d => ({{ x: d.pSup, y: d.p22, zona: d.zona, mun: d.mun }}));
+            const scatter13Data = data.map(d => ({{ x: d.pSup, y: d.p13, zona: d.zona, mun: d.mun }}));
+
+            scatterChartInst = new Chart(scatterCtx, {{
+                type: 'scatter',
+                data: {{
+                    datasets: [
+                        {{
+                            label: '🔵 Flávio Bolsonaro (22)',
+                            data: scatter22Data,
+                            backgroundColor: '#3b82f6',
+                            borderColor: '#60a5fa',
+                            pointRadius: 7,
+                            pointHoverRadius: 10
+                        }},
+                        {{
+                            label: '🔴 Lula (13)',
+                            data: scatter13Data,
+                            backgroundColor: '#ef4444',
+                            borderColor: '#f87171',
+                            pointRadius: 7,
+                            pointHoverRadius: 10
+                        }}
+                    ]
+                }},
+                options: {{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {{
+                        x: {{
+                            title: {{ display: true, text: '% Eleitores com Ensino Superior na Zona', color: '#94a3b8' }},
+                            grid: {{ color: '#1e293b' }},
+                            ticks: {{ color: '#cbd5e1', callback: v => v + '%' }}
+                        }},
+                        y: {{
+                            title: {{ display: true, text: '% Votos Válidos do Candidato', color: '#94a3b8' }},
+                            grid: {{ color: '#1e293b' }},
+                            ticks: {{ color: '#cbd5e1', callback: v => v + '%' }},
+                            min: 0,
+                            max: 100
+                        }}
+                    }},
+                    plugins: {{
+                        legend: {{ labels: {{ color: '#f8fafc', font: {{ family: 'Outfit', weight: 'bold' }} }} }},
+                        tooltip: {{
+                            callbacks: {{
+                                label: ctx => {{
+                                    const p = ctx.raw;
+                                    return `Zona ${{p.zona}} (${{p.mun}}): ${{p.x}}% Sup ➔ ${{p.y}}% Votos`;
+                                }}
+                            }}
+                        }}
+                    }}
+                }}
+            }});
+
+            // 2. Gráfico de Ranking de Zonas (Barras Divergentes)
+            const rankingCtx = document.getElementById('rankingChartCanvas').getContext('2d');
+            if (rankingChartInst) {{
+                rankingChartInst.destroy();
+            }}
+
+            const topSlice = sortedBySup.slice(0, 19);
+            const labels = topSlice.map(d => `Z${{d.zona}} (${{d.pSup}}% Sup)`);
+            const p22Vals = topSlice.map(d => d.p22);
+            const p13Vals = topSlice.map(d => d.p13);
+
+            rankingChartInst = new Chart(rankingCtx, {{
+                type: 'bar',
+                data: {{
+                    labels: labels,
+                    datasets: [
+                        {{
+                            label: '% Direita (22)',
+                            data: p22Vals,
+                            backgroundColor: '#3b82f6',
+                            borderRadius: 4
+                        }},
+                        {{
+                            label: '% Esquerda (13)',
+                            data: p13Vals,
+                            backgroundColor: '#ef4444',
+                            borderRadius: 4
+                        }}
+                    ]
+                }},
+                options: {{
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {{
+                        x: {{
+                            stacked: false,
+                            grid: {{ color: '#1e293b' }},
+                            ticks: {{ color: '#cbd5e1', callback: v => v + '%' }},
+                            max: 100
+                        }},
+                        y: {{
+                            grid: {{ color: '#1e293b' }},
+                            ticks: {{ color: '#cbd5e1', font: {{ size: 10 }} }}
+                        }}
+                    }},
+                    plugins: {{
+                        legend: {{ labels: {{ color: '#f8fafc', font: {{ family: 'Outfit', weight: 'bold' }} }} }}
+                    }}
+                }}
+            }});
+        }}
+
+        function openAnalyticsModal() {{
+            analyticsModal.classList.add('open');
+            setTimeout(() => {{
+                renderAnalyticsCharts();
+            }}, 150);
+        }}
+        function closeAnalyticsModal() {{
+            analyticsModal.classList.remove('open');
+        }}
+
+        btnOpenAnalytics.addEventListener('click', openAnalyticsModal);
+        btnCloseAnalytics.addEventListener('click', closeAnalyticsModal);
+        btnAnalyticsOk.addEventListener('click', closeAnalyticsModal);
+
+        btnScopeMun.addEventListener('click', () => {{
+            chartScopeMunOnly = true;
+            btnScopeMun.style.background = '#0284c7';
+            btnScopeMun.style.borderColor = '#38bdf8';
+            btnScopeBahia.style.background = '#1e293b';
+            btnScopeBahia.style.borderColor = '#334155';
+            renderAnalyticsCharts();
+        }});
+
+        btnScopeBahia.addEventListener('click', () => {{
+            chartScopeMunOnly = false;
+            btnScopeBahia.style.background = '#0284c7';
+            btnScopeBahia.style.borderColor = '#38bdf8';
+            btnScopeMun.style.background = '#1e293b';
+            btnScopeMun.style.borderColor = '#334155';
+            renderAnalyticsCharts();
+        }});
+
+        analyticsModal.addEventListener('click', (e) => {{
+            if (e.target === analyticsModal) {{
+                closeAnalyticsModal();
+            }}
+        }});
+
+        window.addEventListener('keydown', (e) => {{
+            if (e.key === 'Escape' && analyticsModal.classList.contains('open')) {{
+                closeAnalyticsModal();
+            }}
         }});
 
         // Renderização Inicial com foco em Salvador e suas Zonas
