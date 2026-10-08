@@ -707,14 +707,135 @@ def gerar_heatmap_dashboard_html(df, output_path):
             border-color: #38bdf8;
             color: #38bdf8;
         }}
+
+        /* Botão de Ajuda / Metodologia */
+        .btn-help {{
+            padding: 5px 10px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: #38bdf8;
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }}
+        .btn-help:hover {{
+            background: #0284c7;
+            border-color: #38bdf8;
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
+        }}
+
+        /* Modal Overlay & Card */
+        .modal-overlay {{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.78);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }}
+        .modal-overlay.open {{
+            display: flex;
+            opacity: 1;
+        }}
+        .modal-content {{
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            width: 92%;
+            max-width: 740px;
+            max-height: 86vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.85);
+            overflow: hidden;
+            transform: scale(0.95);
+            transition: transform 0.25s ease;
+        }}
+        .modal-overlay.open .modal-content {{
+            transform: scale(1);
+        }}
+        .modal-header {{
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0b0f19;
+        }}
+        .modal-header h2 {{
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #f8fafc;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }}
+        .modal-body {{
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            font-size: 0.84rem;
+            line-height: 1.5;
+            color: #cbd5e1;
+        }}
+        .modal-body::-webkit-scrollbar {{ width: 6px; }}
+        .modal-body::-webkit-scrollbar-thumb {{ background: #334155; border-radius: 4px; }}
+        
+        .guide-card {{
+            background: #0b0f19;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }}
+        .guide-card-title {{
+            font-size: 0.88rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }}
+        .modal-footer {{
+            padding: 12px 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            background: #0b0f19;
+        }}
     </style>
 </head>
 <body>
     <div id="sidebar">
-        <!-- Title Header Impactante -->
+        <!-- Title Header Impactante c/ Botão de Ajuda -->
         <div class="title-container">
-            <h1>Bahia à Direita</h1>
-            <div class="title-subtitle">Mapeamento Eleitoral 2026</div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
+                <div>
+                    <h1>Bahia à Direita</h1>
+                    <div class="title-subtitle">Mapeamento Eleitoral 2026</div>
+                </div>
+                <button id="btnOpenHelp" class="btn-help" title="Entenda todos os indicadores e a metodologia">
+                    <i class="fa-solid fa-circle-question"></i> Guia
+                </button>
+            </div>
             <p class="subtitle">Análise geoespacial de urnas, votação presidencial, abstenção e perfil demográfico.</p>
         </div>
 
@@ -1059,6 +1180,52 @@ def gerar_heatmap_dashboard_html(df, output_path):
             <div style="display: flex; gap: 8px; margin-top: auto;">
                 <button class="btn-action" id="drawerCenterBtn" style="flex:1;"><i class="fa-solid fa-crosshairs"></i> Focar no Mapa</button>
                 <a class="btn-action" id="drawerGmapsBtn" target="_blank" style="flex:1;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Google Maps</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Guia dos Indicadores e Metodologia -->
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fa-solid fa-circle-info" style="color: #38bdf8;"></i> Guia dos Indicadores & Metodologia</h2>
+                <button class="drawer-close-btn" id="btnCloseHelp" title="Fechar"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="guide-card" style="border-left: 4px solid #3b82f6;">
+                    <div class="guide-title" style="color: #60a5fa;"><i class="fa-solid fa-chart-simple"></i> 1. Votos Absolutos vs. % Percentual (Domínio)</div>
+                    <p><strong>• Votos Absolutos (Votos 22 / Votos 13):</strong> Reflete o <em>tamanho do colégio eleitoral</em> e o volume bruto de votos. Um colégio gigante com 4.000 eleitores terá uma mancha térmica forte mesmo que o percentual seja de apenas 35%.</p>
+                    <p><strong>• % Percentual (% 22 / % 13):</strong> Mede a <em>taxa de preferência ideológica</em> da comunidade local. Um colégio com 300 eleitores onde um candidato teve 65% acende com intensidade máxima, revelando redutos de forte fidelidade.</p>
+                </div>
+
+                <div class="guide-card" style="border-left: 4px solid #c084fc;">
+                    <div class="guide-title" style="color: #c084fc;"><i class="fa-solid fa-graduation-cap"></i> 2. Ensino Superior & Correlação Sociodemográfica</div>
+                    <p>Métrica extraída do <strong>Perfil do Eleitorado Oficial do TSE</strong> (cadastro biométrico). Mostra a concentração de eleitores com formação superior completa/incompleta.</p>
+                    <p style="color: #94a3b8; font-size: 0.78rem;"><em>💡 Nota de Análise:</em> Na Bahia e em Salvador, as áreas de maior concentração de ensino superior (bairros nobres e classe média) coincidem fortemente com as maiores votações de Flávio Bolsonaro (22).</p>
+                </div>
+
+                <div class="guide-card" style="border-left: 4px solid #fb923c;">
+                    <div class="guide-title" style="color: #fb923c;"><i class="fa-solid fa-user-xmark"></i> 3. Abstenção Eleitoral (%)</div>
+                    <p>Calculado como <code>(Eleitores Aptos - Votos Totais) / Eleitores Aptos</code>. Identifica a taxa de eleitores que não compareceram às urnas em cada colégio. Varia de 16% a mais de 35%, mapeando zonas de desmobilização cívica.</p>
+                </div>
+
+                <div class="guide-card" style="border-left: 4px solid #f59e0b;">
+                    <div class="guide-title" style="color: #f59e0b;"><i class="fa-solid fa-box-archive"></i> 4. Modelos de Urna (UE2015 vs UE2020+)</div>
+                    <p>Mapeia a distribuição logística das urnas eletrônicas fornecidas pelo TRE. Separa os modelos anteriores a 2020 (UE2015/UE2013/UE2009) dos modelos mais recentes com processadores atualizados (UE2020 e UE2022).</p>
+                </div>
+
+                <div class="guide-card" style="border-left: 4px solid #f472b6;">
+                    <div class="guide-title" style="color: #f472b6;"><i class="fa-solid fa-venus"></i> 5. Mulheres / Gênero (%)</div>
+                    <p>Percentual de eleitoras do gênero feminino cadastradas no colégio. Na Bahia, a maioria esmagadora das seções tem entre <strong>51% e 56%</strong> de mulheres, resultando em uma distribuição geográfica quase homogênea.</p>
+                </div>
+
+                <div class="guide-card" style="border-left: 4px solid #10b981;">
+                    <div class="guide-title" style="color: #34d399;"><i class="fa-solid fa-sliders"></i> 6. Filtro de Candidatos & Dominância</div>
+                    <p>Use o seletor <strong>Filtrar por Candidato</strong> para isolar seções onde um candidato obteve maioria dos votos válidos (vitória no colégio) ou atingiu patamares como ≥ 40%, ≥ 50% ou ≥ 70%.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-action" id="btnModalOk" style="background: #0284c7; border-color: #38bdf8; padding: 8px 20px;"><i class="fa-solid fa-check"></i> Entendi</button>
             </div>
         </div>
     </div>
@@ -1800,6 +1967,35 @@ def gerar_heatmap_dashboard_html(df, output_path):
         }});
         urnaFilter.addEventListener('change', updateDashboard);
         searchInput.addEventListener('input', updateDashboard);
+
+        // Controle do Modal de Ajuda / Metodologia
+        const helpModal = document.getElementById('helpModal');
+        const btnOpenHelp = document.getElementById('btnOpenHelp');
+        const btnCloseHelp = document.getElementById('btnCloseHelp');
+        const btnModalOk = document.getElementById('btnModalOk');
+
+        function openModal() {{
+            helpModal.classList.add('open');
+        }}
+        function closeModal() {{
+            helpModal.classList.remove('open');
+        }}
+
+        btnOpenHelp.addEventListener('click', openModal);
+        btnCloseHelp.addEventListener('click', closeModal);
+        btnModalOk.addEventListener('click', closeModal);
+
+        helpModal.addEventListener('click', (e) => {{
+            if (e.target === helpModal) {{
+                closeModal();
+            }}
+        }});
+
+        window.addEventListener('keydown', (e) => {{
+            if (e.key === 'Escape' && helpModal.classList.contains('open')) {{
+                closeModal();
+            }}
+        }});
 
         // Renderização Inicial com foco em Salvador
         updateDashboard();
