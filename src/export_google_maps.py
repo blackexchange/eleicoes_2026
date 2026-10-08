@@ -234,7 +234,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
             background: var(--bg-main);
             color: var(--text-main);
         }}
-        /* Sidebar Styling */
+        /* Sidebar Styling & Collapse Animation */
         #sidebar {{
             width: 460px;
             min-width: 460px;
@@ -248,6 +248,12 @@ def gerar_heatmap_dashboard_html(df, output_path):
             z-index: 1000;
             overflow-y: auto;
             position: relative;
+            transition: margin-left 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+        }}
+        #sidebar.collapsed {{
+            margin-left: -460px;
+            pointer-events: none;
+            opacity: 0;
         }}
         #sidebar::-webkit-scrollbar {{ width: 6px; }}
         #sidebar::-webkit-scrollbar-thumb {{ background: #334155; border-radius: 4px; }}
@@ -258,6 +264,35 @@ def gerar_heatmap_dashboard_html(df, output_path):
             position: relative;
         }}
         #map {{ width: 100%; height: 100%; background: #080c14; }}
+
+        /* Floating Sidebar Toggle Button */
+        .sidebar-toggle-btn {{
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1050;
+            background: rgba(15, 23, 42, 0.94);
+            backdrop-filter: blur(10px);
+            border: 1px solid #334155;
+            color: #f8fafc;
+            height: 38px;
+            padding: 0 14px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-weight: 700;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+            transition: all 0.2s ease;
+        }}
+        .sidebar-toggle-btn:hover {{
+            background: #0284c7;
+            border-color: #38bdf8;
+            color: #ffffff;
+            transform: translateY(-1px);
+        }}
 
         /* Title Header */
         .title-container {{
@@ -1027,6 +1062,12 @@ def gerar_heatmap_dashboard_html(df, output_path):
 
     <div id="map-container">
         <div id="map"></div>
+        
+        <!-- Botão Flutuante de Ocultar / Exibir Painel Estatístico -->
+        <button class="sidebar-toggle-btn" id="btnToggleSidebar" title="Ocultar ou Exibir Painel Lateral">
+            <i class="fa-solid fa-bars" id="toggleSidebarIcon"></i>
+            <span id="toggleSidebarText">Painel</span>
+        </button>
         
         <!-- Legend Overlay -->
         <div class="map-legend">
@@ -1995,6 +2036,29 @@ def gerar_heatmap_dashboard_html(df, output_path):
             if (e.key === 'Escape' && helpModal.classList.contains('open')) {{
                 closeModal();
             }}
+        }});
+
+        // Controle de Ocultar / Exibir Barra Lateral (Painel Estatístico)
+        const btnToggleSidebar = document.getElementById('btnToggleSidebar');
+        const sidebar = document.getElementById('sidebar');
+        const toggleSidebarIcon = document.getElementById('toggleSidebarIcon');
+        const toggleSidebarText = document.getElementById('toggleSidebarText');
+
+        btnToggleSidebar.addEventListener('click', () => {{
+            sidebar.classList.toggle('collapsed');
+            const isCollapsed = sidebar.classList.contains('collapsed');
+            if (isCollapsed) {{
+                toggleSidebarIcon.className = 'fa-solid fa-chart-simple';
+                toggleSidebarText.textContent = 'Exibir Painel';
+                btnToggleSidebar.title = 'Exibir Painel Estatístico';
+            }} else {{
+                toggleSidebarIcon.className = 'fa-solid fa-bars';
+                toggleSidebarText.textContent = 'Painel';
+                btnToggleSidebar.title = 'Ocultar Painel Estatístico';
+            }}
+            setTimeout(() => {{
+                map.invalidateSize();
+            }}, 360);
         }});
 
         // Renderização Inicial com foco em Salvador
