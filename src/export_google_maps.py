@@ -958,18 +958,20 @@ def gerar_heatmap_dashboard_html(df, output_path):
             <div>
                 <label><i class="fa-solid fa-user-check" style="color:#38bdf8;"></i> Filtrar por Candidato:</label>
                 <select id="candidatoSelect">
-                    <option value="all">Todos os Candidatos (Votação Geral)</option>
-                    <option value="22" selected>🔵 Flávio Bolsonaro (22) - Foco & Calor do 22</option>
-                    <option value="13">🔴 Lula (13) - Foco & Calor do 13</option>
-                    <option value="outros">⚪ Outros Candidatos / Nulos / Brancos</option>
-                    <option value="maioria_22">🔵 Colégios onde Bolsonaro (22) Venceu (Maioria)</option>
-                    <option value="maioria_13">🔴 Colégios onde Lula (13) Venceu (Maioria)</option>
-                    <option value="pct22_30">🔵 Bolsonaro (22) com mais de 30% dos Votos</option>
-                    <option value="pct22_40">🔵 Bolsonaro (22) com mais de 40% dos Votos</option>
-                    <option value="pct22_50">🔵 Bolsonaro (22) com mais de 50% dos Votos</option>
-                    <option value="pct13_30">🔴 Lula (13) com mais de 30% dos Votos</option>
-                    <option value="pct13_50">🔴 Lula (13) com mais de 50% dos Votos</option>
-                    <option value="pct13_70">🔴 Lula (13) com mais de 70% dos Votos</option>
+                    <option value="all" selected>Todos os Candidatos (Votação Geral)</option>
+                    <option value="22">🔵 Flávio Bolsonaro (22) - Vitória / Maioria</option>
+                    <option value="13">🔴 Lula (13) - Vitória / Maioria</option>
+                    <option value="pct22_30">🔵 Flávio Bolsonaro (22) &gt; 30% dos Votos</option>
+                    <option value="pct22_40">🔵 Flávio Bolsonaro (22) &gt; 40% dos Votos</option>
+                    <option value="pct13_30">🔴 Lula (13) &gt; 30% dos Votos</option>
+                    <option value="pct13_40">🔴 Lula (13) &gt; 40% dos Votos</option>
+                    <option value="pct13_50">🔴 Lula (13) &gt; 50% dos Votos</option>
+                    <option value="pct13_70">🔴 Lula (13) &gt; 70% dos Votos</option>
+                    <option value="outros_exp">⚪ Outros Candidatos / 3ª Via &gt; 8% dos Votos</option>
+                    <option value="outros_top">⚪ Outros Candidatos / 3ª Via &gt; 10% dos Votos</option>
+                    <option value="zero_22">🚫 Bolsonaro (22) = 0 Votos (Zerar Bolsonaro)</option>
+                    <option value="zero_13">🚫 Lula (13) = 0 Votos (Zerar Lula)</option>
+                    <option value="zero_outros">⚡ Polarização Pura (Outros = 0 Votos)</option>
                 </select>
             </div>
 
@@ -1774,18 +1776,22 @@ def gerar_heatmap_dashboard_html(df, output_path):
                 if (selectedUrna === 'ue2015' && d.u15 === 0) return false;
                 if (selectedUrna === 'ue2020' && d.u20 === 0) return false;
                 
-                // Filtro Efetivo por Candidato / Dominância
-                if (selectedCand === '22' && d.v22 === 0) return false;
-                if (selectedCand === '13' && d.v13 === 0) return false;
-                if (selectedCand === 'outros' && d.vo === 0) return false;
-                if (selectedCand === 'maioria_22' && d.v22 <= d.v13) return false;
-                if (selectedCand === 'maioria_13' && d.v13 <= d.v22) return false;
+                // Filtro Efetivo por Candidato / Vitória / Limiares Reais
+                if (selectedCand === '22' && d.v22 <= d.v13) return false;
+                if (selectedCand === '13' && d.v13 <= d.v22) return false;
                 if (selectedCand === 'pct22_30' && d.p22 < 30) return false;
                 if (selectedCand === 'pct22_40' && d.p22 < 40) return false;
-                if (selectedCand === 'pct22_50' && d.p22 < 50) return false;
                 if (selectedCand === 'pct13_30' && d.p13 < 30) return false;
+                if (selectedCand === 'pct13_40' && d.p13 < 40) return false;
                 if (selectedCand === 'pct13_50' && d.p13 < 50) return false;
                 if (selectedCand === 'pct13_70' && d.p13 < 70) return false;
+
+                const pOutros = d.vt > 0 ? (d.vo / d.vt) * 100 : 0;
+                if (selectedCand === 'outros_exp' && pOutros < 8) return false;
+                if (selectedCand === 'outros_top' && pOutros < 10) return false;
+                if (selectedCand === 'zero_22' && d.v22 > 0) return false;
+                if (selectedCand === 'zero_13' && d.v13 > 0) return false;
+                if (selectedCand === 'zero_outros' && d.vo > 0) return false;
 
                 // Filtro de Votos Mínimos
                 if (minVotes > 0) {{
@@ -2221,14 +2227,10 @@ def gerar_heatmap_dashboard_html(df, output_path):
         // Eventos dos Controles
         candidatoSelect.addEventListener('change', () => {{
             const val = candidatoSelect.value;
-            if (val === '22' || val === 'maioria_22') {{
+            if (val === '22' || val.startsWith('pct22') || val === 'zero_13') {{
                 currentMode = 'votos22';
-            }} else if (val.startsWith('pct22')) {{
-                currentMode = 'pct22';
-            }} else if (val === '13' || val === 'maioria_13') {{
+            }} else if (val === '13' || val.startsWith('pct13') || val === 'zero_22') {{
                 currentMode = 'votos13';
-            }} else if (val.startsWith('pct13')) {{
-                currentMode = 'pct13';
             }}
             
             // Atualizar botões de modo do Heatmap
