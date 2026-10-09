@@ -1000,6 +1000,38 @@ def gerar_heatmap_dashboard_html(df, output_path):
             </div>
 
             <div>
+                <label><i class="fa-solid fa-venus-mars"></i> Gênero Predominante:</label>
+                <select id="generoFilter">
+                    <option value="all" selected>Todos os Gêneros (Geral)</option>
+                    <option value="fem">👩 Maioria Feminina (Mulheres)</option>
+                    <option value="mas">👨 Maioria Masculina (Homens)</option>
+                </select>
+            </div>
+
+            <div>
+                <label><i class="fa-solid fa-graduation-cap"></i> Grau de Escolaridade (Ensino):</label>
+                <select id="ensinoFilter">
+                    <option value="all" selected>Todos os Níveis de Ensino (Geral)</option>
+                    <option value="sup_alta">🎓 Ensino Superior - Alta Presença (&gt; 10%)</option>
+                    <option value="sup_top">⭐ Polo Universitário / Classe Alta (&gt; 20%)</option>
+                    <option value="medio">📚 Ensino Médio Predominante (&gt; 42%)</option>
+                    <option value="fundamental">🏫 Ensino Fundamental Predominante (&gt; 30%)</option>
+                    <option value="baixa">✏️ Baixa Escolaridade / Analfabeto (&gt; 28%)</option>
+                </select>
+            </div>
+
+            <div>
+                <label><i class="fa-solid fa-heart"></i> Estado Civil:</label>
+                <select id="estadoCivilFilter">
+                    <option value="all" selected>Todos os Estados Civis (Geral)</option>
+                    <option value="solteiros">💍 Solteiros Predominantes (&gt; 70%)</option>
+                    <option value="casados">👥 Casados / Famílias Tradicionais (&gt; 30%)</option>
+                    <option value="divorciados">💔 Divorciados / Separados (&gt; 4%)</option>
+                    <option value="viuvos">🕊️ Viúvos (&gt; 3%)</option>
+                </select>
+            </div>
+
+            <div>
                 <label><i class="fa-solid fa-filter"></i> Modelo de Urna:</label>
                 <select id="urnaFilter">
                     <option value="all">Todos os Modelos de Urna</option>
@@ -1505,6 +1537,9 @@ def gerar_heatmap_dashboard_html(df, output_path):
         const munSelect = document.getElementById('municipioSelect');
         const zonaSelect = document.getElementById('zonaSelect');
         const idadeFilter = document.getElementById('idadeFilter');
+        const generoFilter = document.getElementById('generoFilter');
+        const ensinoFilter = document.getElementById('ensinoFilter');
+        const estadoCivilFilter = document.getElementById('estadoCivilFilter');
         const urnaFilter = document.getElementById('urnaFilter');
         const searchInput = document.getElementById('searchInput');
         const scaleModeSelect = document.getElementById('scaleModeSelect');
@@ -1773,6 +1808,46 @@ def gerar_heatmap_dashboard_html(df, output_path):
                         if (selectedIdade === 'adultos' && pAdu < 0.40) return false;
                         if (selectedIdade === 'maduros' && pMad < 0.27) return false;
                         if (selectedIdade === 'idosos' && pIdo < 0.24) return false;
+                    }}
+                }}
+
+                // Filtro por Gênero
+                const selectedGenero = generoFilter.value;
+                if (selectedGenero === 'fem' && d.fem <= d.mas) return false;
+                if (selectedGenero === 'mas' && d.mas <= d.fem) return false;
+
+                // Filtro por Grau de Escolaridade (Ensino)
+                const selectedEnsino = ensinoFilter.value;
+                if (selectedEnsino !== 'all') {{
+                    const totalEl = d.del > 0 ? d.del : (d.fem + d.mas);
+                    if (totalEl > 0) {{
+                        const pSup = d.sup / totalEl;
+                        const pMed = d.med / totalEl;
+                        const pFun = d.fun / totalEl;
+                        const pBax = d.bax / totalEl;
+
+                        if (selectedEnsino === 'sup_alta' && pSup < 0.10) return false;
+                        if (selectedEnsino === 'sup_top' && pSup < 0.20) return false;
+                        if (selectedEnsino === 'medio' && pMed < 0.42) return false;
+                        if (selectedEnsino === 'fundamental' && pFun < 0.30) return false;
+                        if (selectedEnsino === 'baixa' && pBax < 0.28) return false;
+                    }}
+                }}
+
+                // Filtro por Estado Civil
+                const selectedCivil = estadoCivilFilter.value;
+                if (selectedCivil !== 'all') {{
+                    const totalEl = d.del > 0 ? d.del : (d.fem + d.mas);
+                    if (totalEl > 0) {{
+                        const pSol = d.sol / totalEl;
+                        const pCas = d.cas / totalEl;
+                        const pDiv = d.div / totalEl;
+                        const pViu = d.viu / totalEl;
+
+                        if (selectedCivil === 'solteiros' && pSol < 0.70) return false;
+                        if (selectedCivil === 'casados' && pCas < 0.30) return false;
+                        if (selectedCivil === 'divorciados' && pDiv < 0.04) return false;
+                        if (selectedCivil === 'viuvos' && pViu < 0.03) return false;
                     }}
                 }}
 
@@ -2239,6 +2314,9 @@ def gerar_heatmap_dashboard_html(df, output_path):
         }});
         zonaSelect.addEventListener('change', updateDashboard);
         idadeFilter.addEventListener('change', updateDashboard);
+        generoFilter.addEventListener('change', updateDashboard);
+        ensinoFilter.addEventListener('change', updateDashboard);
+        estadoCivilFilter.addEventListener('change', updateDashboard);
         urnaFilter.addEventListener('change', updateDashboard);
         searchInput.addEventListener('input', updateDashboard);
 
