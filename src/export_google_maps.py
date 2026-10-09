@@ -375,6 +375,8 @@ def gerar_heatmap_dashboard_html(df, output_path):
         .kpi-val.purple {{ color: #c084fc; }}
         .kpi-val.pink {{ color: #f472b6; }}
         .kpi-val.orange {{ color: #fb923c; }}
+        .kpi-val.cyan {{ color: #38bdf8; }}
+        .kpi-val.slate {{ color: #cbd5e1; }}
         .kpi-sub {{
             font-size: 0.7rem;
             color: var(--text-muted);
@@ -929,14 +931,14 @@ def gerar_heatmap_dashboard_html(df, output_path):
                     <div class="kpi-sub" id="kpiPct13">- dos válidos</div>
                 </div>
                 <div class="kpi-card">
+                    <div class="kpi-title">Outros / Brancos / Nulos <i class="fa-solid fa-users" style="color:#cbd5e1;"></i></div>
+                    <div class="kpi-val slate" id="kpiVotosOutros">-</div>
+                    <div class="kpi-sub" id="kpiPctOutros">- dos votos</div>
+                </div>
+                <div class="kpi-card">
                     <div class="kpi-title">Abstenção Eleitoral <i class="fa-solid fa-user-xmark" style="color:#fb923c;"></i></div>
                     <div class="kpi-val orange" id="kpiPctAbs">-</div>
                     <div class="kpi-sub" id="kpiTotalAbs">- não votaram</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-title">Locais & Urnas <i class="fa-solid fa-school" style="color:#38bdf8;"></i></div>
-                    <div class="kpi-val emerald" id="kpiLocais">-</div>
-                    <div class="kpi-sub" id="kpiSecoes">- seções</div>
                 </div>
                 <div class="kpi-card">
                     <div class="kpi-title">Ensino Superior <i class="fa-solid fa-graduation-cap" style="color:#c084fc;"></i></div>
@@ -944,9 +946,19 @@ def gerar_heatmap_dashboard_html(df, output_path):
                     <div class="kpi-sub" id="kpiTotalSup">- c/ Superior</div>
                 </div>
                 <div class="kpi-card">
+                    <div class="kpi-title">Solteiros (Est. Civil) <i class="fa-solid fa-ring" style="color:#38bdf8;"></i></div>
+                    <div class="kpi-val cyan" id="kpiPctSol">-</div>
+                    <div class="kpi-sub" id="kpiTotalSol">- solteiros</div>
+                </div>
+                <div class="kpi-card">
                     <div class="kpi-title">Mulheres (Gênero) <i class="fa-solid fa-venus" style="color:#f472b6;"></i></div>
                     <div class="kpi-val pink" id="kpiPctFem">-</div>
                     <div class="kpi-sub" id="kpiTotalFem">- eleitoras</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Locais & Urnas <i class="fa-solid fa-school" style="color:#34d399;"></i></div>
+                    <div class="kpi-val emerald" id="kpiLocais">-</div>
+                    <div class="kpi-sub" id="kpiSecoes">- seções</div>
                 </div>
             </div>
         </div>
@@ -1867,6 +1879,7 @@ def gerar_heatmap_dashboard_html(df, output_path):
             // Atualizar KPIs
             const totalV13 = filtered.reduce((acc, c) => acc + c.v13, 0);
             const totalV22 = filtered.reduce((acc, c) => acc + c.v22, 0);
+            const totalVo = filtered.reduce((acc, c) => acc + (c.vo || 0), 0);
             const totalGeral = filtered.reduce((acc, c) => acc + c.vt, 0);
             const totalSec = filtered.reduce((acc, c) => acc + c.sec, 0);
             const totalApt = filtered.reduce((acc, c) => acc + c.apt, 0);
@@ -1875,29 +1888,37 @@ def gerar_heatmap_dashboard_html(df, output_path):
             const totalEleitRecorte = filtered.reduce((acc, c) => acc + (c.del > 0 ? c.del : (c.fem + c.mas)), 0);
             const totalFemRecorte = filtered.reduce((acc, c) => acc + c.fem, 0);
             const totalSupRecorte = filtered.reduce((acc, c) => acc + c.sup, 0);
+            const totalSolRecorte = filtered.reduce((acc, c) => acc + (c.sol || 0), 0);
 
             document.getElementById('kpiVotos13').textContent = fmt(totalV13);
             document.getElementById('kpiVotos22').textContent = fmt(totalV22);
+            document.getElementById('kpiVotosOutros').textContent = fmt(totalVo);
             document.getElementById('kpiLocais').textContent = fmt(filtered.length);
             document.getElementById('kpiSecoes').textContent = fmt(totalSec) + ' seções';
 
             const pct13 = totalGeral > 0 ? ((totalV13 / totalGeral) * 100).toFixed(1) : '0.0';
             const pct22 = totalGeral > 0 ? ((totalV22 / totalGeral) * 100).toFixed(1) : '0.0';
+            const pctVo = totalGeral > 0 ? ((totalVo / totalGeral) * 100).toFixed(1) : '0.0';
             const pctAbs = totalApt > 0 ? ((totalAbs / totalApt) * 100).toFixed(1) : '0.0';
 
             document.getElementById('kpiPct13').textContent = pct13 + '% dos válidos';
             document.getElementById('kpiPct22').textContent = pct22 + '% dos válidos';
+            document.getElementById('kpiPctOutros').textContent = pctVo + '% dos votos';
             document.getElementById('kpiPctAbs').textContent = pctAbs + '%';
             document.getElementById('kpiTotalAbs').textContent = fmt(totalAbs) + ' abstenções';
 
             const pctFem = totalEleitRecorte > 0 ? ((totalFemRecorte / totalEleitRecorte) * 100).toFixed(1) : '0.0';
             const pctSup = totalEleitRecorte > 0 ? ((totalSupRecorte / totalEleitRecorte) * 100).toFixed(1) : '0.0';
+            const pctSol = totalEleitRecorte > 0 ? ((totalSolRecorte / totalEleitRecorte) * 100).toFixed(1) : '0.0';
 
             document.getElementById('kpiPctFem').textContent = pctFem + '%';
             document.getElementById('kpiTotalFem').textContent = fmt(totalFemRecorte) + ' eleitoras';
 
             document.getElementById('kpiPctSup').textContent = pctSup + '%';
             document.getElementById('kpiTotalSup').textContent = fmt(totalSupRecorte) + ' c/ Superior';
+
+            document.getElementById('kpiPctSol').textContent = pctSol + '%';
+            document.getElementById('kpiTotalSol').textContent = fmt(totalSolRecorte) + ' solteiros';
 
             // Preparar Pontos do Heatmap com Normalização Relativa ao Filtro Aplicado
             const heatPoints = [];
