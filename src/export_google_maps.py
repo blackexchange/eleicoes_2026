@@ -9,8 +9,8 @@ def export_maps_data():
     
     con = duckdb.connect("data/processed/eleicoes.duckdb")
     
-    # 1. Agrupamento completo por Local de Votação (Colégio / Escola) com contagem de votos, abstenções, urnas e demografia
-    print("[1/4] Extraindo dados de votos, abstenção, urnas e perfil demográfico por Colégio Eleitoral...")
+    # 1. Agrupamento completo por Local de Votação (Colégio / Escola) com contagem de votos, abstenções, urnas, demografia e fluxo
+    print("[1/4] Extraindo dados de votos, abstenção, urnas, demografia e tempos de votação...")
     df_locais = con.execute("""
         WITH votos_agg AS (
             SELECT 
@@ -59,6 +59,16 @@ def export_maps_data():
                 SUM(QT_ELEITORES) AS DEMO_TOTAL_ELEITORES
             FROM perfil_eleitorado_2026_BA
             GROUP BY NR_ZONA, NR_SECAO
+        ),
+        fluxo_agg AS (
+            SELECT 
+                zona AS NR_ZONA,
+                secao AS NR_SECAO,
+                tempo_medio_segundos,
+                tempo_min_segundos,
+                tempo_max_segundos,
+                votos_por_minuto
+            FROM fluxo_votacao_urnas_BA_2026
         ),
         locais_clean AS (
             SELECT 
@@ -116,38 +126,87 @@ def export_maps_data():
             COALESCE(SUM(d.DEMO_MEDIO), 0) AS DEMO_MEDIO,
             COALESCE(SUM(d.DEMO_FUNDAMENTAL), 0) AS DEMO_FUNDAMENTAL,
             COALESCE(SUM(d.DEMO_BAIXA_ESCOLARIDADE), 0) AS DEMO_BAIXA_ESCOLARIDADE,
-            COALESCE(SUM(d.DEMO_TOTAL_ELEITORES), 0) AS DEMO_TOTAL_ELEITORES
+            COALESCE(SUM(d.DEMO_TOTAL_ELEITORES), 0) AS DEMO_TOTAL_ELEITORES,
+            
+            -- Tempos de Votação (Logs da Urna)
+            ROUND(COALESCE(AVG(fl.tempo_medio_segundos), 0), 1) AS TEMPO_MEDIO_SEG,
+            ROUND(COALESCE(MIN(fl.tempo_min_segundos), 0), 1) AS TEMPO_MIN_SEG,
+            ROUND(COALESCE(MAX(fl.tempo_max_segundos), 0), 1) AS TEMPO_MAX_SEG,
+            ROUND(COALESCE(AVG(fl.votos_por_minuto), 0), 3) AS VOTOS_POR_MINUTO
         FROM locais_clean l
         LEFT JOIN votos_agg v ON l.NR_ZONA = v.NR_ZONA AND l.NR_SECAO = v.NR_SECAO
         LEFT JOIN corresp_info c ON l.NR_ZONA = c.NR_ZONA AND l.NR_SECAO = c.NR_SECAO
         LEFT JOIN demo_agg d ON l.NR_ZONA = d.NR_ZONA AND l.NR_SECAO = d.NR_SECAO
+        LEFT JOIN fluxo_agg fl ON l.NR_ZONA = fl.NR_ZONA AND l.NR_SECAO = fl.NR_SECAO
         GROUP BY l.NM_MUNICIPIO, l.NM_LOCAL_VOTACAO, l.DS_ENDERECO, l.NM_BAIRRO, l.NR_CEP
         ORDER BY VOTOS_13 DESC
     """).df()
     
     arquivo_locais = os.path.join(output_dir, "locais_votacao_heatmap_votos_urnas_BA_2026.csv")
     df_locais.to_csv(arquivo_locais, index=False, encoding="utf-8")
-    print(f"[OK] CSV de Locais de Votação com Votos, Urnas e Demografia gerado: {arquivo_locais} ({len(df_locais)} registros)")
+    print(f"[OK] CSV de Locais de Votação gerado: {arquivo_locais} ({len(df_locais)} registros)")
+    
+    # 1.5 Consolidação Estatística de Tempos e Fluxo por Zona Eleitoral
+    print("[1.5/4] Consolidando estatísticas de tempos e fluxo por Zona Eleitoral...")
+    df_zonas = con.execute("""
+        WITH zon_mun AS (
+            SELECT DISTINCT 
+                CAST(NR_ZONA AS INTEGER) as NR_ZONA,
+                FIRST_VALUE(NM_MUNICIPIO) OVER (PARTITION BY NR_ZONA ORDER BY QT_ELEITOR_SECAO DESC) as NM_MUNICIPIO
+            FROM locais_votacao_2026_BA
+        )
+        SELECT 
+            f.zona AS NR_ZONA,
+            COALESCE(zm.NM_MUNICIPIO, 'BAHIA') AS NM_MUNICIPIO,
+            COUNT(*) AS TOTAL_SECOES,
+            SUM(CASE WHEN f.modelo_urna IN ('UE2015', 'UE2013', 'UE2011', 'UE2009') THEN 1 ELSE 0 END) AS SECOES_UE2015,
+            SUM(CASE WHEN f.modelo_urna IN ('UE2020', 'UE2022') THEN 1 ELSE 0 END) AS SECOES_UE2020,
+            SUM(f.total_eleitores_votaram) AS TOTAL_VOTOS,
+            ROUND(AVG(f.votos_por_minuto), 3) AS VOTOS_POR_MINUTO,
+            ROUND(AVG(f.tempo_medio_segundos), 1) AS TEMPO_MEDIO_SEG,
+            ROUND(AVG(f.tempo_medio_minutos), 2) AS TEMPO_MEDIO_MIN,
+            ROUND(MIN(f.tempo_min_segundos), 1) AS TEMPO_MIN_SEG,
+            ROUND(MAX(f.tempo_max_segundos), 1) AS TEMPO_MAX_SEG,
+            ROUND(MEDIAN(f.tempo_mediano_segundos), 1) AS TEMPO_MEDIANO_SEG,
+            ROUND(COALESCE(AVG(CASE WHEN f.modelo_urna IN ('UE2015', 'UE2013') THEN f.tempo_medio_segundos ELSE NULL END), 0), 1) AS TEMPO_MEDIO_UE2015_SEG,
+            ROUND(COALESCE(AVG(CASE WHEN f.modelo_urna IN ('UE2020', 'UE2022') THEN f.tempo_medio_segundos ELSE NULL END), 0), 1) AS TEMPO_MEDIO_UE2020_SEG
+        FROM fluxo_votacao_urnas_BA_2026 f
+        LEFT JOIN zon_mun zm ON f.zona = zm.NR_ZONA
+        GROUP BY f.zona, zm.NM_MUNICIPIO
+        ORDER BY f.zona
+    """).df()
+    arquivo_zonas = os.path.join(output_dir, "estatisticas_tempo_por_zona_BA_2026.csv")
+    df_zonas.to_csv(arquivo_zonas, index=False, encoding="utf-8")
+    print(f"[OK] Tabela por Zona gerada: {arquivo_zonas} ({len(df_zonas)} zonas)")
+    
+    arquivo_locais_tempo = os.path.join(output_dir, "estatisticas_tempo_por_local_votacao_BA_2026.csv")
+    cols_tempo = [
+        "MUNICIPIO", "LOCAL_VOTACAO", "BAIRRO", "ENDERECO", "ZONAS", 
+        "QTD_SECOES", "TOTAL_APTOS", "TOTAL_VOTOS", "URNAS_UE2015", "URNAS_UE2020",
+        "TEMPO_MEDIO_SEG", "TEMPO_MIN_SEG", "TEMPO_MAX_SEG", "VOTOS_POR_MINUTO"
+    ]
+    df_locais[cols_tempo].to_csv(arquivo_locais_tempo, index=False, encoding="utf-8")
+    print(f"[OK] Tabela por Local de Votação gerada: {arquivo_locais_tempo} ({len(df_locais)} locais)")
     
     # 2. Gerar Mapa Interativo e Heatmap das Urnas e Votos (Arquivo Único Oficial)
     print("[2/4] Construindo Dashboard Interativo com Heatmap, Abstenção, Demografia e Filtro de Candidato...")
     mapa_path = os.path.join(output_dir, "mapa_interativo_urnas_BA_2026.html")
-    gerar_heatmap_dashboard_html(df_locais, mapa_path)
+    gerar_heatmap_dashboard_html(df_locais, df_zonas, mapa_path)
     print(f"[OK] Dashboard unificado disponível em: {mapa_path}")
     
     # Também gera heatmap_votos_13_urnas_BA.html para compatibilidade
     legacy_path = os.path.join(output_dir, "heatmap_votos_13_urnas_BA.html")
-    gerar_heatmap_dashboard_html(df_locais, legacy_path)
+    gerar_heatmap_dashboard_html(df_locais, df_zonas, legacy_path)
     print(f"[OK] Arquivo espelho para compatibilidade: {legacy_path}")
     
     # 3. Gerar pasta docs/index.html para publicação automática no GitHub Pages
     docs_dir = "docs"
     os.makedirs(docs_dir, exist_ok=True)
     docs_path = os.path.join(docs_dir, "index.html")
-    gerar_heatmap_dashboard_html(df_locais, docs_path)
+    gerar_heatmap_dashboard_html(df_locais, df_zonas, docs_path)
     print(f"[OK] Arquivo para GitHub Pages gerado: {docs_path}")
 
-def gerar_heatmap_dashboard_html(df, output_path):
+def gerar_heatmap_dashboard_html(df, df_zonas, output_path):
     records = []
     for _, row in df.iterrows():
         records.append({
@@ -185,10 +244,15 @@ def gerar_heatmap_dashboard_html(df, output_path):
             "med": int(row["DEMO_MEDIO"]),
             "fun": int(row["DEMO_FUNDAMENTAL"]),
             "bax": int(row["DEMO_BAIXA_ESCOLARIDADE"]),
-            "del": int(row["DEMO_TOTAL_ELEITORES"])
+            "del": int(row["DEMO_TOTAL_ELEITORES"]),
+            "t_med": round(float(row["TEMPO_MEDIO_SEG"]), 1) if pd.notna(row.get("TEMPO_MEDIO_SEG")) else 0,
+            "t_min": round(float(row["TEMPO_MIN_SEG"]), 1) if pd.notna(row.get("TEMPO_MIN_SEG")) else 0,
+            "t_max": round(float(row["TEMPO_MAX_SEG"]), 1) if pd.notna(row.get("TEMPO_MAX_SEG")) else 0,
+            "vpm": round(float(row["VOTOS_POR_MINUTO"]), 3) if pd.notna(row.get("VOTOS_POR_MINUTO")) else 0
         })
     
     data_json = json.dumps(records, ensure_ascii=False)
+    zonas_json = json.dumps(df_zonas.to_dict(orient="records"), ensure_ascii=False)
     
     bahia_geojson_str = "{}"
     if os.path.exists("data/geo/bahia_boundary.geojson"):
@@ -894,6 +958,116 @@ def gerar_heatmap_dashboard_html(df, output_path):
             align-items: center;
             justify-content: space-between;
         }}
+        /* Modal Tabs */
+        .analytics-tabs {{
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 20px 10px 20px;
+            background: #111827;
+        }}
+        .tab-btn {{
+            background: #1f293d;
+            border: 1px solid var(--border-color);
+            color: #94a3b8;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }}
+        .tab-btn:hover {{
+            background: #27354f;
+            color: #ffffff;
+        }}
+        .tab-btn.active {{
+            background: #0284c7;
+            border-color: #38bdf8;
+            color: #ffffff;
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+        }}
+        /* Zone Table Styling */
+        .zone-table-container {{
+            max-height: 380px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: #0b0f19;
+            margin-top: 8px;
+        }}
+        .zone-table {{
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.76rem;
+            text-align: left;
+        }}
+        .zone-table th {{
+            position: sticky;
+            top: 0;
+            background: #162032;
+            color: #94a3b8;
+            padding: 9px 10px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-size: 0.68rem;
+            z-index: 2;
+        }}
+        .zone-table td {{
+            padding: 8px 10px;
+            border-bottom: 1px solid rgba(35, 49, 78, 0.6);
+            color: #cbd5e1;
+        }}
+        .zone-table tr:hover td {{
+            background: rgba(56, 189, 248, 0.08);
+            color: #ffffff;
+        }}
+        .badge-ue15 {{
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            display: inline-block;
+        }}
+        .badge-ue20 {{
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            display: inline-block;
+        }}
+        .btn-goto-map {{
+            background: #0284c7;
+            border: 1px solid #38bdf8;
+            color: #ffffff;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }}
+        .btn-goto-map:hover {{
+            background: #0369a1;
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+        }}
     </style>
 </head>
 <body>
@@ -1235,6 +1409,29 @@ def gerar_heatmap_dashboard_html(df, output_path):
                 </div>
             </div>
 
+            <!-- Tempos de Votação (Logs da Urna TSE) -->
+            <div class="detail-card">
+                <div class="detail-card-title"><i class="fa-solid fa-stopwatch" style="color:#38bdf8;"></i> Tempos de Votação (Logs da Urna TSE)</div>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
+                    <div style="background:#111827; padding:6px 8px; border-radius:8px; text-align:center; border: 1px solid rgba(245, 158, 11, 0.3);">
+                        <div style="font-size:0.65rem; color:#fbbf24;">Tempo Médio</div>
+                        <div id="drawerTMedVal" style="font-size:1.05rem; font-weight:800; color:#fbbf24; font-family:var(--font-mono);">0s</div>
+                    </div>
+                    <div style="background:#111827; padding:6px 8px; border-radius:8px; text-align:center; border: 1px solid rgba(16, 185, 129, 0.3);">
+                        <div style="font-size:0.65rem; color:#34d399;">Tempo Mín.</div>
+                        <div id="drawerTMinVal" style="font-size:1.05rem; font-weight:800; color:#34d399; font-family:var(--font-mono);">0s</div>
+                    </div>
+                    <div style="background:#111827; padding:6px 8px; border-radius:8px; text-align:center; border: 1px solid rgba(239, 68, 68, 0.3);">
+                        <div style="font-size:0.65rem; color:#f87171;">Tempo Máx.</div>
+                        <div id="drawerTMaxVal" style="font-size:1.05rem; font-weight:800; color:#f87171; font-family:var(--font-mono);">0s</div>
+                    </div>
+                    <div style="background:#111827; padding:6px 8px; border-radius:8px; text-align:center; border: 1px solid rgba(56, 189, 248, 0.3);">
+                        <div style="font-size:0.65rem; color:#38bdf8;">Fluxo / min</div>
+                        <div id="drawerVpmVal" style="font-size:1.05rem; font-weight:800; color:#38bdf8; font-family:var(--font-mono);">0</div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Placar de Votos Presidente -->
             <div class="detail-card">
                 <div class="detail-card-title"><i class="fa-solid fa-chart-pie" style="color:#3b82f6;"></i> Votação para Presidente no Local</div>
@@ -1398,62 +1595,177 @@ def gerar_heatmap_dashboard_html(df, output_path):
     <div class="modal-overlay" id="analyticsModal">
         <div class="modal-content modal-content-large">
             <div class="modal-header">
-                <h2><i class="fa-solid fa-chart-line" style="color: #6366f1;"></i> Correlação: Ensino Superior vs. Votação por Zona</h2>
+                <h2><i class="fa-solid fa-chart-line" style="color: #6366f1;"></i> Analytics &amp; Auditoria dos Logs de Urna (TSE 2026)</h2>
                 <button class="drawer-close-btn" id="btnCloseAnalytics" title="Fechar"><i class="fa-solid fa-xmark"></i></button>
             </div>
+            <!-- Abas de Navegação do Modal -->
+            <div class="analytics-tabs">
+                <button id="btnTabSuperior" class="tab-btn active"><i class="fa-solid fa-graduation-cap"></i> Ensino Superior vs Votação</button>
+                <button id="btnTabTempo" class="tab-btn"><i class="fa-solid fa-school-flag"></i> Tempo de Votação por Local (Colégios &amp; Escolas)</button>
+            </div>
             <div class="modal-body">
-                <!-- Barra de Controle do Gráfico -->
-                <div style="display: flex; justify-content: space-between; align-items: center; background: #0b0f19; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border-color); flex-wrap: wrap; gap: 8px;">
-                    <div style="font-size: 0.82rem; color: #94a3b8;">
-                        <i class="fa-solid fa-filter" style="color:#38bdf8;"></i> Recorte Geográfico das Zonas:
+                <!-- ABA 1: Ensino Superior x Votação -->
+                <div id="viewSuperior">
+                    <!-- Barra de Controle do Gráfico -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: #0b0f19; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border-color); flex-wrap: wrap; gap: 8px;">
+                        <div style="font-size: 0.82rem; color: #94a3b8;">
+                            <i class="fa-solid fa-filter" style="color:#38bdf8;"></i> Recorte Geográfico das Zonas:
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn-action" id="btnScopeMun" style="background:#0284c7; border-color:#38bdf8; font-size:0.75rem; padding:6px 12px;"><i class="fa-solid fa-city"></i> Município Selecionado</button>
+                            <button class="btn-action" id="btnScopeBahia" style="background:#1e293b; border-color:#334155; font-size:0.75rem; padding:6px 12px;"><i class="fa-solid fa-earth-americas"></i> Toda a Bahia</button>
+                        </div>
                     </div>
-                    <div style="display: flex; gap: 8px;">
-                        <button class="btn-action" id="btnScopeMun" style="background:#0284c7; border-color:#38bdf8; font-size:0.75rem; padding:6px 12px;"><i class="fa-solid fa-city"></i> Município Selecionado</button>
-                        <button class="btn-action" id="btnScopeBahia" style="background:#1e293b; border-color:#334155; font-size:0.75rem; padding:6px 12px;"><i class="fa-solid fa-earth-americas"></i> Toda a Bahia</button>
+
+                    <!-- Cards com Destaques Estatísticos -->
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px;">
+                        <div class="guide-card" style="border-left: 4px solid #3b82f6;">
+                            <div style="font-size:0.72rem; font-weight:700; color:#94a3b8;">Correlação c/ Direita (Flávio)</div>
+                            <div id="statCorr22" style="font-size:1.1rem; font-weight:800; color:#60a5fa; font-family:var(--font-mono); margin-top:2px;">Forte Positiva (+)</div>
+                            <div style="font-size:0.68rem; color:#64748b;">Mais escolaridade ➔ Mais votos no 22</div>
+                        </div>
+                        <div class="guide-card" style="border-left: 4px solid #ef4444;">
+                            <div style="font-size:0.72rem; font-weight:700; color:#94a3b8;">Correlação c/ Esquerda (Lula)</div>
+                            <div id="statCorr13" style="font-size:1.1rem; font-weight:800; color:#f87171; font-family:var(--font-mono); margin-top:2px;">Forte Negativa (-)</div>
+                            <div style="font-size:0.68rem; color:#64748b;">Mais escolaridade ➔ Menos votos no 13</div>
+                        </div>
+                        <div class="guide-card" style="border-left: 4px solid #a855f7;">
+                            <div style="font-size:0.72rem; font-weight:700; color:#94a3b8;">Zona Líder em Superior</div>
+                            <div id="statTopSupZone" style="font-size:0.92rem; font-weight:800; color:#c084fc; margin-top:2px;">Zona 1</div>
+                            <div id="statTopSupPct" style="font-size:0.68rem; color:#cbd5e1;">41.8% com Ensino Superior</div>
+                        </div>
+                    </div>
+
+                    <!-- Grid com 2 Gráficos -->
+                    <div class="analytics-grid" style="margin-top: 12px;">
+                        <!-- Gráfico 1: Scatter Plot -->
+                        <div class="chart-box">
+                            <div class="chart-box-title">
+                                <span><i class="fa-solid fa-braille" style="color:#38bdf8;"></i> Dispersão: % Ensino Superior x % Votos</span>
+                                <span style="font-size:0.7rem; color:#94a3b8; font-weight:normal;">Cada ponto = 1 Zona</span>
+                            </div>
+                            <div style="position: relative; flex: 1; min-height: 250px;">
+                                <canvas id="scatterChartCanvas"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Gráfico 2: Ranking por Zona -->
+                        <div class="chart-box">
+                            <div class="chart-box-title">
+                                <span><i class="fa-solid fa-ranking-star" style="color:#a855f7;"></i> Votos por Zona (Ordenadas por % Superior)</span>
+                                <span style="font-size:0.7rem; color:#94a3b8; font-weight:normal;">Maior % Superior ➔ Menor</span>
+                            </div>
+                            <div style="position: relative; flex: 1; min-height: 250px;">
+                                <canvas id="rankingChartCanvas"></canvas>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Cards com Destaques Estatísticos -->
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-                    <div class="guide-card" style="border-left: 4px solid #3b82f6;">
-                        <div style="font-size:0.72rem; font-weight:700; color:#94a3b8;">Correlação c/ Direita (Flávio)</div>
-                        <div id="statCorr22" style="font-size:1.1rem; font-weight:800; color:#60a5fa; font-family:var(--font-mono); margin-top:2px;">Forte Positiva (+)</div>
-                        <div style="font-size:0.68rem; color:#64748b;">Mais escolaridade ➔ Mais votos no 22</div>
-                    </div>
-                    <div class="guide-card" style="border-left: 4px solid #ef4444;">
-                        <div style="font-size:0.72rem; font-weight:700; color:#94a3b8;">Correlação c/ Esquerda (Lula)</div>
-                        <div id="statCorr13" style="font-size:1.1rem; font-weight:800; color:#f87171; font-family:var(--font-mono); margin-top:2px;">Forte Negativa (-)</div>
-                        <div style="font-size:0.68rem; color:#64748b;">Mais escolaridade ➔ Menos votos no 13</div>
-                    </div>
-                    <div class="guide-card" style="border-left: 4px solid #a855f7;">
-                        <div style="font-size:0.72rem; font-weight:700; color:#94a3b8;">Zona Líder em Superior</div>
-                        <div id="statTopSupZone" style="font-size:0.92rem; font-weight:800; color:#c084fc; margin-top:2px;">Zona 1</div>
-                        <div id="statTopSupPct" style="font-size:0.68rem; color:#cbd5e1;">41.8% com Ensino Superior</div>
-                    </div>
-                </div>
-
-                <!-- Grid com 2 Gráficos -->
-                <div class="analytics-grid">
-                    <!-- Gráfico 1: Scatter Plot -->
-                    <div class="chart-box">
-                        <div class="chart-box-title">
-                            <span><i class="fa-solid fa-braille" style="color:#38bdf8;"></i> Dispersão: % Ensino Superior x % Votos</span>
-                            <span style="font-size:0.7rem; color:#94a3b8; font-weight:normal;">Cada ponto = 1 Zona</span>
+                <!-- ABA 2: Auditoria de Tempos de Votação por Local de Votação (Colégios & Escolas) -->
+                <div id="viewTempoVotacao" style="display: none;">
+                    <!-- Barra de Controle do Recorte Geográfico -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: #0b0f19; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border-color); flex-wrap: wrap; gap: 8px;">
+                        <div style="font-size: 0.82rem; color: #94a3b8;">
+                            <i class="fa-solid fa-school-flag" style="color:#38bdf8;"></i> Recorte dos Locais de Votação:
                         </div>
-                        <div style="position: relative; flex: 1; min-height: 250px;">
-                            <canvas id="scatterChartCanvas"></canvas>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn-action" id="btnScopeTempoMun" style="background:#0284c7; border-color:#38bdf8; font-size:0.75rem; padding:6px 12px;"><i class="fa-solid fa-city"></i> Município Selecionado (<span id="labelTempoMun">SALVADOR</span>)</button>
+                            <button class="btn-action" id="btnScopeTempoBahia" style="background:#1e293b; border-color:#334155; font-size:0.75rem; padding:6px 12px;"><i class="fa-solid fa-earth-americas"></i> Toda a Bahia (9.169 locais)</button>
                         </div>
                     </div>
 
-                    <!-- Gráfico 2: Ranking por Zona -->
-                    <div class="chart-box">
+                    <!-- 4 Cards de Destaque -->
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px;">
+                        <div class="guide-card" style="border-left: 4px solid #38bdf8;">
+                            <div style="font-size:0.70rem; font-weight:700; color:#94a3b8;">Tempo Médio na Cabine</div>
+                            <div id="cardTempoMed" style="font-size:1.15rem; font-weight:800; color:#38bdf8; font-family:var(--font-mono); margin-top:2px;">-</div>
+                            <div id="subTempoMed" style="font-size:0.66rem; color:#64748b;">Média por eleitor</div>
+                        </div>
+                        <div class="guide-card" style="border-left: 4px solid #10b981;">
+                            <div style="font-size:0.70rem; font-weight:700; color:#94a3b8;">Menor Tempo Mínimo</div>
+                            <div id="cardTempoMin" style="font-size:1.15rem; font-weight:800; color:#34d399; font-family:var(--font-mono); margin-top:2px;">-</div>
+                            <div id="subTempoMin" style="font-size:0.66rem; color:#64748b;">Voto mais veloz</div>
+                        </div>
+                        <div class="guide-card" style="border-left: 4px solid #ef4444;">
+                            <div style="font-size:0.70rem; font-weight:700; color:#94a3b8;">Maior Tempo Máximo</div>
+                            <div id="cardTempoMax" style="font-size:1.15rem; font-weight:800; color:#f87171; font-family:var(--font-mono); margin-top:2px;">-</div>
+                            <div id="subTempoMax" style="font-size:0.66rem; color:#64748b;">Pico de retenção</div>
+                        </div>
+                        <div class="guide-card" style="border-left: 4px solid #fbbf24;">
+                            <div style="font-size:0.70rem; font-weight:700; color:#94a3b8;">Locais Auditados &amp; Fluxo</div>
+                            <div id="cardTempoVpm" style="font-size:1.15rem; font-weight:800; color:#fbbf24; font-family:var(--font-mono); margin-top:2px;">-</div>
+                            <div id="subTempoVpm" style="font-size:0.66rem; color:#64748b;">Fluxo de votação</div>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico Comparativo de Tempo Médio, Mínimo e Máximo -->
+                    <div class="chart-box" style="margin-top: 12px; min-height: 270px;">
                         <div class="chart-box-title">
-                            <span><i class="fa-solid fa-ranking-star" style="color:#a855f7;"></i> Votos por Zona (Ordenadas por % Superior)</span>
-                            <span style="font-size:0.7rem; color:#94a3b8; font-weight:normal;">Maior % Superior ➔ Menor</span>
+                            <span><i class="fa-solid fa-chart-column" style="color:#38bdf8;"></i> Comparativo: Tempo Médio, Mínimo e Máximo por Local de Votação (Colégio / Escola)</span>
+                            <span style="font-size:0.7rem; color:#94a3b8; font-weight:normal;">Top 25 Colégios / Escolas (em segundos)</span>
                         </div>
-                        <div style="position: relative; flex: 1; min-height: 250px;">
-                            <canvas id="rankingChartCanvas"></canvas>
+                        <div style="position: relative; flex: 1; min-height: 210px;">
+                            <canvas id="tempoLocaisChartCanvas"></canvas>
                         </div>
+                    </div>
+
+                    <!-- Controles e Tabela Interativa de Locais de Votação -->
+                    <div style="margin-top: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; background: #0b0f19; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color); flex-wrap: wrap; gap: 8px;">
+                            <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 220px;">
+                                <i class="fa-solid fa-magnifying-glass" style="color:#94a3b8; font-size:0.8rem;"></i>
+                                <input type="text" id="searchLocalTable" placeholder="Buscar Colégio, Escola, Bairro ou Município..." style="padding: 5px 10px; font-size: 0.76rem; background: #151d30; width: 100%; border: 1px solid var(--border-color); border-radius: 6px; color: #fff;" />
+                            </div>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                <select id="filterModeloLocais" style="padding: 5px 10px; font-size: 0.74rem; width: auto;">
+                                    <option value="all">Todos os Modelos de Urna</option>
+                                    <option value="ue15">Com Urnas Antigas (&lt; UE2020)</option>
+                                    <option value="ue20">Apenas Urnas Modernas (UE2020+)</option>
+                                </select>
+                                <select id="filterFluxoLocais" style="padding: 5px 10px; font-size: 0.74rem; width: auto;">
+                                    <option value="all">Todos os Fluxos</option>
+                                    <option value="vpm_06">⚡ Fluxo Alto (&ge; 0.60 vpm)</option>
+                                    <option value="vpm_07">🚀 Fluxo Máximo (&ge; 0.70 vpm)</option>
+                                    <option value="voto_rapido">⏱️ Votos Relâmpago na Cabine (Mín &le; 30s ➔ &gt;2 vpm)</option>
+                                    <option value="voto_ultra">⚡ Votos Ultra-Rápidos na Cabine (Mín &le; 15s ➔ &gt;4 vpm)</option>
+                                    <option value="vpm_lento">🐢 Fluxo Lento (&lt; 0.30 vpm)</option>
+                                </select>
+                                <select id="sortLocalTable" style="padding: 5px 10px; font-size: 0.74rem; width: auto;">
+                                    <option value="vpm_desc">Mais Votos / Minuto (Maior Fluxo)</option>
+                                    <option value="vpm_asc">Menos Votos / Minuto (Menor Fluxo)</option>
+                                    <option value="t_med_asc">Tempo Médio (Mais Rápidos)</option>
+                                    <option value="t_med_desc">Tempo Médio (Mais Lentos)</option>
+                                    <option value="t_min_asc">Menor Tempo Mínimo</option>
+                                    <option value="t_max_desc">Maior Tempo Máximo</option>
+                                    <option value="votos_desc">Maior Total de Votos</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="zone-table-container">
+                            <table class="zone-table">
+                                <thead>
+                                    <tr>
+                                        <th>Local de Votação (Colégio / Escola)</th>
+                                        <th>Bairro / Município</th>
+                                        <th>Zona</th>
+                                        <th>Urnas &lt;2020</th>
+                                        <th>Urnas 2020+</th>
+                                        <th>Total Votos</th>
+                                        <th>Tempo Médio</th>
+                                        <th>Tempo Mín.</th>
+                                        <th>Tempo Máx.</th>
+                                        <th>Votos/Min</th>
+                                        <th>Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="localTableBody">
+                                    <!-- Inserido dinamicamente via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="localTableCount" style="font-size:0.72rem; color:#94a3b8; margin-top:4px; text-align:right;"></div>
                     </div>
                 </div>
             </div>
@@ -1604,6 +1916,12 @@ def gerar_heatmap_dashboard_html(df, output_path):
         const drawerSupVal = document.getElementById('drawerSupVal');
         const drawerSolVal = document.getElementById('drawerSolVal');
 
+        // Tempos de Votação Drawer Elements
+        const drawerTMedVal = document.getElementById('drawerTMedVal');
+        const drawerTMinVal = document.getElementById('drawerTMinVal');
+        const drawerTMaxVal = document.getElementById('drawerTMaxVal');
+        const drawerVpmVal = document.getElementById('drawerVpmVal');
+
         const drawerCenterBtn = document.getElementById('drawerCenterBtn');
         const drawerGmapsBtn = document.getElementById('drawerGmapsBtn');
 
@@ -1730,6 +2048,12 @@ def gerar_heatmap_dashboard_html(df, output_path):
 
             drawerSupVal.textContent = pSup + '% (' + fmt(d.sup) + ')';
             drawerSolVal.textContent = pSol + '% (' + fmt(d.sol) + ')';
+
+            // Tempos de Votação (Logs da Urna)
+            drawerTMedVal.textContent = (d.t_med || 0) + 's';
+            drawerTMinVal.textContent = (d.t_min || 0) + 's';
+            drawerTMaxVal.textContent = (d.t_max || 0) + 's';
+            drawerVpmVal.textContent = (d.vpm || 0);
 
             drawerGmapsBtn.href = `https://www.google.com/maps?q=${{d.lat}},${{d.lng}}`;
 
@@ -2123,6 +2447,17 @@ def gerar_heatmap_dashboard_html(df, output_path):
                                 </div>
                             </div>
 
+                            <div style="background:#0a101d; padding:4px 8px; border-radius:6px; border:1px solid #1e293b; margin-top:3px; font-size:0.71rem;">
+                                <div class="popup-metric-row">
+                                    <span style="color:#fbbf24;"><i class="fa-solid fa-stopwatch"></i> Tempo Médio: <strong>${{d.t_med || 0}}s</strong></span>
+                                    <span style="color:#38bdf8;">Fluxo: <strong>${{d.vpm || 0}} vpm</strong></span>
+                                </div>
+                                <div class="popup-metric-row">
+                                    <span style="color:#34d399;">Mín: <strong>${{d.t_min || 0}}s</strong></span>
+                                    <span style="color:#f87171;">Máx: <strong>${{d.t_max || 0}}s</strong></span>
+                                </div>
+                            </div>
+
                             <div style="margin-top:2px;">
                                 <div class="popup-metric-row">
                                     <span style="color:#60a5fa; font-weight:700;"><i class="fa-solid fa-square" style="color:#3b82f6;"></i> Bolsonaro (22):</span>
@@ -2396,10 +2731,299 @@ def gerar_heatmap_dashboard_html(df, output_path):
         }});
 
         // ==========================================
+        // DADOS E AUDITORIA DE TEMPOS POR LOCAL DE VOTAÇÃO
+        // ==========================================
+        const zonasAuditData = {zonas_json};
+
+        // ==========================================
         // MÓDULO DE ANALYTICS & GRÁFICOS (CHART.JS)
         // ==========================================
         const analyticsModal = document.getElementById('analyticsModal');
-        const btnOpenAnalytics = document.getElementById('btnOpenAnalytics');
+        const btnTabSuperior = document.getElementById('btnTabSuperior');
+        const btnTabTempo = document.getElementById('btnTabTempo');
+        const viewSuperior = document.getElementById('viewSuperior');
+        const viewTempoVotacao = document.getElementById('viewTempoVotacao');
+
+        let tempoScopeMunOnly = true;
+        let tempoLocaisChartInst = null;
+
+        const btnScopeTempoMun = document.getElementById('btnScopeTempoMun');
+        const btnScopeTempoBahia = document.getElementById('btnScopeTempoBahia');
+        const labelTempoMun = document.getElementById('labelTempoMun');
+        const searchLocalTable = document.getElementById('searchLocalTable');
+        const filterModeloLocais = document.getElementById('filterModeloLocais');
+        const filterFluxoLocais = document.getElementById('filterFluxoLocais');
+        const sortLocalTable = document.getElementById('sortLocalTable');
+        const localTableBody = document.getElementById('localTableBody');
+        const localTableCount = document.getElementById('localTableCount');
+
+        const cardTempoMed = document.getElementById('cardTempoMed');
+        const subTempoMed = document.getElementById('subTempoMed');
+        const cardTempoMin = document.getElementById('cardTempoMin');
+        const subTempoMin = document.getElementById('subTempoMin');
+        const cardTempoMax = document.getElementById('cardTempoMax');
+        const subTempoMax = document.getElementById('subTempoMax');
+        const cardTempoVpm = document.getElementById('cardTempoVpm');
+        const subTempoVpm = document.getElementById('subTempoVpm');
+
+        // Alternância de Abas
+        btnTabSuperior.addEventListener('click', () => {{
+            btnTabSuperior.classList.add('active');
+            btnTabTempo.classList.remove('active');
+            viewSuperior.style.display = 'block';
+            viewTempoVotacao.style.display = 'none';
+            renderAnalyticsCharts();
+        }});
+
+        btnTabTempo.addEventListener('click', () => {{
+            btnTabTempo.classList.add('active');
+            btnTabSuperior.classList.remove('active');
+            viewSuperior.style.display = 'none';
+            viewTempoVotacao.style.display = 'block';
+            renderTempoLocaisView();
+        }});
+
+        btnScopeTempoMun.addEventListener('click', () => {{
+            tempoScopeMunOnly = true;
+            btnScopeTempoMun.style.background = '#0284c7';
+            btnScopeTempoMun.style.borderColor = '#38bdf8';
+            btnScopeTempoBahia.style.background = '#1e293b';
+            btnScopeTempoBahia.style.borderColor = '#334155';
+            renderTempoLocaisView();
+        }});
+
+        btnScopeTempoBahia.addEventListener('click', () => {{
+            tempoScopeMunOnly = false;
+            btnScopeTempoBahia.style.background = '#0284c7';
+            btnScopeTempoBahia.style.borderColor = '#38bdf8';
+            btnScopeTempoMun.style.background = '#1e293b';
+            btnScopeTempoMun.style.borderColor = '#334155';
+            renderTempoLocaisView();
+        }});
+
+        function getFilteredLocaisParaTempo() {{
+            const selectedMun = munSelect.value ? munSelect.value.toLowerCase() : '';
+            let list = (tempoScopeMunOnly && selectedMun) 
+                ? rawData.filter(d => d.m.toLowerCase() === selectedMun) 
+                : [...rawData];
+
+            // Apenas locais com dados de tempo auditados
+            list = list.filter(d => (d.t_med || 0) > 0);
+
+            const query = (searchLocalTable.value || '').toLowerCase().trim();
+            if (query) {{
+                list = list.filter(d => 
+                    (d.l || '').toLowerCase().includes(query) ||
+                    (d.b || '').toLowerCase().includes(query) ||
+                    (d.m || '').toLowerCase().includes(query) ||
+                    (d.z || '').includes(query)
+                );
+            }}
+
+            const modFilter = filterModeloLocais.value;
+            if (modFilter === 'ue15') {{
+                list = list.filter(d => d.u15 > 0);
+            }} else if (modFilter === 'ue20') {{
+                list = list.filter(d => d.u15 === 0 && d.u20 > 0);
+            }}
+
+            const flx = filterFluxoLocais ? filterFluxoLocais.value : 'all';
+            if (flx === 'vpm_06') {{
+                list = list.filter(d => (d.vpm || 0) >= 0.60);
+            }} else if (flx === 'vpm_07') {{
+                list = list.filter(d => (d.vpm || 0) >= 0.70);
+            }} else if (flx === 'voto_rapido') {{
+                list = list.filter(d => (d.t_min || 0) <= 30 && (d.t_min || 0) > 0);
+            }} else if (flx === 'voto_ultra') {{
+                list = list.filter(d => (d.t_min || 0) <= 15 && (d.t_min || 0) > 0);
+            }} else if (flx === 'vpm_lento') {{
+                list = list.filter(d => (d.vpm || 0) < 0.30);
+            }}
+
+            const sortMode = sortLocalTable.value;
+            if (sortMode === 't_med_desc') {{
+                list.sort((a, b) => b.t_med - a.t_med);
+            }} else if (sortMode === 't_med_asc') {{
+                list.sort((a, b) => a.t_med - b.t_med);
+            }} else if (sortMode === 't_max_desc') {{
+                list.sort((a, b) => b.t_max - a.t_max);
+            }} else if (sortMode === 't_min_asc') {{
+                list.sort((a, b) => a.t_min - b.t_min);
+            }} else if (sortMode === 'vpm_desc') {{
+                list.sort((a, b) => b.vpm - a.vpm);
+            }} else if (sortMode === 'vpm_asc') {{
+                list.sort((a, b) => a.vpm - b.vpm);
+            }} else if (sortMode === 'votos_desc') {{
+                list.sort((a, b) => b.vt - a.vt);
+            }}
+
+            return list;
+        }}
+
+        function renderTempoLocaisView() {{
+            const curMun = munSelect.value || 'Bahia Inteira';
+            labelTempoMun.textContent = curMun;
+
+            const list = getFilteredLocaisParaTempo();
+
+            // Atualizar Cards KPI
+            if (list.length > 0) {{
+                const avgMed = list.reduce((acc, d) => acc + d.t_med, 0) / list.length;
+                const minVal = Math.min(...list.map(d => d.t_min).filter(v => v > 0));
+                const maxVal = Math.max(...list.map(d => d.t_max));
+                const avgVpm = list.reduce((acc, d) => acc + d.vpm, 0) / list.length;
+
+                cardTempoMed.innerHTML = `${{avgMed.toFixed(1)}}s <span style="font-size:0.72rem; font-weight:normal; color:#94a3b8;">(${{(avgMed / 60).toFixed(2)}} min)</span>`;
+                subTempoMed.textContent = `Média de ${{fmt(list.length)}} locais auditados`;
+
+                cardTempoMin.innerHTML = `${{minVal.toFixed(1)}}s <span style="font-size:0.72rem; font-weight:normal; color:#34d399;">recorde</span>`;
+                subTempoMin.textContent = `Menor tempo registrado`;
+
+                cardTempoMax.innerHTML = `${{maxVal.toFixed(1)}}s <span style="font-size:0.72rem; font-weight:normal; color:#f87171;">(${{(maxVal / 60).toFixed(1)}}m)</span>`;
+                subTempoMax.textContent = `Maior retenção de cabine`;
+
+                cardTempoVpm.innerHTML = `${{avgVpm.toFixed(3)}} <span style="font-size:0.72rem; font-weight:normal; color:#fbbf24;">votos/min</span>`;
+                subTempoVpm.textContent = `Velocidade média de fluxo`;
+            }} else {{
+                cardTempoMed.textContent = '-';
+                cardTempoMin.textContent = '-';
+                cardTempoMax.textContent = '-';
+                cardTempoVpm.textContent = '-';
+            }}
+
+            renderLocalTable(list);
+            renderTempoLocaisChart(list);
+        }}
+
+        function renderLocalTable(list) {{
+            localTableBody.innerHTML = '';
+            if (!list || list.length === 0) {{
+                localTableBody.innerHTML = '<tr><td colspan="11" style="text-align:center; padding:20px; color:#94a3b8;">Nenhum local de votação encontrado com os filtros atuais.</td></tr>';
+                localTableCount.textContent = '0 locais encontrados';
+                return;
+            }}
+
+            const maxDisplay = 100;
+            const displayed = list.slice(0, maxDisplay);
+
+            displayed.forEach(d => {{
+                const tr = document.createElement('tr');
+                const badgeUE15 = d.u15 > 0 ? `<span class="badge-ue15">${{d.u15}} urnas</span>` : `<span style="color:#64748b;">-</span>`;
+                const badgeUE20 = d.u20 > 0 ? `<span class="badge-ue20">${{d.u20}} urnas</span>` : `<span style="color:#64748b;">-</span>`;
+
+                tr.innerHTML = `
+                    <td style="font-weight:700; color:#f8fafc; max-width:240px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${{d.l}}">
+                        <i class="fa-solid fa-school" style="color:#38bdf8; font-size:0.7rem; margin-right:4px;"></i>${{d.l}}
+                    </td>
+                    <td style="color:#cbd5e1; font-size:0.74rem;">${{d.b ? d.b + ', ' : ''}}${{d.m}}</td>
+                    <td style="font-family:var(--font-mono); font-weight:700; color:#94a3b8;">Z${{d.z || '?'}}</td>
+                    <td>${{badgeUE15}}</td>
+                    <td>${{badgeUE20}}</td>
+                    <td style="font-family:var(--font-mono);">${{fmt(d.vt)}}</td>
+                    <td style="font-weight:800; color:#f59e0b; font-family:var(--font-mono);">${{d.t_med}}s <span style="font-size:0.68rem; font-weight:normal; color:#94a3b8;">(${{(d.t_med / 60).toFixed(1)}}m)</span></td>
+                    <td style="color:#34d399; font-family:var(--font-mono); font-weight:700;">${{d.t_min}}s</td>
+                    <td style="color:#f87171; font-family:var(--font-mono); font-weight:700;">${{d.t_max}}s</td>
+                    <td style="font-weight:700; color:#38bdf8; font-family:var(--font-mono);">${{d.vpm}}</td>
+                    <td>
+                        <button class="btn-goto-map" onclick="goToLocal('${{d.lat}}', '${{d.lng}}')">
+                            <i class="fa-solid fa-location-dot"></i> Ver
+                        </button>
+                    </td>
+                `;
+                localTableBody.appendChild(tr);
+            }});
+
+            localTableCount.textContent = list.length > maxDisplay 
+                ? `Exibindo os ${{maxDisplay}} primeiros de ${{fmt(list.length)}} locais auditados` 
+                : `Exibindo todos os ${{list.length}} locais auditados`;
+        }}
+
+        window.goToLocal = function(lat, lng) {{
+            analyticsModal.classList.remove('open');
+            window.openItemDrawerFromPopup(lat, lng);
+            map.flyTo([parseFloat(lat), parseFloat(lng)], 17, {{ duration: 1.2 }});
+        }};
+
+        searchLocalTable.addEventListener('input', () => renderTempoLocaisView());
+        filterModeloLocais.addEventListener('change', () => renderTempoLocaisView());
+        filterFluxoLocais.addEventListener('change', () => renderTempoLocaisView());
+        sortLocalTable.addEventListener('change', () => renderTempoLocaisView());
+
+        function renderTempoLocaisChart(list) {{
+            const chartCanvas = document.getElementById('tempoLocaisChartCanvas');
+            if (!chartCanvas) return;
+            const ctx = chartCanvas.getContext('2d');
+            if (tempoLocaisChartInst) {{
+                tempoLocaisChartInst.destroy();
+            }}
+
+            if (!list || list.length === 0) return;
+
+            const top25 = list.slice(0, 25);
+            const labels = top25.map(d => {{
+                let clean = d.l.replace('COLÉGIO ESTADUAL', 'C.E.').replace('ESCOLA MUNICIPAL', 'E.M.').replace('COLÉGIO', 'COL.');
+                if (clean.length > 22) clean = clean.substring(0, 20) + '...';
+                return clean;
+            }});
+
+            const medData = top25.map(d => d.t_med);
+            const minData = top25.map(d => d.t_min);
+            const maxData = top25.map(d => d.t_max);
+
+            tempoLocaisChartInst = new Chart(ctx, {{
+                type: 'bar',
+                data: {{
+                    labels: labels,
+                    datasets: [
+                        {{
+                            label: 'Tempo Mínimo (s)',
+                            data: minData,
+                            backgroundColor: '#10b981',
+                            borderRadius: 3
+                        }},
+                        {{
+                            label: 'Tempo Médio (s)',
+                            data: medData,
+                            backgroundColor: '#f59e0b',
+                            borderRadius: 3
+                        }},
+                        {{
+                            label: 'Tempo Máximo (s)',
+                            data: maxData,
+                            backgroundColor: '#ef4444',
+                            borderRadius: 3
+                        }}
+                    ]
+                }},
+                options: {{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {{
+                        x: {{
+                            grid: {{ color: '#1e293b' }},
+                            ticks: {{ color: '#cbd5e1', font: {{ size: 9 }}, maxRotation: 45 }}
+                        }},
+                        y: {{
+                            title: {{ display: true, text: 'Segundos na Cabine', color: '#94a3b8' }},
+                            grid: {{ color: '#1e293b' }},
+                            ticks: {{ color: '#cbd5e1' }}
+                        }}
+                    }},
+                    plugins: {{
+                        tooltip: {{
+                            callbacks: {{
+                                title: function(context) {{
+                                    const idx = context[0].dataIndex;
+                                    const d = top25[idx];
+                                    return `${{d.l}} (${{d.b ? d.b + ', ' : ''}}${{d.m}})`;
+                                }}
+                            }}
+                        }},
+                        legend: {{ labels: {{ color: '#f8fafc', font: {{ family: 'Outfit', weight: 'bold' }} }} }}
+                    }}
+                }}
+            }});
+        }}
         const btnCloseAnalytics = document.getElementById('btnCloseAnalytics');
         const btnAnalyticsOk = document.getElementById('btnAnalyticsOk');
         const btnScopeMun = document.getElementById('btnScopeMun');
