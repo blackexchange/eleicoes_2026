@@ -1229,6 +1229,18 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path):
             </div>
 
             <div>
+                <label><i class="fa-solid fa-gauge-high" style="color:#06b6d4;"></i> Fluxo de Votação (Logs da Urna):</label>
+                <select id="fluxoFilter">
+                    <option value="all" selected>Todos os Fluxos (Geral)</option>
+                    <option value="fluxo_max">🚀 Fluxo Máximo (&ge; 0.70 vpm)</option>
+                    <option value="fluxo_alto">⚡ Fluxo Alto (&ge; 0.60 vpm)</option>
+                    <option value="voto_rapido">⏱️ Votos Relâmpago na Cabine (Mín &le; 30s ➔ &gt;2 vpm)</option>
+                    <option value="voto_ultra">⚡ Votos Ultra-Rápidos na Cabine (Mín &le; 15s ➔ &gt;4 vpm)</option>
+                    <option value="fluxo_lento">🐢 Fluxo Lento (&lt; 0.30 vpm)</option>
+                </select>
+            </div>
+
+            <div>
                 <label><i class="fa-solid fa-magnifying-glass"></i> Busca Rápida de Escola/Bairro:</label>
                 <input type="text" id="searchInput" placeholder="Digite nome da escola, bairro, endereço..." />
             </div>
@@ -1333,6 +1345,10 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path):
                 </button>
                 <button class="mode-btn" data-mode="urnasUE2015" id="btnModeU15">
                     <span><i class="fa-solid fa-box-archive" style="color:#f59e0b; margin-right:4px;"></i> Urnas UE2015</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+                <button class="mode-btn" data-mode="fluxoMax" id="btnModeFluxo">
+                    <span><i class="fa-solid fa-gauge-high" style="color:#06b6d4; margin-right:4px;"></i> Fluxo de Votos (vpm)</span>
                     <i class="fa-solid fa-chevron-right"></i>
                 </button>
             </div>
@@ -1867,6 +1883,7 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path):
         const ensinoFilter = document.getElementById('ensinoFilter');
         const estadoCivilFilter = document.getElementById('estadoCivilFilter');
         const urnaFilter = document.getElementById('urnaFilter');
+        const fluxoFilter = document.getElementById('fluxoFilter');
         const searchInput = document.getElementById('searchInput');
         const scaleModeSelect = document.getElementById('scaleModeSelect');
         const gainSlider = document.getElementById('gainSlider');
@@ -1993,7 +2010,8 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path):
             demoMaduros: thermalBlueToRed,
             demoIdosos: thermalBlueToRed,
             demoFem: thermalBlueToRed,
-            urnasUE2015: thermalBlueToRed
+            urnasUE2015: thermalBlueToRed,
+            fluxoMax: thermalBlueToRed
         }};
 
         // Função para Abrir Detalhes da Urna/Colégio
@@ -2097,6 +2115,7 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path):
             const selectedMun = munSelect.value.toLowerCase();
             const selectedZona = zonaSelect.value;
             const selectedUrna = urnaFilter.value;
+            const selectedFluxo = fluxoFilter ? fluxoFilter.value : 'all';
             const searchVal = searchInput.value.toLowerCase().trim();
             const scaleMode = scaleModeSelect.value;
             const gain = parseFloat(gainSlider.value);
@@ -2111,6 +2130,13 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path):
                 }}
                 if (selectedUrna === 'ue2015' && d.u15 === 0) return false;
                 if (selectedUrna === 'ue2020' && d.u20 === 0) return false;
+                
+                // Filtro de Fluxo de Votação (Logs da Urna)
+                if (selectedFluxo === 'fluxo_max' && (d.vpm || 0) < 0.70) return false;
+                if (selectedFluxo === 'fluxo_alto' && (d.vpm || 0) < 0.60) return false;
+                if (selectedFluxo === 'voto_rapido' && ((d.t_min || 0) > 30 || (d.t_min || 0) === 0)) return false;
+                if (selectedFluxo === 'voto_ultra' && ((d.t_min || 0) > 15 || (d.t_min || 0) === 0)) return false;
+                if (selectedFluxo === 'fluxo_lento' && ((d.vpm || 0) >= 0.30 || (d.vpm || 0) === 0)) return false;
                 
                 // Filtro Efetivo por Candidato / Vitória / Limiares Reais
                 if (selectedCand === '22' && d.v22 <= d.v13) return false;
@@ -2393,6 +2419,21 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path):
                 }});
                 legendTitle.textContent = "Concentração Relativa de Urnas UE2015";
                 legendBar.style.background = "linear-gradient(to right, #1e3a8a, #06b6d4, #10b981, #fbbf24, #f97316, #ef4444)";
+            }} else if (currentMode === 'fluxoMax') {{
+                const vals = filtered.map(d => d.vpm).filter(v => v > 0).sort((a, b) => a - b);
+                const maxVal = vals.length > 0 ? vals[vals.length - 1] : 0.75;
+                const p85 = vals.length > 0 ? vals[Math.floor(vals.length * 0.85)] : 0.65;
+                const refBase = scaleMode === 'relativo' ? Math.max(p85, 0.50) : (scaleMode === 'global' ? 0.75 : maxVal);
+
+                filtered.forEach(d => {{
+                    if (d.vpm > 0) {{
+                        let norm = scaleMode === 'sqrt' ? Math.sqrt(d.vpm / maxVal) : Math.pow(d.vpm / refBase, 1.3);
+                        const intensity = Math.min(1.0, norm * gain);
+                        heatPoints.push([d.lat, d.lng, intensity]);
+                    }}
+                }});
+                legendTitle.textContent = "Velocidade de Fluxo (Votos por Minuto)";
+                legendBar.style.background = "linear-gradient(to right, #1e3a8a, #06b6d4, #10b981, #fbbf24, #f97316, #ef4444)";
             }}
 
             // Renderizar / Atualizar Heatmap Layer
@@ -2530,14 +2571,19 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path):
             }}
         }});
 
-        // Renderizar Lista dos Top Colégios por Candidato Selecionado
+        // Renderizar Lista dos Top Colégios por Candidato Selecionado ou Fluxo
         function renderHotspotsList(filtered) {{
             hotspotsList.innerHTML = '';
             const selectedCand = candidatoSelect.value;
+            const selectedFluxo = fluxoFilter ? fluxoFilter.value : 'all';
             let sorted = [...filtered];
             let candColor = '#38bdf8';
 
-            if (selectedCand === '22' || selectedCand.startsWith('pct22')) {{
+            if (currentMode === 'fluxoMax' || selectedFluxo !== 'all') {{
+                sorted.sort((a, b) => (b.vpm || 0) - (a.vpm || 0));
+                candColor = '#06b6d4';
+                hotspotsHeader.innerHTML = `<i class="fa-solid fa-gauge-high" style="color:#06b6d4;"></i> Top Colégios - Maior Fluxo (vpm)`;
+            }} else if (selectedCand === '22' || selectedCand.startsWith('pct22')) {{
                 sorted.sort((a, b) => b.v22 - a.v22);
                 candColor = '#60a5fa';
                 hotspotsHeader.innerHTML = `<i class="fa-solid fa-trophy" style="color:#3b82f6;"></i> Top Colégios - Bolsonaro (22)`;
@@ -2554,14 +2600,13 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path):
             const top6 = sorted.slice(0, 6);
             
             top6.forEach((d, idx) => {{
-                let valToShow = d.vt;
-                let pctToShow = '100';
-                if (selectedCand === '22' || selectedCand.startsWith('pct22')) {{
-                    valToShow = d.v22;
-                    pctToShow = d.p22;
+                let subLabel = `${{fmt(d.vt)}} votos`;
+                if (currentMode === 'fluxoMax' || selectedFluxo !== 'all') {{
+                    subLabel = `${{d.vpm}} vpm (méd: ${{d.t_med}}s | mín: ${{d.t_min}}s)`;
+                }} else if (selectedCand === '22' || selectedCand.startsWith('pct22')) {{
+                    subLabel = `${{fmt(d.v22)}} votos (${{d.p22}}%)`;
                 }} else if (selectedCand === '13' || selectedCand.startsWith('pct13')) {{
-                    valToShow = d.v13;
-                    pctToShow = d.p13;
+                    subLabel = `${{fmt(d.v13)}} votos (${{d.p13}}%)`;
                 }}
 
                 const item = document.createElement('div');
@@ -2570,7 +2615,7 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path):
                     <div class="hotspot-title">#${{idx + 1}} ${{d.l}}</div>
                     <div class="hotspot-sub">
                         <span><i class="fa-solid fa-location-dot"></i> ${{d.b ? d.b + ', ' : ''}}${{d.m}}</span>
-                        <span style="color:${{candColor}}; font-weight:700;">${{fmt(valToShow)}} votos (${{pctToShow}}%)</span>
+                        <span style="color:${{candColor}}; font-weight:700;">${{subLabel}}</span>
                     </div>
                 `;
                 item.addEventListener('click', () => {{
@@ -2676,6 +2721,7 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path):
         ensinoFilter.addEventListener('change', updateDashboard);
         estadoCivilFilter.addEventListener('change', updateDashboard);
         urnaFilter.addEventListener('change', updateDashboard);
+        fluxoFilter.addEventListener('change', updateDashboard);
         searchInput.addEventListener('input', updateDashboard);
 
         // Controle do Modal de Ajuda / Metodologia
