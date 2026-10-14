@@ -188,25 +188,217 @@ def export_maps_data():
     df_locais[cols_tempo].to_csv(arquivo_locais_tempo, index=False, encoding="utf-8")
     print(f"[OK] Tabela por Local de Votação gerada: {arquivo_locais_tempo} ({len(df_locais)} locais)")
     
+    # 1.8 Consolidação de Auditoria por Seção Eleitoral e Score de Anomalia
+    print("[1.8/4] Consolidando Auditoria Detalhada por Seção Eleitoral e Score de Anomalia...")
+    df_auditoria_secoes = con.execute("""
+        WITH votos_secao AS (
+            SELECT 
+                NR_ZONA,
+                NR_SECAO,
+                SUM(CASE WHEN NR_VOTAVEL = 13 THEN QT_VOTOS ELSE 0 END) AS VOTOS_13,
+                SUM(CASE WHEN NR_VOTAVEL = 22 THEN QT_VOTOS ELSE 0 END) AS VOTOS_22,
+                SUM(CASE WHEN NR_VOTAVEL NOT IN (13, 22) THEN QT_VOTOS ELSE 0 END) AS VOTOS_OUTROS,
+                SUM(QT_VOTOS) AS TOTAL_VOTOS
+            FROM votacao_presidente_secao_2026_BA
+            GROUP BY NR_ZONA, NR_SECAO
+        ),
+        locais_sec AS (
+            SELECT 
+                TRY_CAST(NR_ZONA AS BIGINT) AS NR_ZONA,
+                TRY_CAST(NR_SECAO AS BIGINT) AS NR_SECAO,
+                NM_MUNICIPIO,
+                NM_LOCAL_VOTACAO,
+                DS_ENDERECO,
+                NM_BAIRRO,
+                TRY_CAST(QT_ELEITOR_SECAO AS BIGINT) AS APTOS,
+                TRY_CAST(REPLACE(NR_LATITUDE, ',', '.') AS DOUBLE) AS LATITUDE,
+                TRY_CAST(REPLACE(NR_LONGITUDE, ',', '.') AS DOUBLE) AS LONGITUDE
+            FROM locais_votacao_2026_BA
+            WHERE NR_TURNO = '1'
+        ),
+        sec_base AS (
+            SELECT 
+                COALESCE(l.NM_MUNICIPIO, 'BAHIA') AS MUNICIPIO,
+                f.zona AS ZONA,
+                f.secao AS SECAO,
+                COALESCE(l.NM_LOCAL_VOTACAO, 'LOCAL NÃO INFORMADO') AS LOCAL_VOTACAO,
+                COALESCE(l.DS_ENDERECO, '') AS ENDERECO,
+                COALESCE(l.NM_BAIRRO, '') AS BAIRRO,
+                l.LATITUDE,
+                l.LONGITUDE,
+                COALESCE(l.APTOS, f.total_eleitores_votaram) AS APTOS,
+                f.total_eleitores_votaram AS COMPARECIMENTO,
+                GREATEST(0, COALESCE(l.APTOS, f.total_eleitores_votaram) - f.total_eleitores_votaram) AS ABSTENCAO,
+                ROUND(CASE WHEN COALESCE(l.APTOS, f.total_eleitores_votaram) > 0 
+                      THEN GREATEST(0, COALESCE(l.APTOS, f.total_eleitores_votaram) - f.total_eleitores_votaram) * 100.0 / COALESCE(l.APTOS, f.total_eleitores_votaram) 
+                      ELSE 0 END, 2) AS PCT_ABSTENCAO,
+                f.modelo_urna AS MODELO_URNA,
+                f.primeiro_voto AS PRIMEIRO_VOTO,
+                f.ultimo_voto AS ULTIMO_VOTO,
+                f.duracao_sessao_min AS DURACAO_SESSAO_MIN,
+                f.tempo_medio_segundos AS TEMPO_MEDIO_SEG,
+                f.votos_por_minuto AS VOTOS_POR_MINUTO,
+                f.qtd_biometria AS QTD_BIOMETRIA,
+                f.qtd_manual AS QTD_MANUAL,
+                f.pct_manual AS PCT_MANUAL,
+                f.votos_pos_17h AS VOTOS_POS_17H,
+                f.votos_pos_17h_manual AS VOTOS_POS_17H_MANUAL,
+                f.pct_votos_pos_17h AS PCT_VOTOS_POS_17H,
+                COALESCE(v.VOTOS_13, 0) AS VOTOS_13,
+                COALESCE(v.VOTOS_22, 0) AS VOTOS_22,
+                COALESCE(v.VOTOS_OUTROS, 0) AS VOTOS_OUTROS,
+                COALESCE(v.TOTAL_VOTOS, 0) AS TOTAL_VOTOS,
+                ROUND(CASE WHEN COALESCE(v.TOTAL_VOTOS, 0) > 0 THEN (v.VOTOS_13 * 100.0 / v.TOTAL_VOTOS) ELSE 0 END, 2) AS PCT_VOTOS_13,
+                ROUND(CASE WHEN COALESCE(v.TOTAL_VOTOS, 0) > 0 THEN (v.VOTOS_22 * 100.0 / v.TOTAL_VOTOS) ELSE 0 END, 2) AS PCT_VOTOS_22
+            FROM fluxo_votacao_urnas_BA_2026 f
+            LEFT JOIN locais_sec l ON f.zona = l.NR_ZONA AND f.secao = l.NR_SECAO
+            LEFT JOIN votos_secao v ON f.zona = v.NR_ZONA AND f.secao = v.NR_SECAO
+        ),
+        sec_scored AS (
+            SELECT 
+                *,
+                -- Score Composto de Anomalia (0 a 100)
+                (CASE 
+                    WHEN PCT_ABSTENCAO <= 5.0 THEN 30
+                    WHEN PCT_ABSTENCAO <= 10.0 THEN 20
+                    WHEN PCT_ABSTENCAO <= 15.0 THEN 10
+                    ELSE 0 
+                 END) +
+                (CASE 
+                    WHEN PCT_MANUAL >= 40.0 THEN 30
+                    WHEN PCT_MANUAL >= 30.0 THEN 25
+                    WHEN PCT_MANUAL >= 20.0 THEN 15
+                    WHEN PCT_MANUAL >= 15.0 THEN 5
+                    ELSE 0 
+                 END) +
+                (CASE 
+                    WHEN VOTOS_POS_17H >= 30 THEN 20
+                    WHEN VOTOS_POS_17H >= 15 THEN 15
+                    WHEN VOTOS_POS_17H >= 5 THEN 10
+                    WHEN VOTOS_POS_17H > 0 THEN 5
+                    ELSE 0 
+                 END) +
+                (CASE 
+                    WHEN GREATEST(PCT_VOTOS_13, PCT_VOTOS_22) >= 90.0 THEN 20
+                    WHEN GREATEST(PCT_VOTOS_13, PCT_VOTOS_22) >= 80.0 THEN 15
+                    WHEN GREATEST(PCT_VOTOS_13, PCT_VOTOS_22) >= 70.0 THEN 10
+                    ELSE 0 
+                 END) AS SCORE_ANOMALIA
+            FROM sec_base
+        )
+        SELECT 
+            *,
+            CASE 
+                WHEN SCORE_ANOMALIA >= 70 THEN 'CRÍTICO'
+                WHEN SCORE_ANOMALIA >= 50 THEN 'ALTO'
+                WHEN SCORE_ANOMALIA >= 35 THEN 'MÉDIO'
+                ELSE 'NORMAL'
+            END AS NIVEL_RISCO,
+            CASE WHEN PCT_ABSTENCAO <= 10.0 THEN 1 ELSE 0 END AS FLAG_BAIXA_ABSTENCAO,
+            CASE WHEN PCT_MANUAL >= 20.0 THEN 1 ELSE 0 END AS FLAG_ALTA_LIBERACAO_MANUAL,
+            CASE WHEN VOTOS_POS_17H > 0 THEN 1 ELSE 0 END AS FLAG_VOTOS_POS_17H
+        FROM sec_scored
+        ORDER BY SCORE_ANOMALIA DESC, PCT_MANUAL DESC, VOTOS_POS_17H DESC
+    """).df()
+
+    # Salva tabela no DuckDB
+    con.execute("CREATE OR REPLACE TABLE auditoria_secoes_BA_2026 AS SELECT * FROM df_auditoria_secoes")
+    print(f"[OK] Tabela auditoria_secoes_BA_2026 criada no DuckDB: {len(df_auditoria_secoes)} seções.")
+
+    # Exporta CSV completo de auditoria
+    arquivo_auditoria_csv = os.path.join(output_dir, "auditoria_secoes_anomalias_BA_2026.csv")
+    df_auditoria_secoes.to_csv(arquivo_auditoria_csv, index=False, encoding="utf-8")
+    print(f"[OK] CSV de Auditoria de Seções exportado: {arquivo_auditoria_csv} ({len(df_auditoria_secoes)} seções)")
+
+    # Agregações para gráficos comparativos de auditoria
+    df_chart_manual = con.execute("""
+        SELECT 
+            CASE 
+                WHEN PCT_MANUAL < 10.0 THEN '< 10% Manual'
+                WHEN PCT_MANUAL < 20.0 THEN '10% a 20%'
+                WHEN PCT_MANUAL < 30.0 THEN '20% a 30%'
+                ELSE '> 30% Manual'
+            END AS FAIXA,
+            COUNT(*) AS SECOES,
+            SUM(TOTAL_VOTOS) AS TOTAL_VOTOS,
+            ROUND(SUM(VOTOS_13)*100.0/SUM(TOTAL_VOTOS), 2) AS PCT_13,
+            ROUND(SUM(VOTOS_22)*100.0/SUM(TOTAL_VOTOS), 2) AS PCT_22
+        FROM auditoria_secoes_BA_2026
+        WHERE TOTAL_VOTOS > 0
+        GROUP BY 1
+        ORDER BY 
+            CASE 
+                WHEN FAIXA = '< 10% Manual' THEN 1
+                WHEN FAIXA = '10% a 20%' THEN 2
+                WHEN FAIXA = '20% a 30%' THEN 3
+                ELSE 4
+            END
+    """).df()
+
+    df_chart_pos17 = con.execute("""
+        SELECT 
+            CASE 
+                WHEN VOTOS_POS_17H = 0 THEN 'Sem pós-17h'
+                WHEN VOTOS_POS_17H <= 15 THEN '1 a 15'
+                WHEN VOTOS_POS_17H <= 30 THEN '16 a 30'
+                ELSE '> 30'
+            END AS FAIXA,
+            COUNT(*) AS SECOES,
+            SUM(TOTAL_VOTOS) AS TOTAL_VOTOS,
+            ROUND(SUM(VOTOS_13)*100.0/SUM(TOTAL_VOTOS), 2) AS PCT_13,
+            ROUND(SUM(VOTOS_22)*100.0/SUM(TOTAL_VOTOS), 2) AS PCT_22
+        FROM auditoria_secoes_BA_2026
+        WHERE TOTAL_VOTOS > 0
+        GROUP BY 1
+        ORDER BY 
+            CASE 
+                WHEN FAIXA = 'Sem pós-17h' THEN 1
+                WHEN FAIXA = '1 a 15' THEN 2
+                WHEN FAIXA = '16 a 30' THEN 3
+                ELSE 4
+            END
+    """).df()
+
+    charts_data = {
+        "manual": df_chart_manual.to_dict(orient="records"),
+        "pos17": df_chart_pos17.to_dict(orient="records"),
+        "total_secoes": len(df_auditoria_secoes),
+        "total_votantes": int(df_auditoria_secoes["COMPARECIMENTO"].sum()),
+        "media_pct_manual": round(float(df_auditoria_secoes["PCT_MANUAL"].mean()), 2),
+        "total_pos_17h": int(df_auditoria_secoes["VOTOS_POS_17H"].sum()),
+        "secoes_alto_risco": int((df_auditoria_secoes["SCORE_ANOMALIA"] >= 50).sum()),
+        "secoes_trifeta": int(((df_auditoria_secoes["FLAG_BAIXA_ABSTENCAO"] == 1) & 
+                               (df_auditoria_secoes["FLAG_ALTA_LIBERACAO_MANUAL"] == 1) & 
+                               (df_auditoria_secoes["FLAG_VOTOS_POS_17H"] == 1)).sum())
+    }
+
     # 2. Gerar Mapa Interativo e Heatmap das Urnas e Votos (Arquivo Único Oficial)
     print("[2/4] Construindo Dashboard Interativo com Heatmap, Abstenção, Demografia e Filtro de Candidato...")
     mapa_path = os.path.join(output_dir, "mapa_interativo_urnas_BA_2026.html")
-    gerar_heatmap_dashboard_html(df_locais, df_zonas, mapa_path)
+    gerar_heatmap_dashboard_html(df_locais, df_zonas, mapa_path, df_secoes=df_auditoria_secoes, charts_data=charts_data)
     print(f"[OK] Dashboard unificado disponível em: {mapa_path}")
     
     # Também gera heatmap_votos_13_urnas_BA.html para compatibilidade
     legacy_path = os.path.join(output_dir, "heatmap_votos_13_urnas_BA.html")
-    gerar_heatmap_dashboard_html(df_locais, df_zonas, legacy_path)
+    gerar_heatmap_dashboard_html(df_locais, df_zonas, legacy_path, df_secoes=df_auditoria_secoes, charts_data=charts_data)
     print(f"[OK] Arquivo espelho para compatibilidade: {legacy_path}")
     
     # 3. Gerar pasta docs/index.html para publicação automática no GitHub Pages
     docs_dir = "docs"
     os.makedirs(docs_dir, exist_ok=True)
     docs_path = os.path.join(docs_dir, "index.html")
-    gerar_heatmap_dashboard_html(df_locais, df_zonas, docs_path)
+    gerar_heatmap_dashboard_html(df_locais, df_zonas, docs_path, df_secoes=df_auditoria_secoes, charts_data=charts_data)
     print(f"[OK] Arquivo para GitHub Pages gerado: {docs_path}")
 
-def gerar_heatmap_dashboard_html(df, df_zonas, output_path):
+    # 4. Gerar Mapa Dedicado de Auditoria de Seções Eleitorais
+    print("[4/4] Gerando Mapa Dedicado de Auditoria de Seções Eleitorais...")
+    try:
+        from src.export_mapa_auditoria_secoes import export_mapa_auditoria_secoes
+    except ModuleNotFoundError:
+        from export_mapa_auditoria_secoes import export_mapa_auditoria_secoes
+    export_mapa_auditoria_secoes()
+
+def gerar_heatmap_dashboard_html(df, df_zonas, output_path, df_secoes=None, charts_data=None):
     records = []
     for _, row in df.iterrows():
         records.append({
@@ -253,6 +445,40 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path):
     
     data_json = json.dumps(records, ensure_ascii=False)
     zonas_json = json.dumps(df_zonas.to_dict(orient="records"), ensure_ascii=False)
+
+    secoes_records = []
+    if df_secoes is not None:
+        df_top_secoes = df_secoes.head(3500)
+        for _, r in df_top_secoes.iterrows():
+            secoes_records.append({
+                "m": str(r["MUNICIPIO"]),
+                "z": int(r["ZONA"]),
+                "s": int(r["SECAO"]),
+                "l": str(r["LOCAL_VOTACAO"]),
+                "u": str(r["MODELO_URNA"]),
+                "apt": int(r["APTOS"]),
+                "cmp": int(r["COMPARECIMENTO"]),
+                "pabs": float(r["PCT_ABSTENCAO"]),
+                "pman": float(r["PCT_MANUAL"]),
+                "qman": int(r["QTD_MANUAL"]),
+                "p17": int(r["VOTOS_POS_17H"]),
+                "p17m": int(r["VOTOS_POS_17H_MANUAL"]),
+                "t1": str(r["PRIMEIRO_VOTO"]) if pd.notna(r["PRIMEIRO_VOTO"]) else "",
+                "t2": str(r["ULTIMO_VOTO"]) if pd.notna(r["ULTIMO_VOTO"]) else "",
+                "v13": int(r["VOTOS_13"]),
+                "v22": int(r["VOTOS_22"]),
+                "p13": float(r["PCT_VOTOS_13"]),
+                "p22": float(r["PCT_VOTOS_22"]),
+                "sc": int(r["SCORE_ANOMALIA"]),
+                "risk": str(r["NIVEL_RISCO"]),
+                "f_abs": int(r["FLAG_BAIXA_ABSTENCAO"]),
+                "f_man": int(r["FLAG_ALTA_LIBERACAO_MANUAL"]),
+                "f_p17": int(r["FLAG_VOTOS_POS_17H"]),
+                "lat": round(float(r["LATITUDE"]), 6) if pd.notna(r["LATITUDE"]) else None,
+                "lng": round(float(r["LONGITUDE"]), 6) if pd.notna(r["LONGITUDE"]) else None
+            })
+    secoes_audit_json = json.dumps(secoes_records, ensure_ascii=False)
+    charts_data_json = json.dumps(charts_data or {}, ensure_ascii=False)
     
     bahia_geojson_str = "{}"
     if os.path.exists("data/geo/bahia_boundary.geojson"):
@@ -1068,6 +1294,85 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path):
             background: #0369a1;
             box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
         }}
+        .badge-risk-critico {{
+            background: rgba(239, 68, 68, 0.25);
+            color: #fca5a5;
+            border: 1px solid #ef4444;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-weight: 800;
+            font-size: 0.68rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }}
+        .badge-risk-alto {{
+            background: rgba(249, 115, 22, 0.2);
+            color: #fdba74;
+            border: 1px solid #f97316;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.68rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }}
+        .badge-risk-medio {{
+            background: rgba(245, 158, 11, 0.2);
+            color: #fde047;
+            border: 1px solid #f59e0b;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.68rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }}
+        .badge-risk-normal {{
+            background: rgba(59, 130, 246, 0.15);
+            color: #93c5fd;
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.68rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }}
+        .tag-alert-red {{
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-weight: 800;
+            font-size: 0.72rem;
+            white-space: nowrap;
+        }}
+        .tag-alert-amber {{
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.72rem;
+            white-space: nowrap;
+        }}
+        .tag-alert-green {{
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.72rem;
+            white-space: nowrap;
+        }}
     </style>
 </head>
 <body>
@@ -1089,6 +1394,9 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path):
                 </div>
             </div>
             <p class="subtitle">Análise geoespacial de urnas, votação presidencial, abstenção e perfil demográfico.</p>
+            <a href="mapa_auditoria_secoes_BA.html" style="margin-top: 10px; background: linear-gradient(135deg, #b91c1c, #d97706); border: 1px solid #f59e0b; color: #ffffff; text-decoration: none; padding: 8px 12px; border-radius: 8px; font-size: 0.74rem; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35); transition: transform 0.2s;">
+                <i class="fa-solid fa-fingerprint"></i> Abrir Mapa de Auditoria de Seções (Biometria &amp; Horário)
+            </a>
         </div>
 
         <!-- KPIs Eleitorais & Abstenção -->
@@ -1618,6 +1926,7 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path):
             <div class="analytics-tabs">
                 <button id="btnTabSuperior" class="tab-btn active"><i class="fa-solid fa-graduation-cap"></i> Ensino Superior vs Votação</button>
                 <button id="btnTabTempo" class="tab-btn"><i class="fa-solid fa-school-flag"></i> Tempo de Votação por Local (Colégios &amp; Escolas)</button>
+                <button id="btnTabAuditoriaSecoes" class="tab-btn"><i class="fa-solid fa-fingerprint" style="color: #f59e0b;"></i> Auditoria por Seção (Biometria &amp; Horário)</button>
             </div>
             <div class="modal-body">
                 <!-- ABA 1: Ensino Superior x Votação -->
@@ -1784,6 +2093,118 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path):
                         <div id="localTableCount" style="font-size:0.72rem; color:#94a3b8; margin-top:4px; text-align:right;"></div>
                     </div>
                 </div>
+                <!-- ABA 3: Auditoria por Seção Eleitoral (Biometria & Horário) -->
+                <div id="viewAuditoriaSecoes" style="display: none;">
+                    <!-- Cards com Destaques Gerais da Auditoria -->
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px;">
+                        <div class="guide-card" style="border-left: 4px solid #3b82f6;">
+                            <div style="font-size:0.7rem; font-weight:700; color:#94a3b8;">Total Seções Auditadas</div>
+                            <div id="cardAuditTotal" style="font-size:1.15rem; font-weight:800; color:#60a5fa; font-family:var(--font-mono); margin-top:2px;">35.472</div>
+                            <div style="font-size:0.68rem; color:#64748b; margin-top:3px;">
+                                <a href="auditoria_secoes_anomalias_BA_2026.csv" download style="color:#38bdf8; text-decoration:none;"><i class="fa-solid fa-download"></i> Baixar CSV Completo</a>
+                            </div>
+                        </div>
+                        <div class="guide-card" style="border-left: 4px solid #f59e0b;">
+                            <div style="font-size:0.7rem; font-weight:700; color:#94a3b8;">Média Liberação Manual</div>
+                            <div id="cardAuditManual" style="font-size:1.15rem; font-weight:800; color:#fbbf24; font-family:var(--font-mono); margin-top:2px;">12.2%</div>
+                            <div style="font-size:0.68rem; color:#94a3b8; margin-top:3px;">1.084.216 eleitores sem biometria</div>
+                        </div>
+                        <div class="guide-card" style="border-left: 4px solid #a855f7;">
+                            <div style="font-size:0.7rem; font-weight:700; color:#94a3b8;">Votos Pós-17h</div>
+                            <div id="cardAuditPos17" style="font-size:1.15rem; font-weight:800; color:#c084fc; font-family:var(--font-mono); margin-top:2px;">672.845</div>
+                            <div style="font-size:0.68rem; color:#94a3b8; margin-top:3px;">81.216 manuais após 17h</div>
+                        </div>
+                        <div class="guide-card" style="border-left: 4px solid #ef4444;">
+                            <div style="font-size:0.7rem; font-weight:700; color:#94a3b8;">Seções Alto Risco (Score ≥ 50)</div>
+                            <div id="cardAuditRisco" style="font-size:1.15rem; font-weight:800; color:#f87171; font-family:var(--font-mono); margin-top:2px;">1.637</div>
+                            <div style="font-size:0.68rem; color:#94a3b8; margin-top:3px;">150 com trifeta de anomalia</div>
+                        </div>
+                    </div>
+
+                    <!-- Gráficos Comparativos Chart.js -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                        <div style="background: #0b0f19; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px;">
+                            <div style="font-size: 0.76rem; font-weight: 700; color: #f8fafc; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-fingerprint" style="color: #f59e0b;"></i> Votação (13 vs 22) por Faixa de Liberação Manual
+                            </div>
+                            <div style="height: 180px; position: relative;">
+                                <canvas id="chartAuditManual"></canvas>
+                            </div>
+                        </div>
+                        <div style="background: #0b0f19; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px;">
+                            <div style="font-size: 0.76rem; font-weight: 700; color: #f8fafc; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-clock" style="color: #a855f7;"></i> Votação (13 vs 22) por Volume de Votos Pós-17h
+                            </div>
+                            <div style="height: 180px; position: relative;">
+                                <canvas id="chartAuditPos17"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Controles e Filtros de Anomalia de Seções -->
+                    <div style="background: #0b0f19; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                            <div style="flex: 1; min-width: 240px; position: relative;">
+                                <input type="text" id="searchSecaoTable" placeholder="Buscar Seção, Zona, Município ou Colégio..." style="padding: 6px 12px; font-size: 0.76rem; background: #151d30; width: 100%; border: 1px solid var(--border-color); border-radius: 6px; color: #fff;" />
+                            </div>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <span style="font-size: 0.72rem; color: #94a3b8; font-weight: 600;"><i class="fa-solid fa-filter" style="color:#f59e0b;"></i> Anomalia:</span>
+                                <select id="filterSecaoAnomaly" style="padding: 6px 10px; font-size: 0.74rem; background: #151d30; border: 1px solid var(--border-color); border-radius: 6px; color: #fff; cursor: pointer;">
+                                    <option value="all">Todas as Seções Ranqueadas</option>
+                                    <option value="critico">🚨 Score Crítico / Alto (Score ≥ 50)</option>
+                                    <option value="trifeta">⚠️ Trifeta: Baixa Abs + Alta Manual + Pós-17h</option>
+                                    <option value="baixa_abs">📉 Baixa Abstenção Atípica (≤ 10%)</option>
+                                    <option value="alta_man">✋ Alta Liberação Manual pelo Mesário (≥ 20%)</option>
+                                    <option value="pos_17h">🌙 Votos Pós-17h (≥ 15 votos computados)</option>
+                                    <option value="pos_17h_man">🕒 Votos Pós-17h Manuais (sem biometria)</option>
+                                </select>
+                            </div>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <span style="font-size: 0.72rem; color: #94a3b8; font-weight: 600;"><i class="fa-solid fa-arrow-down-wide-short" style="color:#38bdf8;"></i> Ordenar:</span>
+                                <select id="sortSecaoTable" style="padding: 6px 10px; font-size: 0.74rem; background: #151d30; border: 1px solid var(--border-color); border-radius: 6px; color: #fff; cursor: pointer;">
+                                    <option value="score_desc">Maior Score de Anomalia</option>
+                                    <option value="pct_man_desc">Maior % Liberação Manual</option>
+                                    <option value="pos_17h_desc">Mais Votos Pós-17h</option>
+                                    <option value="abs_asc">Menor Abstenção (Maior Comp.)</option>
+                                    <option value="pct_13_desc">Maior % Votação Lula (13)</option>
+                                    <option value="pct_22_desc">Maior % Votação Bolsonaro (22)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Tabela Interativa de Seções -->
+                        <div class="zone-table-container" style="max-height: 380px;">
+                            <table class="zone-table" id="secaoTable">
+                                <thead>
+                                    <tr>
+                                        <th>Município &amp; Colégio</th>
+                                        <th>Zona</th>
+                                        <th>Seção</th>
+                                        <th>Urna</th>
+                                        <th>Aptos / Vot.</th>
+                                        <th>Abstenção</th>
+                                        <th>% Manual</th>
+                                        <th>Pós-17h (Man)</th>
+                                        <th>Horários (1º/Últ)</th>
+                                        <th>Lula 13</th>
+                                        <th>Bolso 22</th>
+                                        <th>Score</th>
+                                        <th>Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="secoesTableBody">
+                                    <!-- Inserido dinamicamente via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                            <button id="btnLoadMoreSecoes" class="btn-action" style="background:#1e293b; border-color:#334155; font-size:0.72rem; padding:4px 12px; display:none;">
+                                <i class="fa-solid fa-plus"></i> Carregar mais 100 seções
+                            </button>
+                            <div id="secoesTableCount" style="font-size:0.72rem; color:#94a3b8; text-align:right; flex:1;"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="btn-action" id="btnAnalyticsOk" style="background: #0284c7; border-color: #38bdf8; padding: 8px 20px;"><i class="fa-solid fa-check"></i> Fechar Gráficos</button>
@@ -1798,6 +2219,8 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path):
     <script>
         const rawData = {data_json};
         const bahiaBoundary = {bahia_geojson_str};
+        const secoesAuditData = {secoes_audit_json};
+        const auditChartsData = {charts_data_json};
 
         // Formatação de números padrão BR
         const fmt = num => (num || 0).toLocaleString('pt-BR');
@@ -2787,8 +3210,10 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path):
         const analyticsModal = document.getElementById('analyticsModal');
         const btnTabSuperior = document.getElementById('btnTabSuperior');
         const btnTabTempo = document.getElementById('btnTabTempo');
+        const btnTabAuditoriaSecoes = document.getElementById('btnTabAuditoriaSecoes');
         const viewSuperior = document.getElementById('viewSuperior');
         const viewTempoVotacao = document.getElementById('viewTempoVotacao');
+        const viewAuditoriaSecoes = document.getElementById('viewAuditoriaSecoes');
 
         let tempoScopeMunOnly = true;
         let tempoLocaisChartInst = null;
@@ -2816,17 +3241,31 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path):
         btnTabSuperior.addEventListener('click', () => {{
             btnTabSuperior.classList.add('active');
             btnTabTempo.classList.remove('active');
+            btnTabAuditoriaSecoes.classList.remove('active');
             viewSuperior.style.display = 'block';
             viewTempoVotacao.style.display = 'none';
+            viewAuditoriaSecoes.style.display = 'none';
             renderAnalyticsCharts();
         }});
 
         btnTabTempo.addEventListener('click', () => {{
             btnTabTempo.classList.add('active');
             btnTabSuperior.classList.remove('active');
+            btnTabAuditoriaSecoes.classList.remove('active');
             viewSuperior.style.display = 'none';
             viewTempoVotacao.style.display = 'block';
+            viewAuditoriaSecoes.style.display = 'none';
             renderTempoLocaisView();
+        }});
+
+        btnTabAuditoriaSecoes.addEventListener('click', () => {{
+            btnTabAuditoriaSecoes.classList.add('active');
+            btnTabSuperior.classList.remove('active');
+            btnTabTempo.classList.remove('active');
+            viewSuperior.style.display = 'none';
+            viewTempoVotacao.style.display = 'none';
+            viewAuditoriaSecoes.style.display = 'block';
+            renderAuditoriaSecoesView();
         }});
 
         btnScopeTempoMun.addEventListener('click', () => {{
@@ -3070,6 +3509,299 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path):
                 }}
             }});
         }}
+
+        // ==========================================
+        // AUDITORIA POR SEÇÃO ELEITORAL & ANOMALIAS
+        // ==========================================
+        const searchSecaoTable = document.getElementById('searchSecaoTable');
+        const filterSecaoAnomaly = document.getElementById('filterSecaoAnomaly');
+        const sortSecaoTable = document.getElementById('sortSecaoTable');
+        const secoesTableBody = document.getElementById('secoesTableBody');
+        const secoesTableCount = document.getElementById('secoesTableCount');
+        const btnLoadMoreSecoes = document.getElementById('btnLoadMoreSecoes');
+
+        let secoesDisplayLimit = 100;
+        let chartAuditManualInst = null;
+        let chartAuditPos17Inst = null;
+
+        function getFilteredSecoes() {{
+            const query = (searchSecaoTable.value || '').toLowerCase().trim();
+            const anomFilter = filterSecaoAnomaly.value;
+            const sortMode = sortSecaoTable.value;
+
+            let list = [...secoesAuditData];
+
+            if (query) {{
+                list = list.filter(d => 
+                    d.m.toLowerCase().includes(query) ||
+                    d.l.toLowerCase().includes(query) ||
+                    ('z' + d.z).includes(query) ||
+                    ('zona ' + d.z).includes(query) ||
+                    d.z.toString() === query ||
+                    ('s' + d.s).includes(query) ||
+                    ('secao ' + d.s).includes(query) ||
+                    d.s.toString() === query
+                );
+            }}
+
+            if (anomFilter === 'critico') {{
+                list = list.filter(d => d.sc >= 50);
+            }} else if (anomFilter === 'trifeta') {{
+                list = list.filter(d => d.f_abs === 1 && d.f_man === 1 && d.f_p17 === 1);
+            }} else if (anomFilter === 'baixa_abs') {{
+                list = list.filter(d => d.f_abs === 1);
+            }} else if (anomFilter === 'alta_man') {{
+                list = list.filter(d => d.f_man === 1);
+            }} else if (anomFilter === 'pos_17h') {{
+                list = list.filter(d => d.p17 >= 15);
+            }} else if (anomFilter === 'pos_17h_man') {{
+                list = list.filter(d => d.p17m > 0);
+            }}
+
+            if (sortMode === 'score_desc') {{
+                list.sort((a, b) => b.sc - a.sc || b.pman - a.pman);
+            }} else if (sortMode === 'pct_man_desc') {{
+                list.sort((a, b) => b.pman - a.pman);
+            }} else if (sortMode === 'pos_17h_desc') {{
+                list.sort((a, b) => b.p17 - a.p17);
+            }} else if (sortMode === 'abs_asc') {{
+                list.sort((a, b) => a.pabs - b.pabs);
+            }} else if (sortMode === 'pct_13_desc') {{
+                list.sort((a, b) => b.p13 - a.p13);
+            }} else if (sortMode === 'pct_22_desc') {{
+                list.sort((a, b) => b.p22 - a.p22);
+            }}
+
+            return list;
+        }}
+
+        function renderAuditoriaSecoesView() {{
+            renderAuditoriaCharts();
+            renderSecoesTable();
+        }}
+
+        function renderAuditoriaCharts() {{
+            if (!auditChartsData || !auditChartsData.manual) return;
+
+            // Gráfico 1: Votação por Faixa de Liberação Manual
+            const canvasManual = document.getElementById('chartAuditManual');
+            if (canvasManual && !chartAuditManualInst) {{
+                const ctxM = canvasManual.getContext('2d');
+                const mLabels = auditChartsData.manual.map(d => d.FAIXA);
+                const mData13 = auditChartsData.manual.map(d => d.PCT_13);
+                const mData22 = auditChartsData.manual.map(d => d.PCT_22);
+
+                chartAuditManualInst = new Chart(ctxM, {{
+                    type: 'bar',
+                    data: {{
+                        labels: mLabels,
+                        datasets: [
+                            {{
+                                label: 'Lula 13 (%)',
+                                data: mData13,
+                                backgroundColor: 'rgba(239, 68, 68, 0.85)',
+                                borderColor: '#ef4444',
+                                borderWidth: 1,
+                                borderRadius: 4
+                            }},
+                            {{
+                                label: 'Bolsonaro 22 (%)',
+                                data: mData22,
+                                backgroundColor: 'rgba(59, 130, 246, 0.85)',
+                                borderColor: '#3b82f6',
+                                borderWidth: 1,
+                                borderRadius: 4
+                            }}
+                        ]
+                    }},
+                    options: {{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {{
+                            x: {{ grid: {{ color: '#1e293b' }}, ticks: {{ color: '#cbd5e1', font: {{ size: 10 }} }} }},
+                            y: {{ min: 0, max: 100, grid: {{ color: '#1e293b' }}, ticks: {{ color: '#94a3b8', callback: v => v + '%' }} }}
+                        }},
+                        plugins: {{
+                            legend: {{ labels: {{ color: '#f8fafc', font: {{ family: 'Outfit', size: 10 }} }} }},
+                            tooltip: {{
+                                callbacks: {{
+                                    afterBody: function(items) {{
+                                        const idx = items[0].dataIndex;
+                                        const rec = auditChartsData.manual[idx];
+                                        return `Seções: ${{fmt(rec.SECOES)}}\nVotos: ${{fmt(rec.TOTAL_VOTOS)}}`;
+                                    }}
+                                }}
+                            }}
+                        }}
+                    }}
+                }});
+            }}
+
+            // Gráfico 2: Votação por Faixa de Votos Pós-17h
+            const canvasPos17 = document.getElementById('chartAuditPos17');
+            if (canvasPos17 && !chartAuditPos17Inst) {{
+                const ctxP = canvasPos17.getContext('2d');
+                const pLabels = auditChartsData.pos17.map(d => d.FAIXA);
+                const pData13 = auditChartsData.pos17.map(d => d.PCT_13);
+                const pData22 = auditChartsData.pos17.map(d => d.PCT_22);
+
+                chartAuditPos17Inst = new Chart(ctxP, {{
+                    type: 'bar',
+                    data: {{
+                        labels: pLabels,
+                        datasets: [
+                            {{
+                                label: 'Lula 13 (%)',
+                                data: pData13,
+                                backgroundColor: 'rgba(239, 68, 68, 0.85)',
+                                borderColor: '#ef4444',
+                                borderWidth: 1,
+                                borderRadius: 4
+                            }},
+                            {{
+                                label: 'Bolsonaro 22 (%)',
+                                data: pData22,
+                                backgroundColor: 'rgba(59, 130, 246, 0.85)',
+                                borderColor: '#3b82f6',
+                                borderWidth: 1,
+                                borderRadius: 4
+                            }}
+                        ]
+                    }},
+                    options: {{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {{
+                            x: {{ grid: {{ color: '#1e293b' }}, ticks: {{ color: '#cbd5e1', font: {{ size: 10 }} }} }},
+                            y: {{ min: 0, max: 100, grid: {{ color: '#1e293b' }}, ticks: {{ color: '#94a3b8', callback: v => v + '%' }} }}
+                        }},
+                        plugins: {{
+                            legend: {{ labels: {{ color: '#f8fafc', font: {{ family: 'Outfit', size: 10 }} }} }},
+                            tooltip: {{
+                                callbacks: {{
+                                    afterBody: function(items) {{
+                                        const idx = items[0].dataIndex;
+                                        const rec = auditChartsData.pos17[idx];
+                                        return `Seções: ${{fmt(rec.SECOES)}}\nVotos: ${{fmt(rec.TOTAL_VOTOS)}}`;
+                                    }}
+                                }}
+                            }}
+                        }}
+                    }}
+                }});
+            }}
+        }}
+
+        function renderSecoesTable() {{
+            secoesTableBody.innerHTML = '';
+            const list = getFilteredSecoes();
+
+            if (!list || list.length === 0) {{
+                secoesTableBody.innerHTML = '<tr><td colspan="13" style="text-align:center; padding:20px; color:#94a3b8;">Nenhuma seção eleitoral encontrada para os filtros selecionados.</td></tr>';
+                secoesTableCount.textContent = '0 seções encontradas';
+                btnLoadMoreSecoes.style.display = 'none';
+                return;
+            }}
+
+            const displayed = list.slice(0, secoesDisplayLimit);
+
+            displayed.forEach(d => {{
+                const tr = document.createElement('tr');
+
+                // Badge de modelo de urna
+                const isUE15 = d.u.includes('2015') || d.u.includes('2013') || d.u.includes('2011') || d.u.includes('2009');
+                const badgeUrna = isUE15 
+                    ? `<span class="badge-ue15">${{d.u}}</span>` 
+                    : `<span class="badge-ue20">${{d.u}}</span>`;
+
+                // Badge de risco
+                let badgeRisk = `<span class="badge-risk-normal">${{d.sc}} pts</span>`;
+                if (d.risk === 'CRÍTICO') {{
+                    badgeRisk = `<span class="badge-risk-critico"><i class="fa-solid fa-triangle-exclamation"></i> ${{d.sc}} CRÍTICO</span>`;
+                }} else if (d.risk === 'ALTO') {{
+                    badgeRisk = `<span class="badge-risk-alto"><i class="fa-solid fa-circle-exclamation"></i> ${{d.sc}} ALTO</span>`;
+                }} else if (d.risk === 'MÉDIO') {{
+                    badgeRisk = `<span class="badge-risk-medio">${{d.sc}} MÉDIO</span>`;
+                }}
+
+                // Tag de manual
+                let tagManual = `<span class="tag-alert-green">${{d.pman.toFixed(1)}}%</span>`;
+                if (d.pman >= 30.0) {{
+                    tagManual = `<span class="tag-alert-red">${{d.pman.toFixed(1)}}% (${{d.qman}})</span>`;
+                }} else if (d.pman >= 20.0) {{
+                    tagManual = `<span class="tag-alert-amber">${{d.pman.toFixed(1)}}% (${{d.qman}})</span>`;
+                }}
+
+                // Tag de pós-17h
+                let tagP17 = `<span style="color:#94a3b8; font-family:var(--font-mono);">${{d.p17}}</span>`;
+                if (d.p17 >= 30) {{
+                    tagP17 = `<span class="tag-alert-red" title="${{d.p17m}} manuais">${{d.p17}} (${{d.p17m}})</span>`;
+                }} else if (d.p17 >= 15) {{
+                    tagP17 = `<span class="tag-alert-amber" title="${{d.p17m}} manuais">${{d.p17}} (${{d.p17m}})</span>`;
+                }} else if (d.p17 > 0) {{
+                    tagP17 = `<span style="color:#c084fc; font-family:var(--font-mono); font-weight:700;">${{d.p17}}</span>`;
+                }}
+
+                // Tag de abstenção
+                let tagAbs = `<span style="font-family:var(--font-mono);">${{d.pabs.toFixed(1)}}%</span>`;
+                if (d.pabs <= 10.0) {{
+                    tagAbs = `<span class="tag-alert-amber" title="Abstenção Atipicamente Baixa">${{d.pabs.toFixed(1)}}%</span>`;
+                }}
+
+                // Botão ação no mapa
+                const btnMap = (d.lat && d.lng) 
+                    ? `<button class="btn-goto-map" onclick="goToLocal('${{d.lat}}', '${{d.lng}}')"><i class="fa-solid fa-location-dot"></i> Ver</button>`
+                    : `<span style="color:#64748b; font-size:0.68rem;">-</span>`;
+
+                tr.innerHTML = `
+                    <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${{d.l}}">
+                        <div style="font-weight:700; color:#f8fafc; font-size:0.75rem; text-overflow:ellipsis; overflow:hidden;"><i class="fa-solid fa-school" style="color:#38bdf8; font-size:0.65rem; margin-right:4px;"></i>${{d.l}}</div>
+                        <div style="font-size:0.68rem; color:#94a3b8;">${{d.m}}</div>
+                    </td>
+                    <td style="font-family:var(--font-mono); font-weight:700; color:#cbd5e1;">Z${{d.z}}</td>
+                    <td style="font-family:var(--font-mono); font-weight:800; color:#38bdf8;">S${{d.s}}</td>
+                    <td>${{badgeUrna}}</td>
+                    <td style="font-family:var(--font-mono); font-size:0.72rem;">${{fmt(d.apt)}} / <strong>${{fmt(d.cmp)}}</strong></td>
+                    <td>${{tagAbs}}</td>
+                    <td>${{tagManual}}</td>
+                    <td>${{tagP17}}</td>
+                    <td style="font-family:var(--font-mono); font-size:0.68rem; color:#94a3b8; white-space:nowrap;">${{d.t1 || '--'}} / <strong style="color:#f8fafc;">${{d.t2 || '--'}}</strong></td>
+                    <td style="color:#f87171; font-weight:700; font-family:var(--font-mono);">${{d.p13.toFixed(1)}}% <span style="font-size:0.65rem; font-weight:normal; color:#94a3b8;">(${{fmt(d.v13)}})</span></td>
+                    <td style="color:#60a5fa; font-weight:700; font-family:var(--font-mono);">${{d.p22.toFixed(1)}}% <span style="font-size:0.65rem; font-weight:normal; color:#94a3b8;">(${{fmt(d.v22)}})</span></td>
+                    <td>${{badgeRisk}}</td>
+                    <td>${{btnMap}}</td>
+                `;
+
+                secoesTableBody.appendChild(tr);
+            }});
+
+            secoesTableCount.textContent = list.length > secoesDisplayLimit
+                ? `Exibindo os ${{secoesDisplayLimit}} primeiros de ${{fmt(list.length)}} seções filtradas`
+                : `Exibindo todas as ${{list.length}} seções filtradas`;
+
+            btnLoadMoreSecoes.style.display = list.length > secoesDisplayLimit ? 'inline-flex' : 'none';
+        }}
+
+        searchSecaoTable.addEventListener('input', () => {{
+            secoesDisplayLimit = 100;
+            renderSecoesTable();
+        }});
+
+        filterSecaoAnomaly.addEventListener('change', () => {{
+            secoesDisplayLimit = 100;
+            renderSecoesTable();
+        }});
+
+        sortSecaoTable.addEventListener('change', () => {{
+            secoesDisplayLimit = 100;
+            renderSecoesTable();
+        }});
+
+        btnLoadMoreSecoes.addEventListener('click', () => {{
+            secoesDisplayLimit += 100;
+            renderSecoesTable();
+        }});
+
         const btnCloseAnalytics = document.getElementById('btnCloseAnalytics');
         const btnAnalyticsOk = document.getElementById('btnAnalyticsOk');
         const btnScopeMun = document.getElementById('btnScopeMun');

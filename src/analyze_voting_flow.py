@@ -51,12 +51,25 @@ def parse_jez_fast(jez_name: str, zip_bytes: bytes, uf: str):
     first_vote = None
     last_vote = None
 
+    hab_bio = 0
+    hab_man = 0
+    votos_pos_17 = 0
+    votos_pos_17_man = 0
+    cur_mode = "manual"
+
     for line in text.splitlines():
         if not line.startswith("04/10/2026"):
             continue
         parts = line.split("\t")
         if len(parts) >= 5:
             dt_str, msg = parts[0], parts[4].lower()
+            if "aguardando digita" in msg or "identificador do eleitor" in msg:
+                cur_mode = "manual"
+            elif "tipo de habilita" in msg and "biom" in msg:
+                cur_mode = "biometrica"
+            elif "ano de nascimento" in msg or "habilitou o eleitor" in msg or "dado pessoal" in msg:
+                cur_mode = "manual"
+
             if "eleitor foi habilitado" in msg or "tipo de habilita" in msg:
                 if current_hab is None:
                     try:
@@ -74,9 +87,22 @@ def parse_jez_fast(jez_name: str, zip_bytes: bytes, uf: str):
                             if first_vote is None:
                                 first_vote = current_hab
                             last_vote = dt
+
+                            time_part = dt_str.split(" ")[1] if " " in dt_str else ""
+                            is_pos_17 = time_part >= "17:00:00"
+                            if is_pos_17:
+                                votos_pos_17 += 1
+
+                            if cur_mode == "biometrica":
+                                hab_bio += 1
+                            else:
+                                hab_man += 1
+                                if is_pos_17:
+                                    votos_pos_17_man += 1
                     except Exception:
                         pass
                     current_hab = None
+                    cur_mode = "manual"
 
     if voter_count > 0 and first_vote and last_vote:
         span_min = max(1.0, (last_vote - first_vote).total_seconds() / 60.0)
@@ -100,7 +126,13 @@ def parse_jez_fast(jez_name: str, zip_bytes: bytes, uf: str):
             "tempo_medio_minutos": round(avg_dur / 60.0, 2),
             "tempo_mediano_segundos": round(med_dur, 1),
             "tempo_min_segundos": round(min_dur, 1),
-            "tempo_max_segundos": round(max_dur, 1)
+            "tempo_max_segundos": round(max_dur, 1),
+            "qtd_biometria": hab_bio,
+            "qtd_manual": hab_man,
+            "pct_manual": round((hab_man * 100.0 / voter_count), 2) if voter_count > 0 else 0.0,
+            "votos_pos_17h": votos_pos_17,
+            "votos_pos_17h_manual": votos_pos_17_man,
+            "pct_votos_pos_17h": round((votos_pos_17 * 100.0 / voter_count), 2) if voter_count > 0 else 0.0
         }
     return None
 
