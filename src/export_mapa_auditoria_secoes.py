@@ -41,7 +41,8 @@ def export_mapa_auditoria_secoes():
             PCT_MANUAL, QTD_MANUAL, VOTOS_POS_17H, VOTOS_POS_17H_MANUAL,
             PRIMEIRO_VOTO, ULTIMO_VOTO, VOTOS_13, VOTOS_22, PCT_VOTOS_13, PCT_VOTOS_22,
             SCORE_ANOMALIA, NIVEL_RISCO, VOTOS_POR_MINUTO, TEMPO_MEDIO_SEG,
-            FLAG_BAIXA_ABSTENCAO, FLAG_ALTA_LIBERACAO_MANUAL, FLAG_VOTOS_POS_17H
+            FLAG_BAIXA_ABSTENCAO, FLAG_ALTA_LIBERACAO_MANUAL, FLAG_VOTOS_POS_17H,
+            VOTOS_VALIDOS, TOTAL_VOTOS
         FROM auditoria_secoes_BA_2026
         ORDER BY SCORE_ANOMALIA DESC, PCT_MANUAL DESC, VOTOS_POS_17H DESC
     """).fetchall()
@@ -77,14 +78,16 @@ def export_mapa_auditoria_secoes():
         # 6: pct_manual, 7: qtd_manual, 8: votos_pos_17h, 9: votos_pos_17h_manual,
         # 10: primeiro_voto, 11: ultimo_voto, 12: votos_13, 13: votos_22,
         # 14: pct_votos_13, 15: pct_votos_22, 16: score_anomalia, 17: nivel_risco,
-        # 18: votos_por_minuto, 19: tempo_medio_seg, 20: f_abs, 21: f_man, 22: f_p17
+        # 18: votos_por_minuto, 19: tempo_medio_seg, 20: f_abs, 21: f_man, 22: f_p17,
+        # 23: votos_validos, 24: total_votos
         locais_dict[loc_key]["s"].append([
             int(r[6]), int(r[7]), str(r[8]), int(r[9]), int(r[10]),
             float(r[11]), float(r[12]), int(r[13]), int(r[14]), int(r[15]),
             str(r[16] or ""), str(r[17] or ""), int(r[18]), int(r[19]),
             float(r[20]), float(r[21]), int(r[22]), str(r[23]),
             float(r[24] or 0.0), float(r[25] or 0.0),
-            int(r[26]), int(r[27]), int(r[28])
+            int(r[26]), int(r[27]), int(r[28]),
+            int(r[29] or 0), int(r[30] or 0)
         ])
 
     data_locais = list(locais_dict.values())
@@ -1138,6 +1141,7 @@ def build_html(data_json, stats_json, bahia_geojson_str):
             let totalPos17Man = 0;
             let somaV13 = 0;
             let somaV22 = 0;
+            let somaValidos = 0;
             let flatSecoes = [];
 
             locais.forEach(loc => {{
@@ -1149,6 +1153,7 @@ def build_html(data_json, stats_json, bahia_geojson_str):
                     totalPos17Man += sec[9];
                     somaV13 += sec[12];
                     somaV22 += sec[13];
+                    somaValidos += (sec[23] || (sec[12] + sec[13]));
                     flatSecoes.push({{
                         loc: loc,
                         sec: sec
@@ -1162,10 +1167,9 @@ def build_html(data_json, stats_json, bahia_geojson_str):
             kpiPos17Count.textContent = fmt(totalPos17);
             kpiPos17ManCount.textContent = `${{fmt(totalPos17Man)}} sem biometria`;
 
-            const totValidos = somaV13 + somaV22;
-            if (totValidos > 0) {{
-                const p13 = ((somaV13 * 100) / totValidos).toFixed(1);
-                const p22 = ((somaV22 * 100) / totValidos).toFixed(1);
+            if (somaValidos > 0) {{
+                const p13 = ((somaV13 * 100) / somaValidos).toFixed(2);
+                const p22 = ((somaV22 * 100) / somaValidos).toFixed(2);
                 kpiPlacar.innerHTML = `<span style="color:#f87171;">${{p13}}%</span> vs <span style="color:#60a5fa;">${{p22}}%</span>`;
             }} else {{
                 kpiPlacar.textContent = '-';

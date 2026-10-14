@@ -18,7 +18,9 @@ def export_maps_data():
                 NR_SECAO,
                 SUM(CASE WHEN NR_VOTAVEL = 13 THEN QT_VOTOS ELSE 0 END) AS VOTOS_13,
                 SUM(CASE WHEN NR_VOTAVEL = 22 THEN QT_VOTOS ELSE 0 END) AS VOTOS_22,
-                SUM(CASE WHEN NR_VOTAVEL NOT IN (13, 22) THEN QT_VOTOS ELSE 0 END) AS VOTOS_OUTROS,
+                SUM(CASE WHEN NR_VOTAVEL NOT IN (13, 22, 95, 96) THEN QT_VOTOS ELSE 0 END) AS VOTOS_OUTROS,
+                SUM(CASE WHEN NR_VOTAVEL NOT IN (95, 96) THEN QT_VOTOS ELSE 0 END) AS VOTOS_VALIDOS,
+                SUM(CASE WHEN NR_VOTAVEL IN (95, 96) THEN QT_VOTOS ELSE 0 END) AS VOTOS_BRANCOS_NULOS,
                 SUM(QT_VOTOS) AS TOTAL_VOTOS
             FROM votacao_presidente_secao_2026_BA
             GROUP BY NR_ZONA, NR_SECAO
@@ -70,24 +72,48 @@ def export_maps_data():
                 votos_por_minuto
             FROM fluxo_votacao_urnas_BA_2026
         ),
-        locais_clean AS (
+        mun_coords AS (
             SELECT 
-                TRY_CAST(NR_ZONA AS BIGINT) AS NR_ZONA,
-                TRY_CAST(NR_SECAO AS BIGINT) AS NR_SECAO,
                 NM_MUNICIPIO,
-                NM_LOCAL_VOTACAO,
-                DS_ENDERECO,
-                NM_BAIRRO,
-                NR_CEP,
-                TRY_CAST(QT_ELEITOR_SECAO AS BIGINT) AS APTOS,
-                TRY_CAST(REPLACE(NR_LATITUDE, ',', '.') AS DOUBLE) AS LATITUDE,
-                TRY_CAST(REPLACE(NR_LONGITUDE, ',', '.') AS DOUBLE) AS LONGITUDE
+                AVG(TRY_CAST(REPLACE(NR_LATITUDE, ',', '.') AS DOUBLE)) AS LAT_MUN,
+                AVG(TRY_CAST(REPLACE(NR_LONGITUDE, ',', '.') AS DOUBLE)) AS LNG_MUN
             FROM locais_votacao_2026_BA
             WHERE NR_TURNO = '1'
-              AND NR_LATITUDE IS NOT NULL 
-              AND NR_LONGITUDE IS NOT NULL
               AND TRY_CAST(REPLACE(NR_LATITUDE, ',', '.') AS DOUBLE) BETWEEN -19.0 AND -8.0
               AND TRY_CAST(REPLACE(NR_LONGITUDE, ',', '.') AS DOUBLE) BETWEEN -47.0 AND -37.0
+            GROUP BY NM_MUNICIPIO
+        ),
+        locais_clean AS (
+            SELECT 
+                TRY_CAST(l.NR_ZONA AS BIGINT) AS NR_ZONA,
+                TRY_CAST(l.NR_SECAO AS BIGINT) AS NR_SECAO,
+                l.NM_MUNICIPIO,
+                l.NM_LOCAL_VOTACAO,
+                l.DS_ENDERECO,
+                l.NM_BAIRRO,
+                l.NR_CEP,
+                TRY_CAST(l.QT_ELEITOR_SECAO AS BIGINT) AS APTOS,
+                COALESCE(
+                    CASE 
+                        WHEN TRY_CAST(REPLACE(l.NR_LATITUDE, ',', '.') AS DOUBLE) BETWEEN -19.0 AND -8.0 
+                        THEN TRY_CAST(REPLACE(l.NR_LATITUDE, ',', '.') AS DOUBLE)
+                        ELSE NULL 
+                    END,
+                    m.LAT_MUN,
+                    -12.9714
+                ) AS LATITUDE,
+                COALESCE(
+                    CASE 
+                        WHEN TRY_CAST(REPLACE(l.NR_LONGITUDE, ',', '.') AS DOUBLE) BETWEEN -47.0 AND -37.0 
+                        THEN TRY_CAST(REPLACE(l.NR_LONGITUDE, ',', '.') AS DOUBLE)
+                        ELSE NULL 
+                    END,
+                    m.LNG_MUN,
+                    -38.5014
+                ) AS LONGITUDE
+            FROM locais_votacao_2026_BA l
+            LEFT JOIN mun_coords m ON l.NM_MUNICIPIO = m.NM_MUNICIPIO
+            WHERE l.NR_TURNO = '1'
         )
         SELECT 
             l.NM_MUNICIPIO AS MUNICIPIO,
@@ -105,11 +131,15 @@ def export_maps_data():
             COALESCE(SUM(v.VOTOS_13), 0) AS VOTOS_13,
             COALESCE(SUM(v.VOTOS_22), 0) AS VOTOS_22,
             COALESCE(SUM(v.VOTOS_OUTROS), 0) AS VOTOS_OUTROS,
+            COALESCE(SUM(v.VOTOS_VALIDOS), 0) AS VOTOS_VALIDOS,
+            COALESCE(SUM(v.VOTOS_BRANCOS_NULOS), 0) AS VOTOS_BRANCOS_NULOS,
             COALESCE(SUM(v.TOTAL_VOTOS), 0) AS TOTAL_VOTOS,
             GREATEST(0, COALESCE(SUM(l.APTOS), 0) - COALESCE(SUM(v.TOTAL_VOTOS), 0)) AS TOTAL_ABSTENCOES,
             ROUND(CASE WHEN SUM(l.APTOS) > 0 THEN (GREATEST(0, SUM(l.APTOS) - SUM(v.TOTAL_VOTOS)) * 100.0 / SUM(l.APTOS)) ELSE 0 END, 2) AS PCT_ABSTENCAO,
-            ROUND(CASE WHEN SUM(v.TOTAL_VOTOS) > 0 THEN (SUM(v.VOTOS_13) * 100.0 / SUM(v.TOTAL_VOTOS)) ELSE 0 END, 2) AS PCT_VOTOS_13,
-            ROUND(CASE WHEN SUM(v.TOTAL_VOTOS) > 0 THEN (SUM(v.VOTOS_22) * 100.0 / SUM(v.TOTAL_VOTOS)) ELSE 0 END, 2) AS PCT_VOTOS_22,
+            ROUND(CASE WHEN SUM(v.VOTOS_VALIDOS) > 0 THEN (SUM(v.VOTOS_13) * 100.0 / SUM(v.VOTOS_VALIDOS)) ELSE 0 END, 2) AS PCT_VOTOS_13,
+            ROUND(CASE WHEN SUM(v.VOTOS_VALIDOS) > 0 THEN (SUM(v.VOTOS_22) * 100.0 / SUM(v.VOTOS_VALIDOS)) ELSE 0 END, 2) AS PCT_VOTOS_22,
+            ROUND(CASE WHEN SUM(v.TOTAL_VOTOS) > 0 THEN (SUM(v.VOTOS_13) * 100.0 / SUM(v.TOTAL_VOTOS)) ELSE 0 END, 2) AS PCT_TOTAL_13,
+            ROUND(CASE WHEN SUM(v.TOTAL_VOTOS) > 0 THEN (SUM(v.VOTOS_22) * 100.0 / SUM(v.TOTAL_VOTOS)) ELSE 0 END, 2) AS PCT_TOTAL_22,
             
             -- Demografia
             COALESCE(SUM(d.DEMO_FEM), 0) AS DEMO_FEM,
@@ -197,24 +227,54 @@ def export_maps_data():
                 NR_SECAO,
                 SUM(CASE WHEN NR_VOTAVEL = 13 THEN QT_VOTOS ELSE 0 END) AS VOTOS_13,
                 SUM(CASE WHEN NR_VOTAVEL = 22 THEN QT_VOTOS ELSE 0 END) AS VOTOS_22,
-                SUM(CASE WHEN NR_VOTAVEL NOT IN (13, 22) THEN QT_VOTOS ELSE 0 END) AS VOTOS_OUTROS,
+                SUM(CASE WHEN NR_VOTAVEL NOT IN (13, 22, 95, 96) THEN QT_VOTOS ELSE 0 END) AS VOTOS_OUTROS,
+                SUM(CASE WHEN NR_VOTAVEL NOT IN (95, 96) THEN QT_VOTOS ELSE 0 END) AS VOTOS_VALIDOS,
+                SUM(CASE WHEN NR_VOTAVEL IN (95, 96) THEN QT_VOTOS ELSE 0 END) AS VOTOS_BRANCOS_NULOS,
                 SUM(QT_VOTOS) AS TOTAL_VOTOS
             FROM votacao_presidente_secao_2026_BA
             GROUP BY NR_ZONA, NR_SECAO
         ),
-        locais_sec AS (
+        mun_coords AS (
             SELECT 
-                TRY_CAST(NR_ZONA AS BIGINT) AS NR_ZONA,
-                TRY_CAST(NR_SECAO AS BIGINT) AS NR_SECAO,
                 NM_MUNICIPIO,
-                NM_LOCAL_VOTACAO,
-                DS_ENDERECO,
-                NM_BAIRRO,
-                TRY_CAST(QT_ELEITOR_SECAO AS BIGINT) AS APTOS,
-                TRY_CAST(REPLACE(NR_LATITUDE, ',', '.') AS DOUBLE) AS LATITUDE,
-                TRY_CAST(REPLACE(NR_LONGITUDE, ',', '.') AS DOUBLE) AS LONGITUDE
+                AVG(TRY_CAST(REPLACE(NR_LATITUDE, ',', '.') AS DOUBLE)) AS LAT_MUN,
+                AVG(TRY_CAST(REPLACE(NR_LONGITUDE, ',', '.') AS DOUBLE)) AS LNG_MUN
             FROM locais_votacao_2026_BA
             WHERE NR_TURNO = '1'
+              AND TRY_CAST(REPLACE(NR_LATITUDE, ',', '.') AS DOUBLE) BETWEEN -19.0 AND -8.0
+              AND TRY_CAST(REPLACE(NR_LONGITUDE, ',', '.') AS DOUBLE) BETWEEN -47.0 AND -37.0
+            GROUP BY NM_MUNICIPIO
+        ),
+        locais_sec AS (
+            SELECT 
+                TRY_CAST(l.NR_ZONA AS BIGINT) AS NR_ZONA,
+                TRY_CAST(l.NR_SECAO AS BIGINT) AS NR_SECAO,
+                l.NM_MUNICIPIO,
+                l.NM_LOCAL_VOTACAO,
+                l.DS_ENDERECO,
+                l.NM_BAIRRO,
+                TRY_CAST(l.QT_ELEITOR_SECAO AS BIGINT) AS APTOS,
+                COALESCE(
+                    CASE 
+                        WHEN TRY_CAST(REPLACE(l.NR_LATITUDE, ',', '.') AS DOUBLE) BETWEEN -19.0 AND -8.0 
+                        THEN TRY_CAST(REPLACE(l.NR_LATITUDE, ',', '.') AS DOUBLE)
+                        ELSE NULL 
+                    END,
+                    m.LAT_MUN,
+                    -12.9714
+                ) AS LATITUDE,
+                COALESCE(
+                    CASE 
+                        WHEN TRY_CAST(REPLACE(l.NR_LONGITUDE, ',', '.') AS DOUBLE) BETWEEN -47.0 AND -37.0 
+                        THEN TRY_CAST(REPLACE(l.NR_LONGITUDE, ',', '.') AS DOUBLE)
+                        ELSE NULL 
+                    END,
+                    m.LNG_MUN,
+                    -38.5014
+                ) AS LONGITUDE
+            FROM locais_votacao_2026_BA l
+            LEFT JOIN mun_coords m ON l.NM_MUNICIPIO = m.NM_MUNICIPIO
+            WHERE l.NR_TURNO = '1'
         ),
         sec_base AS (
             SELECT 
@@ -247,9 +307,13 @@ def export_maps_data():
                 COALESCE(v.VOTOS_13, 0) AS VOTOS_13,
                 COALESCE(v.VOTOS_22, 0) AS VOTOS_22,
                 COALESCE(v.VOTOS_OUTROS, 0) AS VOTOS_OUTROS,
+                COALESCE(v.VOTOS_VALIDOS, 0) AS VOTOS_VALIDOS,
+                COALESCE(v.VOTOS_BRANCOS_NULOS, 0) AS VOTOS_BRANCOS_NULOS,
                 COALESCE(v.TOTAL_VOTOS, 0) AS TOTAL_VOTOS,
-                ROUND(CASE WHEN COALESCE(v.TOTAL_VOTOS, 0) > 0 THEN (v.VOTOS_13 * 100.0 / v.TOTAL_VOTOS) ELSE 0 END, 2) AS PCT_VOTOS_13,
-                ROUND(CASE WHEN COALESCE(v.TOTAL_VOTOS, 0) > 0 THEN (v.VOTOS_22 * 100.0 / v.TOTAL_VOTOS) ELSE 0 END, 2) AS PCT_VOTOS_22
+                ROUND(CASE WHEN COALESCE(v.VOTOS_VALIDOS, 0) > 0 THEN (v.VOTOS_13 * 100.0 / v.VOTOS_VALIDOS) ELSE 0 END, 2) AS PCT_VOTOS_13,
+                ROUND(CASE WHEN COALESCE(v.VOTOS_VALIDOS, 0) > 0 THEN (v.VOTOS_22 * 100.0 / v.VOTOS_VALIDOS) ELSE 0 END, 2) AS PCT_VOTOS_22,
+                ROUND(CASE WHEN COALESCE(v.TOTAL_VOTOS, 0) > 0 THEN (v.VOTOS_13 * 100.0 / v.TOTAL_VOTOS) ELSE 0 END, 2) AS PCT_TOTAL_13,
+                ROUND(CASE WHEN COALESCE(v.TOTAL_VOTOS, 0) > 0 THEN (v.VOTOS_22 * 100.0 / v.TOTAL_VOTOS) ELSE 0 END, 2) AS PCT_TOTAL_22
             FROM fluxo_votacao_urnas_BA_2026 f
             LEFT JOIN locais_sec l ON f.zona = l.NR_ZONA AND f.secao = l.NR_SECAO
             LEFT JOIN votos_secao v ON f.zona = v.NR_ZONA AND f.secao = v.NR_SECAO
@@ -320,9 +384,10 @@ def export_maps_data():
                 ELSE '> 30% Manual'
             END AS FAIXA,
             COUNT(*) AS SECOES,
+            SUM(VOTOS_VALIDOS) AS TOTAL_VALIDOS,
             SUM(TOTAL_VOTOS) AS TOTAL_VOTOS,
-            ROUND(SUM(VOTOS_13)*100.0/SUM(TOTAL_VOTOS), 2) AS PCT_13,
-            ROUND(SUM(VOTOS_22)*100.0/SUM(TOTAL_VOTOS), 2) AS PCT_22
+            ROUND(SUM(VOTOS_13)*100.0/NULLIF(SUM(VOTOS_VALIDOS), 0), 2) AS PCT_13,
+            ROUND(SUM(VOTOS_22)*100.0/NULLIF(SUM(VOTOS_VALIDOS), 0), 2) AS PCT_22
         FROM auditoria_secoes_BA_2026
         WHERE TOTAL_VOTOS > 0
         GROUP BY 1
@@ -344,9 +409,10 @@ def export_maps_data():
                 ELSE '> 30'
             END AS FAIXA,
             COUNT(*) AS SECOES,
+            SUM(VOTOS_VALIDOS) AS TOTAL_VALIDOS,
             SUM(TOTAL_VOTOS) AS TOTAL_VOTOS,
-            ROUND(SUM(VOTOS_13)*100.0/SUM(TOTAL_VOTOS), 2) AS PCT_13,
-            ROUND(SUM(VOTOS_22)*100.0/SUM(TOTAL_VOTOS), 2) AS PCT_22
+            ROUND(SUM(VOTOS_13)*100.0/NULLIF(SUM(VOTOS_VALIDOS), 0), 2) AS PCT_13,
+            ROUND(SUM(VOTOS_22)*100.0/NULLIF(SUM(VOTOS_VALIDOS), 0), 2) AS PCT_22
         FROM auditoria_secoes_BA_2026
         WHERE TOTAL_VOTOS > 0
         GROUP BY 1
@@ -418,6 +484,8 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path, df_secoes=None, char
             "v13": int(row["VOTOS_13"]),
             "v22": int(row["VOTOS_22"]),
             "vo": int(row["VOTOS_OUTROS"]),
+            "vv": int(row.get("VOTOS_VALIDOS", row["VOTOS_13"] + row["VOTOS_22"] + row["VOTOS_OUTROS"])),
+            "vbn": int(row.get("VOTOS_BRANCOS_NULOS", 0)),
             "vt": int(row["TOTAL_VOTOS"]),
             "p13": float(row["PCT_VOTOS_13"]),
             "p22": float(row["PCT_VOTOS_22"]),
@@ -467,6 +535,9 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path, df_secoes=None, char
                 "t2": str(r["ULTIMO_VOTO"]) if pd.notna(r["ULTIMO_VOTO"]) else "",
                 "v13": int(r["VOTOS_13"]),
                 "v22": int(r["VOTOS_22"]),
+                "vo": int(r.get("VOTOS_OUTROS", 0)),
+                "vv": int(r.get("VOTOS_VALIDOS", r["VOTOS_13"] + r["VOTOS_22"])),
+                "vt": int(r.get("TOTAL_VOTOS", r["COMPARECIMENTO"])),
                 "p13": float(r["PCT_VOTOS_13"]),
                 "p22": float(r["PCT_VOTOS_22"]),
                 "sc": int(r["SCORE_ANOMALIA"]),
@@ -2653,6 +2724,7 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path, df_secoes=None, char
             const totalV13 = filtered.reduce((acc, c) => acc + c.v13, 0);
             const totalV22 = filtered.reduce((acc, c) => acc + c.v22, 0);
             const totalVo = filtered.reduce((acc, c) => acc + (c.vo || 0), 0);
+            const totalValidos = filtered.reduce((acc, c) => acc + (c.vv || (c.v13 + c.v22 + (c.vo || 0))), 0);
             const totalGeral = filtered.reduce((acc, c) => acc + c.vt, 0);
             const totalSec = filtered.reduce((acc, c) => acc + c.sec, 0);
             const totalApt = filtered.reduce((acc, c) => acc + c.apt, 0);
@@ -2669,14 +2741,14 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path, df_secoes=None, char
             document.getElementById('kpiLocais').textContent = fmt(filtered.length);
             document.getElementById('kpiSecoes').textContent = fmt(totalSec) + ' seções';
 
-            const pct13 = totalGeral > 0 ? ((totalV13 / totalGeral) * 100).toFixed(1) : '0.0';
-            const pct22 = totalGeral > 0 ? ((totalV22 / totalGeral) * 100).toFixed(1) : '0.0';
-            const pctVo = totalGeral > 0 ? ((totalVo / totalGeral) * 100).toFixed(1) : '0.0';
+            const pct13 = totalValidos > 0 ? ((totalV13 / totalValidos) * 100).toFixed(2) : '0.00';
+            const pct22 = totalValidos > 0 ? ((totalV22 / totalValidos) * 100).toFixed(2) : '0.00';
+            const pctVo = totalValidos > 0 ? ((totalVo / totalValidos) * 100).toFixed(2) : '0.00';
             const pctAbs = totalApt > 0 ? ((totalAbs / totalApt) * 100).toFixed(1) : '0.0';
 
             document.getElementById('kpiPct13').textContent = pct13 + '% dos válidos';
             document.getElementById('kpiPct22').textContent = pct22 + '% dos válidos';
-            document.getElementById('kpiPctOutros').textContent = pctVo + '% dos votos';
+            document.getElementById('kpiPctOutros').textContent = pctVo + '% dos válidos';
             document.getElementById('kpiPctAbs').textContent = pctAbs + '%';
             document.getElementById('kpiTotalAbs').textContent = fmt(totalAbs) + ' abstenções';
 
