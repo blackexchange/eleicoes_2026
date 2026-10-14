@@ -92,7 +92,7 @@ def export_maps_data():
                 l.DS_ENDERECO,
                 l.NM_BAIRRO,
                 l.NR_CEP,
-                TRY_CAST(l.QT_ELEITOR_SECAO AS BIGINT) AS APTOS,
+                COALESCE(NULLIF(TRY_CAST(l.QT_ELEITOR_ELEICAO_FEDERAL AS BIGINT), 0), TRY_CAST(l.QT_ELEITOR_SECAO AS BIGINT)) AS APTOS,
                 COALESCE(
                     CASE 
                         WHEN TRY_CAST(REPLACE(l.NR_LATITUDE, ',', '.') AS DOUBLE) BETWEEN -19.0 AND -8.0 
@@ -113,7 +113,7 @@ def export_maps_data():
                 ) AS LONGITUDE
             FROM locais_votacao_2026_BA l
             LEFT JOIN mun_coords m ON l.NM_MUNICIPIO = m.NM_MUNICIPIO
-            WHERE l.NR_TURNO = '1'
+            WHERE l.NR_TURNO = '1' AND l.CD_TIPO_SECAO_AGREGADA = '1'
         )
         SELECT 
             l.NM_MUNICIPIO AS MUNICIPIO,
@@ -234,6 +234,16 @@ def export_maps_data():
             FROM votacao_presidente_secao_2026_BA
             GROUP BY NR_ZONA, NR_SECAO
         ),
+        agregadas_info AS (
+            SELECT 
+                TRY_CAST(NR_ZONA AS BIGINT) as NR_ZONA,
+                TRY_CAST(NR_SECAO_PRINCIPAL AS BIGINT) as NR_SECAO_PRINCIPAL,
+                STRING_AGG(DISTINCT CAST(TRY_CAST(NR_SECAO AS BIGINT) AS VARCHAR), ', ' ORDER BY CAST(TRY_CAST(NR_SECAO AS BIGINT) AS VARCHAR)) as SECOES_AGREGADAS,
+                COUNT(DISTINCT NR_SECAO) as QTD_AGREGADAS
+            FROM locais_votacao_2026_BA
+            WHERE CD_TIPO_SECAO_AGREGADA = '2' AND NR_TURNO = '1'
+            GROUP BY 1, 2
+        ),
         mun_coords AS (
             SELECT 
                 NM_MUNICIPIO,
@@ -253,7 +263,7 @@ def export_maps_data():
                 l.NM_LOCAL_VOTACAO,
                 l.DS_ENDERECO,
                 l.NM_BAIRRO,
-                TRY_CAST(l.QT_ELEITOR_SECAO AS BIGINT) AS APTOS,
+                COALESCE(NULLIF(TRY_CAST(l.QT_ELEITOR_ELEICAO_FEDERAL AS BIGINT), 0), TRY_CAST(l.QT_ELEITOR_SECAO AS BIGINT)) AS APTOS,
                 COALESCE(
                     CASE 
                         WHEN TRY_CAST(REPLACE(l.NR_LATITUDE, ',', '.') AS DOUBLE) BETWEEN -19.0 AND -8.0 
@@ -274,7 +284,7 @@ def export_maps_data():
                 ) AS LONGITUDE
             FROM locais_votacao_2026_BA l
             LEFT JOIN mun_coords m ON l.NM_MUNICIPIO = m.NM_MUNICIPIO
-            WHERE l.NR_TURNO = '1'
+            WHERE l.NR_TURNO = '1' AND l.CD_TIPO_SECAO_AGREGADA = '1'
         ),
         sec_base AS (
             SELECT 
@@ -286,6 +296,8 @@ def export_maps_data():
                 COALESCE(l.NM_BAIRRO, '') AS BAIRRO,
                 l.LATITUDE,
                 l.LONGITUDE,
+                COALESCE(ag.SECOES_AGREGADAS, '') AS SECOES_AGREGADAS,
+                CASE WHEN ag.SECOES_AGREGADAS IS NOT NULL AND ag.SECOES_AGREGADAS != '' THEN 1 ELSE 0 END AS IS_AGREGADA,
                 COALESCE(l.APTOS, f.total_eleitores_votaram) AS APTOS,
                 f.total_eleitores_votaram AS COMPARECIMENTO,
                 GREATEST(0, COALESCE(l.APTOS, f.total_eleitores_votaram) - f.total_eleitores_votaram) AS ABSTENCAO,
@@ -296,14 +308,14 @@ def export_maps_data():
                 f.primeiro_voto AS PRIMEIRO_VOTO,
                 f.ultimo_voto AS ULTIMO_VOTO,
                 f.duracao_sessao_min AS DURACAO_SESSAO_MIN,
-                f.tempo_medio_segundos AS TEMPO_MEDIO_SEG,
-                f.votos_por_minuto AS VOTOS_POR_MINUTO,
+                ROUND(f.tempo_medio_segundos, 1) AS TEMPO_MEDIO_SEG,
+                ROUND(f.votos_por_minuto, 3) AS VOTOS_POR_MINUTO,
                 f.qtd_biometria AS QTD_BIOMETRIA,
                 f.qtd_manual AS QTD_MANUAL,
-                f.pct_manual AS PCT_MANUAL,
+                ROUND(f.pct_manual, 1) AS PCT_MANUAL,
                 f.votos_pos_17h AS VOTOS_POS_17H,
                 f.votos_pos_17h_manual AS VOTOS_POS_17H_MANUAL,
-                f.pct_votos_pos_17h AS PCT_VOTOS_POS_17H,
+                ROUND(CASE WHEN f.votos_pos_17h > 0 THEN (f.votos_pos_17h_manual * 100.0 / f.votos_pos_17h) ELSE 0 END, 1) AS PCT_POS_17H_MANUAL,
                 COALESCE(v.VOTOS_13, 0) AS VOTOS_13,
                 COALESCE(v.VOTOS_22, 0) AS VOTOS_22,
                 COALESCE(v.VOTOS_OUTROS, 0) AS VOTOS_OUTROS,
@@ -316,39 +328,57 @@ def export_maps_data():
                 ROUND(CASE WHEN COALESCE(v.TOTAL_VOTOS, 0) > 0 THEN (v.VOTOS_22 * 100.0 / v.TOTAL_VOTOS) ELSE 0 END, 2) AS PCT_TOTAL_22
             FROM fluxo_votacao_urnas_BA_2026 f
             LEFT JOIN locais_sec l ON f.zona = l.NR_ZONA AND f.secao = l.NR_SECAO
+            LEFT JOIN agregadas_info ag ON f.zona = ag.NR_ZONA AND f.secao = ag.NR_SECAO_PRINCIPAL
             LEFT JOIN votos_secao v ON f.zona = v.NR_ZONA AND f.secao = v.NR_SECAO
+        ),
+        sec_intra AS (
+            SELECT 
+                *,
+                ROUND(AVG(PCT_MANUAL) OVER(PARTITION BY MUNICIPIO, LOCAL_VOTACAO), 1) AS MEDIA_MANUAL_LOCAL,
+                COUNT(*) OVER(PARTITION BY MUNICIPIO, LOCAL_VOTACAO) AS SECOES_NO_LOCAL,
+                ROUND(PCT_MANUAL - AVG(PCT_MANUAL) OVER(PARTITION BY MUNICIPIO, LOCAL_VOTACAO), 1) AS DIF_MANUAL_LOCAL
+            FROM sec_base
         ),
         sec_scored AS (
             SELECT 
                 *,
-                -- Score Composto de Anomalia (0 a 100)
+                -- Score Composto de Anomalia Forense (0 a 100)
+                -- 1. Abstenção Atípica (Aptos Reais Consolidados) - até 25 pts
                 (CASE 
-                    WHEN PCT_ABSTENCAO <= 5.0 THEN 30
-                    WHEN PCT_ABSTENCAO <= 10.0 THEN 20
-                    WHEN PCT_ABSTENCAO <= 15.0 THEN 10
+                    WHEN PCT_ABSTENCAO <= 5.0 THEN 25
+                    WHEN PCT_ABSTENCAO <= 10.0 THEN 15
+                    WHEN PCT_ABSTENCAO <= 15.0 THEN 5
                     ELSE 0 
                  END) +
+                -- 2. Liberação Manual Extrema Geral - até 25 pts
                 (CASE 
-                    WHEN PCT_MANUAL >= 40.0 THEN 30
-                    WHEN PCT_MANUAL >= 30.0 THEN 25
-                    WHEN PCT_MANUAL >= 20.0 THEN 15
-                    WHEN PCT_MANUAL >= 15.0 THEN 5
+                    WHEN PCT_MANUAL >= 50.0 THEN 25
+                    WHEN PCT_MANUAL >= 35.0 THEN 20
+                    WHEN PCT_MANUAL >= 25.0 THEN 10
                     ELSE 0 
                  END) +
+                -- 3. Desvio Intra-Colégio (sala destoando das outras salas do mesmo local) - até 25 pts
                 (CASE 
-                    WHEN VOTOS_POS_17H >= 30 THEN 20
-                    WHEN VOTOS_POS_17H >= 15 THEN 15
-                    WHEN VOTOS_POS_17H >= 5 THEN 10
+                    WHEN SECOES_NO_LOCAL > 1 AND DIF_MANUAL_LOCAL >= 50.0 THEN 25
+                    WHEN SECOES_NO_LOCAL > 1 AND DIF_MANUAL_LOCAL >= 30.0 THEN 20
+                    WHEN SECOES_NO_LOCAL > 1 AND DIF_MANUAL_LOCAL >= 20.0 THEN 10
+                    ELSE 0 
+                 END) +
+                -- 4. Votos Pós-17h com Liberação Manual Concentrada - até 15 pts
+                (CASE 
+                    WHEN VOTOS_POS_17H >= 10 AND PCT_POS_17H_MANUAL >= 70.0 THEN 15
+                    WHEN VOTOS_POS_17H >= 5 AND PCT_POS_17H_MANUAL >= 50.0 THEN 10
                     WHEN VOTOS_POS_17H > 0 THEN 5
                     ELSE 0 
                  END) +
+                -- 5. Polarização Extrema de Votação (≥ 90%) - até 10 pts
                 (CASE 
-                    WHEN GREATEST(PCT_VOTOS_13, PCT_VOTOS_22) >= 90.0 THEN 20
-                    WHEN GREATEST(PCT_VOTOS_13, PCT_VOTOS_22) >= 80.0 THEN 15
-                    WHEN GREATEST(PCT_VOTOS_13, PCT_VOTOS_22) >= 70.0 THEN 10
+                    WHEN GREATEST(PCT_VOTOS_13, PCT_VOTOS_22) >= 95.0 THEN 10
+                    WHEN GREATEST(PCT_VOTOS_13, PCT_VOTOS_22) >= 90.0 THEN 7
+                    WHEN GREATEST(PCT_VOTOS_13, PCT_VOTOS_22) >= 80.0 THEN 4
                     ELSE 0 
                  END) AS SCORE_ANOMALIA
-            FROM sec_base
+            FROM sec_intra
         )
         SELECT 
             *,
@@ -360,7 +390,10 @@ def export_maps_data():
             END AS NIVEL_RISCO,
             CASE WHEN PCT_ABSTENCAO <= 10.0 THEN 1 ELSE 0 END AS FLAG_BAIXA_ABSTENCAO,
             CASE WHEN PCT_MANUAL >= 20.0 THEN 1 ELSE 0 END AS FLAG_ALTA_LIBERACAO_MANUAL,
-            CASE WHEN VOTOS_POS_17H > 0 THEN 1 ELSE 0 END AS FLAG_VOTOS_POS_17H
+            CASE WHEN SECOES_NO_LOCAL > 1 AND DIF_MANUAL_LOCAL >= 25.0 THEN 1 ELSE 0 END AS FLAG_DESVIO_ESCOLA,
+            CASE WHEN VOTOS_POS_17H > 0 THEN 1 ELSE 0 END AS FLAG_VOTOS_POS_17H,
+            CASE WHEN VOTOS_POS_17H >= 5 AND PCT_POS_17H_MANUAL >= 70.0 THEN 1 ELSE 0 END AS FLAG_POS_17H_MANUAL_ALTO,
+            IS_AGREGADA AS FLAG_AGREGADA
         FROM sec_scored
         ORDER BY SCORE_ANOMALIA DESC, PCT_MANUAL DESC, VOTOS_POS_17H DESC
     """).df()

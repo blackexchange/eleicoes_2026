@@ -42,7 +42,9 @@ def export_mapa_auditoria_secoes():
             PRIMEIRO_VOTO, ULTIMO_VOTO, VOTOS_13, VOTOS_22, PCT_VOTOS_13, PCT_VOTOS_22,
             SCORE_ANOMALIA, NIVEL_RISCO, VOTOS_POR_MINUTO, TEMPO_MEDIO_SEG,
             FLAG_BAIXA_ABSTENCAO, FLAG_ALTA_LIBERACAO_MANUAL, FLAG_VOTOS_POS_17H,
-            VOTOS_VALIDOS, TOTAL_VOTOS
+            VOTOS_VALIDOS, TOTAL_VOTOS,
+            SECOES_AGREGADAS, IS_AGREGADA, DIF_MANUAL_LOCAL, MEDIA_MANUAL_LOCAL,
+            PCT_POS_17H_MANUAL, FLAG_DESVIO_ESCOLA, FLAG_POS_17H_MANUAL_ALTO
         FROM auditoria_secoes_BA_2026
         ORDER BY SCORE_ANOMALIA DESC, PCT_MANUAL DESC, VOTOS_POS_17H DESC
     """).fetchall()
@@ -79,7 +81,9 @@ def export_mapa_auditoria_secoes():
         # 10: primeiro_voto, 11: ultimo_voto, 12: votos_13, 13: votos_22,
         # 14: pct_votos_13, 15: pct_votos_22, 16: score_anomalia, 17: nivel_risco,
         # 18: votos_por_minuto, 19: tempo_medio_seg, 20: f_abs, 21: f_man, 22: f_p17,
-        # 23: votos_validos, 24: total_votos
+        # 23: votos_validos, 24: total_votos,
+        # 25: secoes_agregadas, 26: is_agregada, 27: dif_manual_local, 28: media_manual_local,
+        # 29: pct_pos_17h_manual, 30: f_desvio_escola, 31: f_pos17_manual_alto
         locais_dict[loc_key]["s"].append([
             int(r[6]), int(r[7]), str(r[8]), int(r[9]), int(r[10]),
             float(r[11]), float(r[12]), int(r[13]), int(r[14]), int(r[15]),
@@ -87,7 +91,9 @@ def export_mapa_auditoria_secoes():
             float(r[20]), float(r[21]), int(r[22]), str(r[23]),
             float(r[24] or 0.0), float(r[25] or 0.0),
             int(r[26]), int(r[27]), int(r[28]),
-            int(r[29] or 0), int(r[30] or 0)
+            int(r[29] or 0), int(r[30] or 0),
+            str(r[31] or ""), int(r[32] or 0), float(r[33] or 0.0), float(r[34] or 0.0),
+            float(r[35] or 0.0), int(r[36] or 0), int(r[37] or 0)
         ])
 
     data_locais = list(locais_dict.values())
@@ -105,7 +111,9 @@ def export_mapa_auditoria_secoes():
         "secoes_critico": int(sum(1 for r in rows if r[22] >= 70)),
         "secoes_alto": int(sum(1 for r in rows if 50 <= r[22] < 70)),
         "secoes_medio": int(sum(1 for r in rows if 35 <= r[22] < 50)),
-        "secoes_trifeta": int(sum(1 for r in rows if r[26] == 1 and r[27] == 1 and r[28] == 1))
+        "secoes_trifeta": int(sum(1 for r in rows if r[26] == 1 and r[27] == 1 and r[28] == 1)),
+        "secoes_agregadas": int(sum(1 for r in rows if r[32] == 1)),
+        "secoes_desvio_escola": int(sum(1 for r in rows if r[36] == 1))
     }
     stats_json = json.dumps(stats, ensure_ascii=False)
 
@@ -722,10 +730,13 @@ def build_html(data_json, stats_json, bahia_geojson_str):
                 <option value="all">Todas as Seções Auditadas</option>
                 <option value="critico">🔴 Risco Crítico (Score ≥ 70)</option>
                 <option value="alto_plus">🚨 Risco Alto ou Crítico (Score ≥ 50)</option>
+                <option value="desvio_escola">🏫 Desvio Intra-Colégio (≥ +25% vs outras salas)</option>
+                <option value="pos_17h_manual">🌙 Pós-17h c/ Liberação Manual Concentrada</option>
                 <option value="trifeta">⚠️ Trifeta: Baixa Abs + Alta Manual + Pós-17h</option>
                 <option value="alta_manual">✋ Alta Liberação Manual Mesário (≥ 20%)</option>
                 <option value="pos_17h">🌙 Votos Pós-17h (≥ 15 votos computados)</option>
-                <option value="baixa_abs">📉 Baixa Abstenção Atípica (≤ 10%)</option>
+                <option value="baixa_abs">📉 Baixa Abstenção Atípica (≤ 10% de aptos)</option>
+                <option value="agregada">📦 Urnas com Seções Agregadas</option>
                 <option value="ue2015">📟 Urnas Antigas &lt; UE2020 (UE2015/13/11)</option>
                 <option value="ue2020">🖥️ Urnas UE2020+</option>
             </select>
@@ -827,6 +838,11 @@ def build_html(data_json, stats_json, bahia_geojson_str):
                 <!-- Abas inseridas via JS -->
             </div>
 
+            <!-- Banner de Seção Agregada -->
+            <div id="detAgregadaBanner" style="display:none; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.4); border-radius: 8px; padding: 8px 10px; font-size: 0.72rem; color: #93c5fd; margin-bottom: 8px;">
+                <i class="fa-solid fa-layer-group" style="color: #60a5fa;"></i> <strong>Urna com Seções Agregadas:</strong> <span id="detAgregadaText"></span>
+            </div>
+
             <!-- Box do Score de Anomalia -->
             <div class="score-box" id="drawerScoreBox">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -848,11 +864,11 @@ def build_html(data_json, stats_json, bahia_geojson_str):
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.74rem;">
                     <div>Modelo Urna: <strong id="detUrna" style="color:#f59e0b;">-</strong></div>
-                    <div>Votos/Minuto: <strong id="detVpm" style="color:#38bdf8;">-</strong></div>
+                    <div>Abstenção: <strong id="detAbs" style="color:#f87171;">-</strong></div>
                     <div>Primeiro Voto: <strong id="detT1" style="color:#fff;">-</strong></div>
                     <div>Último Voto: <strong id="detT2" style="color:#fff;">-</strong></div>
-                    <div>Comparecimento: <strong id="detComp" style="color:#fff;">-</strong></div>
-                    <div>Abstenção: <strong id="detAbs" style="color:#f87171;">-</strong></div>
+                    <div style="grid-column: span 2;">Comparecimento: <strong id="detComp" style="color:#fff;">-</strong></div>
+                    <div style="grid-column: span 2;">Ritmo de Fluxo: <strong id="detVpm" style="color:#38bdf8;">-</strong></div>
                 </div>
             </div>
 
@@ -868,6 +884,10 @@ def build_html(data_json, stats_json, bahia_geojson_str):
                 <div class="score-bar-bg" style="height: 8px;">
                     <div id="detBioBar" style="background:#10b981; width:70%; height:100%;"></div>
                     <div id="detManBar" style="background:#ef4444; width:30%; height:100%;"></div>
+                </div>
+                <div style="font-size: 0.7rem; color: #94a3b8; display: flex; justify-content: space-between; border-top: 1px dashed rgba(51, 65, 85, 0.6); padding-top: 6px;" id="detDesvioEscolaRow">
+                    <span>Desvio no Colégio:</span>
+                    <strong id="detDesvioEscolaVal" style="color:#f59e0b;">-</strong>
                 </div>
                 <div style="font-size: 0.7rem; color: #94a3b8;" id="detPos17Txt">
                     Votos computados após 17:00:00: <strong id="detPos17Val" style="color:#c084fc;">-</strong>
@@ -904,30 +924,32 @@ def build_html(data_json, stats_json, bahia_geojson_str):
                 <button class="drawer-close-btn" id="btnCloseHelp"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div style="font-size: 0.78rem; color: #cbd5e1; line-height: 1.5; display: flex; flex-direction: column; gap: 10px;">
-                <p>O <strong>Score de Anomalia Operacional</strong> pontua cada seção eleitoral de <strong>0 a 100 pontos</strong> a partir do cruzamento dos logs oficiais da urna (<code>logd.dat</code>), dados de votação nominal e cadastro de eleitores do TSE.</p>
+                <p>O <strong>Score de Anomalia Forense</strong> pontua cada urna de <strong>0 a 100 pontos</strong> a partir do cruzamento dos logs brutos da urna (<code>logd.dat</code>), votação nominal do TSE e cadastro oficial de locais e seções agregadas.</p>
                 <div style="background:#0b0f19; padding:10px; border-radius:8px; border-left:3px solid #ef4444;">
-                    <strong>1. Baixa Abstenção / Super-Comparecimento (Até 30 pts)</strong><br>
-                    Seções onde o comparecimento foi superior a 90% (abstenção ≤ 10%) ou 95% (abstenção ≤ 5%) recebem pontuação proporcional por estarem muito acima da média estadual de abstenção da Bahia (~20%).
+                    <strong>1. Abstenção Atípica Consolidada (Até 25 pts)</strong><br>
+                    Calculada sobre a <em>capacidade real consolidada</em> da urna (incluindo eleitores de seções agregadas). Seções com abstenção real ≤ 5% ou ≤ 10% recebem pontuação por estarem muito distantes da média estadual (~20%).
                 </div>
                 <div style="background:#0b0f19; padding:10px; border-radius:8px; border-left:3px solid #f59e0b;">
-                    <strong>2. Liberação Manual pelo Mesário sem Biometria (Até 30 pts)</strong><br>
-                    A média estadual de habilitação sem biometria na Bahia é de 12%. Seções com liberação manual de 20%, 30% ou mais de 40% dos eleitores via confirmação de ano de nascimento pelo mesário recebem pontuação elevada.
+                    <strong>2. Liberação Manual pelo Mesário sem Biometria (Até 25 pts)</strong><br>
+                    A média estadual da Bahia é de 12% de votos manuais. Seções onde 25%, 35% ou mais de 50% dos eleitores foram liberados pelo mesário recebem pontuação elevada.
+                </div>
+                <div style="background:#0b0f19; padding:10px; border-radius:8px; border-left:3px solid #ec4899;">
+                    <strong>3. Desvio Intra-Colégio / Sala Destoante (Até 25 pts)</strong><br>
+                    Compara a taxa manual da urna contra a média das outras salas do <em>mesmo colégio eleitoral</em>. Se uma sala apresenta +20%, +30% ou +50% de liberações manuais que suas vizinhas no mesmo prédio, indica forte anomalia de conduta daquela mesa receptora.
                 </div>
                 <div style="background:#0b0f19; padding:10px; border-radius:8px; border-left:3px solid #a855f7;">
-                    <strong>3. Votação Registrada Pós-17:00:00 (Até 20 pts)</strong><br>
-                    Contabiliza eleitores cujo voto foi computado com timestamp oficial a partir das 17h00. Pontuação escalonada para urnas com mais de 5, 15 ou 30 votos tardios, com bônus para votos tardios liberados manualmente.
+                    <strong>4. Votação Pós-17h com Liberação Manual Concentrada (Até 15 pts)</strong><br>
+                    Contabiliza eleitores atendidos após as 17h e afere se houve concentração desproporcional de liberações manuais (≥ 70% sem biometria) na prorrogação da fila.
                 </div>
                 <div style="background:#0b0f19; padding:10px; border-radius:8px; border-left:3px solid #3b82f6;">
-                    <strong>4. Unilateralidade Partidária Excessiva (Até 20 pts)</strong><br>
-                    Seções onde um candidato atinge mais de 70%, 80% ou 90% dos votos válidos.
+                    <strong>5. Polarização Extrema de Votação (Até 10 pts)</strong><br>
+                    Seções onde um candidato atinge mais de 80%, 90% ou 95% dos votos válidos.
                 </div>
-                <p style="font-size: 0.72rem; color: #94a3b8;">
-                    <strong>Classificação de Risco:</strong><br>
-                    🔴 <strong>Crítico (≥ 70 pts):</strong> 103 seções com confluência extrema de anomalias.<br>
-                    🟠 <strong>Alto (50 - 69 pts):</strong> 1.534 seções sob suspeita operacional.<br>
-                    🟡 <strong>Médio (35 - 49 pts):</strong> 3.526 seções em alerta.<br>
-                    🔵 <strong>Normal (&lt; 35 pts):</strong> Padrão operacional regular.
-                </p>
+                <div style="background:#0b0f19; padding:10px; border-radius:8px; border-left:3px solid #06b6d4; font-size: 0.72rem;">
+                    <strong>ℹ️ Nota Técnica: Seções Agregadas &amp; Ritmo de Votação (VPM)</strong><br>
+                    • <strong>Seções Agregadas:</strong> O TSE junta até 3 ou 4 seções na mesma urna física. O sistema consolida todos os aptos federais, eliminando falsos alarmes de "super-comparecimento".<br>
+                    • <strong>Votos por Minuto (VPM):</strong> A média da Bahia é de <strong>0,45 vpm</strong> (1 voto a cada 2m13s). O máximo registrado em todo o estado foi de 1,00 vpm (60s por eleitor). Ter &gt; 30 vpm é fisicamente impossível (significaria 1 voto a cada 2 segundos!). Leituras de "35" decorrem de interpretação errônea de valores decimais como <code>0.35</code> por softwares de planilhas.
+                </div>
                 <div style="background:#0b0f19; padding:12px; border-radius:8px; border-left:3px solid #10b981; margin-top: 4px;">
                     <div style="font-weight: 700; color: #34d399; margin-bottom: 6px;">
                         <i class="fa-solid fa-map-location-dot"></i> Como Importar no Google Meus Mapas (Google My Maps):
@@ -1058,6 +1080,10 @@ def build_html(data_json, stats_json, bahia_geojson_str):
         const detBioBar = document.getElementById('detBioBar');
         const detManBar = document.getElementById('detManBar');
         const detPos17Val = document.getElementById('detPos17Val');
+        const detAgregadaBanner = document.getElementById('detAgregadaBanner');
+        const detAgregadaText = document.getElementById('detAgregadaText');
+        const detDesvioEscolaRow = document.getElementById('detDesvioEscolaRow');
+        const detDesvioEscolaVal = document.getElementById('detDesvioEscolaVal');
         const detV13 = document.getElementById('detV13');
         const detP13 = document.getElementById('detP13');
         const detV22 = document.getElementById('detV22');
@@ -1140,10 +1166,13 @@ def build_html(data_json, stats_json, bahia_geojson_str):
 
                     if (anom === 'critico') return sec[16] >= 70;
                     if (anom === 'alto_plus') return sec[16] >= 50;
+                    if (anom === 'desvio_escola') return sec[30] === 1; // f_desvio_escola
+                    if (anom === 'pos_17h_manual') return sec[31] === 1; // f_pos17_manual_alto
                     if (anom === 'trifeta') return sec[20] === 1 && sec[21] === 1 && sec[22] === 1;
                     if (anom === 'alta_manual') return sec[21] === 1; // pman >= 20
                     if (anom === 'pos_17h') return sec[8] >= 15;
                     if (anom === 'baixa_abs') return sec[20] === 1; // pabs <= 10
+                    if (anom === 'agregada') return sec[26] === 1; // is_agregada
                     if (anom === 'ue2015') return sec[2].includes('2015') || sec[2].includes('2013') || sec[2].includes('2011');
                     if (anom === 'ue2020') return sec[2].includes('2020') || sec[2].includes('2022');
 
@@ -1413,7 +1442,9 @@ def build_html(data_json, stats_json, bahia_geojson_str):
 
         function renderDrawerSectionDetails(loc, sec) {{
             // sec: 0:z, 1:s, 2:u, 3:apt, 4:cmp, 5:pabs, 6:pman, 7:qman, 8:p17, 9:p17m,
-            // 10:t1, 11:t2, 12:v13, 13:v22, 14:p13, 15:p22, 16:sc, 17:risk, 18:vpm, 19:t_med
+            // 10:t1, 11:t2, 12:v13, 13:v22, 14:p13, 15:p22, 16:sc, 17:risk, 18:vpm, 19:t_med,
+            // 20:f_abs, 21:f_man, 22:f_p17, 23:v_val, 24:v_tot, 25:sec_agr, 26:is_agr,
+            // 27:dif_man, 28:med_man, 29:p_p17m, 30:f_desv, 31:f_p17_man
             const sc = sec[16];
             drawerScoreBadge.textContent = `${{sc}} pts (${{sec[17]}})`;
             drawerScoreFill.style.width = `${{Math.min(100, sc)}}%`;
@@ -1434,16 +1465,28 @@ def build_html(data_json, stats_json, bahia_geojson_str):
             drawerScoreBadge.className = `rank-score ${{badgeClass}}`;
             drawerScoreFill.style.background = fillColor;
 
+            // Seção Agregada Banner
+            if (sec[26] === 1 && sec[25]) {{
+                detAgregadaBanner.style.display = 'block';
+                detAgregadaText.innerHTML = `Esta urna recebeu os eleitores da(s) seção(ões) <strong>${{sec[25]}}</strong>. Capacidade consolidada oficial do TSE: <strong>${{fmt(sec[3])}} aptos</strong>.`;
+            }} else {{
+                detAgregadaBanner.style.display = 'none';
+            }}
+
             // Justificativa dos pontos
             let reasons = [];
-            if (sec[5] <= 5.0) reasons.push("Comparecimento atípico massivo (abstenção ≤ 5%)");
-            else if (sec[5] <= 10.0) reasons.push("Baixa abstenção atípica (≤ 10%)");
+            if (sec[26] === 1 && sec[25]) reasons.push(`Urna consolidada com seções agregadas: ${{sec[25]}} (${{fmt(sec[3])}} aptos reais)`);
+            if (sec[5] <= 5.0) reasons.push("Comparecimento atípico massivo (abstenção consolidada ≤ 5,0%)");
+            else if (sec[5] <= 10.0) reasons.push("Baixa abstenção atípica (≤ 10,0% de aptos)");
 
-            if (sec[6] >= 40.0) reasons.push(`${{sec[6].toFixed(1)}}% de eleitores liberados manualmente pelo mesário (sem biometria)`);
-            else if (sec[6] >= 20.0) reasons.push(`Alta taxa de liberação manual sem biometria (${{sec[6].toFixed(1)}}%)`);
+            if (sec[6] >= 50.0) reasons.push(`${{sec[6].toFixed(1)}}% de eleitores liberados manualmente pelo mesário (sem biometria)`);
+            else if (sec[6] >= 30.0) reasons.push(`Alta taxa de liberação manual sem biometria (${{sec[6].toFixed(1)}}%)`);
 
-            if (sec[8] >= 30) reasons.push(`Volume extremo de votos após 17h (${{sec[8]}} votos computados, ${{sec[9]}} manuais)`);
-            else if (sec[8] > 0) reasons.push(`${{sec[8]}} votos registrados após as 17:00`);
+            if (sec[27] >= 20.0) reasons.push(`Desvio Intra-Colégio: +${{sec[27].toFixed(1)}}% de liberações manuais acima da média das outras salas desta escola (${{sec[28].toFixed(1)}}%)`);
+
+            if (sec[8] >= 10 && sec[29] >= 70.0) reasons.push(`Volume pós-17h com liberação manual concentrada (${{sec[8]}} votos, ${{sec[9]}} manuais — ${{sec[29].toFixed(1)}}%)`);
+            else if (sec[8] >= 30) reasons.push(`Volume extremo de votos após 17h (${{sec[8]}} votos computados)`);
+            else if (sec[8] > 0) reasons.push(`${{sec[8]}} votos registrados após as 17:00 (${{sec[9]}} manuais)`);
 
             const pMax = Math.max(sec[14], sec[15]);
             if (pMax >= 80.0) reasons.push(`Desproporção extrema de votos (${{pMax.toFixed(1)}}% para um candidato)`);
@@ -1454,11 +1497,18 @@ def build_html(data_json, stats_json, bahia_geojson_str):
 
             // Informações Urna
             detUrna.textContent = sec[2];
-            detVpm.textContent = `${{sec[18].toFixed(2)}} vpm`;
             detT1.textContent = sec[10] || '--';
             detT2.textContent = sec[11] || '--';
-            detComp.textContent = `${{fmt(sec[4])}} eleitores (${{fmt(sec[3])}} aptos)`;
+            detComp.textContent = `${{fmt(sec[4])}} eleitores (${{fmt(sec[3])}} aptos consolid.)`;
             detAbs.textContent = `${{sec[5].toFixed(1)}}%`;
+
+            // Ritmo de Votação (VPM formatado sem ambiguidades)
+            const segPorVoto = sec[18] > 0 ? Math.round(60 / sec[18]) : 0;
+            const minP = Math.floor(segPorVoto / 60);
+            const secP = segPorVoto % 60;
+            const tempoFluxoStr = minP > 0 ? `${{minP}}m${{secP < 10 ? '0' : ''}}${{secP}}s` : `${{secP}}s`;
+            detVpm.textContent = `${{sec[18].toFixed(2)}} vpm (1 voto a cada ${{tempoFluxoStr}} | cabine: ${{sec[19].toFixed(1)}}s)`;
+            detVpm.title = `Ritmo médio do fluxo: 1 voto a cada ${{tempoFluxoStr}}. Tempo médio na cabine: ${{sec[19].toFixed(1)}}s.`;
 
             // Biometria
             const bioCount = Math.max(0, sec[4] - sec[7]);
@@ -1466,7 +1516,18 @@ def build_html(data_json, stats_json, bahia_geojson_str):
             detMan.textContent = `${{fmt(sec[7])}} (${{sec[6].toFixed(1)}}%)`;
             detBioBar.style.width = `${{100 - sec[6]}}%`;
             detManBar.style.width = `${{sec[6]}}%`;
-            detPos17Val.textContent = `${{sec[8]}} votos (sendo ${{sec[9]}} liberados manualmente)`;
+
+            // Desvio Intra-Colégio
+            if (sec[27] !== 0) {{
+                detDesvioEscolaRow.style.display = 'flex';
+                const sgn = sec[27] > 0 ? '+' : '';
+                const color = sec[27] >= 20 ? '#ef4444' : (sec[27] >= 10 ? '#f59e0b' : '#94a3b8');
+                detDesvioEscolaVal.innerHTML = `<span style="color:${{color}}; font-weight:700;">${{sgn}}${{sec[27].toFixed(1)}}%</span> vs média do colégio (${{sec[28].toFixed(1)}}%)`;
+            }} else {{
+                detDesvioEscolaRow.style.display = 'none';
+            }}
+
+            detPos17Val.textContent = `${{sec[8]}} votos (sendo ${{sec[9]}} manuais — ${{sec[29].toFixed(1)}}%)`;
 
             // Votação Nominal
             detV13.textContent = fmt(sec[12]);
@@ -1506,16 +1567,20 @@ def build_html(data_json, stats_json, bahia_geojson_str):
                 "Municipio",
                 "Zona",
                 "Secao",
+                "Secoes_Agregadas",
                 "Local_Votacao",
                 "Bairro",
                 "Endereco",
                 "Modelo_Urna",
                 "Lib_Manual_Pct",
+                "Media_Manual_Escola_Pct",
+                "Desvio_Manual_Escola_Pct",
                 "Qtd_Manual",
                 "Votos_Pos_17h",
                 "Votos_Pos_17h_Manual",
+                "Pct_Pos_17h_Manual",
                 "Abstencao_Pct",
-                "Eleitores_Aptos",
+                "Eleitores_Aptos_Reais",
                 "Comparecimento",
                 "Votos_Lula_13",
                 "Votos_Bolsonaro_22",
@@ -1524,7 +1589,8 @@ def build_html(data_json, stats_json, bahia_geojson_str):
                 "Primeiro_Voto",
                 "Ultimo_Voto",
                 "Votos_Por_Minuto",
-                "Tempo_Medio_Seg",
+                "Ritmo_Fluxo_Extenso",
+                "Tempo_Medio_Cabine_Seg",
                 "Descricao"
             ];
 
@@ -1543,18 +1609,32 @@ def build_html(data_json, stats_json, bahia_geojson_str):
                 const lat = loc.lat ? loc.lat.toFixed(6) : "";
                 const lng = loc.lng ? loc.lng.toFixed(6) : "";
 
+                const segPorVoto = sec[18] > 0 ? Math.round(60 / sec[18]) : 0;
+                const minP = Math.floor(segPorVoto / 60);
+                const secP = segPorVoto % 60;
+                const tempoFluxoStr = minP > 0 ? `${{minP}}m${{secP < 10 ? '0' : ''}}${{secP}}s` : `${{secP}}s`;
+                const ritmoExtenso = `${{sec[18].toFixed(2)}} vpm (1 voto a cada ${{tempoFluxoStr}})`;
+
                 // Título claro exibido no marcador do Google Maps
-                const nome = "[Score " + sec[16] + " | " + sec[17] + "] Z " + sec[0] + " S " + sec[1] + " - " + loc.l + " (" + loc.m + ")";
+                let agrBadge = (sec[26] === 1 && sec[25]) ? " [Agregadas: " + sec[25] + "]" : "";
+                const nome = "[Score " + sec[16] + " | " + sec[17] + "] Z " + sec[0] + " S " + sec[1] + agrBadge + " - " + loc.l + " (" + loc.m + ")";
 
                 // Descrição formatada exibida no balão popup do Google Maps
-                const desc = "Município: " + loc.m + " | Zona: " + sec[0] + " | Seção: " + sec[1] + "\\n" +
-                    "Local: " + loc.l + " (" + (loc.b || "Bairro N/I") + ")\\n" +
+                let desc = "Município: " + loc.m + " | Zona: " + sec[0] + " | Seção: " + sec[1];
+                if (sec[26] === 1 && sec[25]) {{
+                    desc += " (Urna Agregada com Seções: " + sec[25] + ")";
+                }}
+                desc += "\\nLocal: " + loc.l + " (" + (loc.b || "Bairro N/I") + ")\\n" +
                     "Endereço: " + (loc.e || "N/A") + "\\n" +
                     "Score Anomalia: " + sec[16] + " pts (" + sec[17] + ")\\n" +
                     "Urna: " + sec[2] + "\\n" +
-                    "Liberação Manual Mesário: " + sec[6].toFixed(1) + "% (" + sec[7] + " eleitores sem biometria)\\n" +
-                    "Votos Registrados Pós-17h: " + sec[8] + " (sendo " + sec[9] + " manuais)\\n" +
-                    "Abstenção: " + sec[5].toFixed(1) + "% (" + sec[4] + " votantes de " + sec[3] + " aptos)\\n" +
+                    "Liberação Manual Mesário: " + sec[6].toFixed(1) + "% (" + sec[7] + " eleitores sem biometria)\\n";
+                if (sec[27] !== 0) {{
+                    desc += "Desvio Intra-Escola: " + (sec[27] > 0 ? "+" : "") + sec[27].toFixed(1) + "% vs média da escola (" + sec[28].toFixed(1) + "%)\\n";
+                }}
+                desc += "Votos Registrados Pós-17h: " + sec[8] + " (sendo " + sec[9] + " manuais — " + sec[29].toFixed(1) + "%)\\n" +
+                    "Abstenção Real Consolidada: " + sec[5].toFixed(1) + "% (" + sec[4] + " votantes de " + sec[3] + " aptos)\\n" +
+                    "Ritmo de Fluxo: " + ritmoExtenso + " (cabine: " + sec[19].toFixed(1) + "s)\\n" +
                     "Placar: Lula " + sec[12] + " (" + sec[14].toFixed(1) + "%) vs Bolsonaro " + sec[13] + " (" + sec[15].toFixed(1) + "%)\\n" +
                     "Horários: 1º voto às " + (sec[10] || "-") + ", encerramento às " + (sec[11] || "-");
 
@@ -1567,14 +1647,18 @@ def build_html(data_json, stats_json, bahia_geojson_str):
                     escapeCSV(loc.m),
                     sec[0],
                     sec[1],
+                    escapeCSV(sec[25] || ""),
                     escapeCSV(loc.l),
                     escapeCSV(loc.b),
                     escapeCSV(loc.e),
                     escapeCSV(sec[2]),
                     escapeCSV(sec[6].toFixed(1) + "%"),
+                    escapeCSV(sec[28].toFixed(1) + "%"),
+                    escapeCSV((sec[27] > 0 ? "+" : "") + sec[27].toFixed(1) + "%"),
                     sec[7],
                     sec[8],
                     sec[9],
+                    escapeCSV(sec[29].toFixed(1) + "%"),
                     escapeCSV(sec[5].toFixed(1) + "%"),
                     sec[3],
                     sec[4],
@@ -1585,6 +1669,7 @@ def build_html(data_json, stats_json, bahia_geojson_str):
                     escapeCSV(sec[10]),
                     escapeCSV(sec[11]),
                     sec[18].toFixed(2),
+                    escapeCSV(ritmoExtenso),
                     sec[19].toFixed(1),
                     escapeCSV(desc)
                 ];
