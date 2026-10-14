@@ -676,14 +676,17 @@ def build_html(data_json, stats_json, bahia_geojson_str):
             </div>
         </div>
         <div class="top-navbar-right">
+            <button class="nav-btn danger" id="btnDownloadFilteredCSV" title="Exportar o recorte filtrado para importar no Google Meus Mapas">
+                <i class="fa-solid fa-map-location-dot"></i> <span id="lblDownloadBtn">Baixar CSV Google Maps</span>
+            </button>
             <a href="index.html" class="nav-btn primary">
-                <i class="fa-solid fa-map-location-dot"></i> Ir ao Mapa Geral (Colégios)
+                <i class="fa-solid fa-layer-group"></i> Ir ao Mapa Geral (Colégios)
             </a>
-            <a href="auditoria_secoes_anomalias_BA_2026.csv" download class="nav-btn danger">
-                <i class="fa-solid fa-file-csv"></i> Baixar CSV Completo (35.472 Seções)
+            <a href="auditoria_secoes_anomalias_BA_2026.csv" download class="nav-btn" title="Baixar CSV bruto original com todas as 35.472 seções">
+                <i class="fa-solid fa-database"></i> Base Completa
             </a>
             <button class="nav-btn" id="btnHelp">
-                <i class="fa-solid fa-circle-question"></i> Metodologia
+                <i class="fa-solid fa-circle-question"></i> Metodologia &amp; Meus Mapas
             </button>
         </div>
     </div>
@@ -757,6 +760,16 @@ def build_html(data_json, stats_json, bahia_geojson_str):
                 <option value="voto13">🔴 Votos Lula (13)</option>
                 <option value="voto22">🔵 Votos Bolsonaro (22)</option>
             </select>
+        </div>
+
+        <!-- Botão de Download do Recorte no Sidebar -->
+        <div style="padding: 10px 14px; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(239, 68, 68, 0.35); border-radius: 10px; margin: 10px 14px 6px 14px; box-shadow: 0 4px 14px rgba(0,0,0,0.3);">
+            <button class="nav-btn danger" id="btnDownloadFilteredCSVSidebar" style="width: 100%; justify-content: center; padding: 10px 12px; font-size: 0.76rem; border-radius: 8px; font-weight: 700; cursor: pointer;">
+                <i class="fa-solid fa-cloud-arrow-down"></i> <span id="lblDownloadSidebar">Baixar CSV p/ Google Meus Mapas</span>
+            </button>
+            <div style="font-size: 0.65rem; color: #94a3b8; text-align: center; margin-top: 6px; line-height: 1.35;">
+                Exporta apenas as seções do <strong>filtro ativo</strong> com <code>Latitude</code>, <code>Longitude</code> e <code>Nome</code> prontos para o <strong>Google My Maps</strong>.
+            </div>
         </div>
 
         <!-- KPIs Dinâmicos do Recorte Atual -->
@@ -915,6 +928,21 @@ def build_html(data_json, stats_json, bahia_geojson_str):
                     🟡 <strong>Médio (35 - 49 pts):</strong> 3.526 seções em alerta.<br>
                     🔵 <strong>Normal (&lt; 35 pts):</strong> Padrão operacional regular.
                 </p>
+                <div style="background:#0b0f19; padding:12px; border-radius:8px; border-left:3px solid #10b981; margin-top: 4px;">
+                    <div style="font-weight: 700; color: #34d399; margin-bottom: 6px;">
+                        <i class="fa-solid fa-map-location-dot"></i> Como Importar no Google Meus Mapas (Google My Maps):
+                    </div>
+                    <ol style="margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; font-size: 0.74rem;">
+                        <li>Aplique os filtros desejados (município, zona ou risco) e clique em <strong>"Baixar CSV Google Maps"</strong>.</li>
+                        <li>Acesse o <a href="https://www.google.com/mymaps" target="_blank" style="color:#38bdf8; text-decoration:underline; font-weight:700;">Google Meus Mapas (My Maps)</a> e clique em <em>"+ Criar um novo mapa"</em>.</li>
+                        <li>Na camada do mapa, clique no link azul <strong>"Importar"</strong> e faça o upload do arquivo CSV baixado.</li>
+                        <li>O Google Maps selecionará automaticamente as colunas <code>Latitude</code> e <code>Longitude</code>. Clique em <em>Continuar</em>.</li>
+                        <li>Para o título do marcador, selecione a coluna <code>Nome</code> e clique em <em>Concluir</em>.</li>
+                    </ol>
+                    <div style="font-size: 0.68rem; color: #94a3b8; margin-top: 6px;">
+                        💡 <em>Dica:</em> O Google My Maps recomenda até 2.000 pontos por camada. Se o seu filtro tiver mais de 2.000 seções, você pode segmentar por município ou risco para criar camadas organizadas.
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1041,6 +1069,12 @@ def build_html(data_json, stats_json, bahia_geojson_str):
         const modalMetodologia = document.getElementById('modalMetodologia');
         const btnHelp = document.getElementById('btnHelp');
         const btnCloseHelp = document.getElementById('btnCloseHelp');
+
+        const btnDownloadFilteredCSV = document.getElementById('btnDownloadFilteredCSV');
+        const btnDownloadFilteredCSVSidebar = document.getElementById('btnDownloadFilteredCSVSidebar');
+        const lblDownloadBtn = document.getElementById('lblDownloadBtn');
+        const lblDownloadSidebar = document.getElementById('lblDownloadSidebar');
+        let currentFilteredSecoes = [];
 
         // Modal Help Handlers
         btnHelp.addEventListener('click', () => modalMetodologia.classList.add('open'));
@@ -1175,8 +1209,13 @@ def build_html(data_json, stats_json, bahia_geojson_str):
                 kpiPlacar.textContent = '-';
             }}
 
-            // 2. Atualizar Ranking
+            // 2. Atualizar Ranking e Dados Exportáveis
+            currentFilteredSecoes = flatSecoes;
             renderRanking(flatSecoes);
+
+            const countTxt = fmt(flatSecoes.length);
+            if (lblDownloadBtn) lblDownloadBtn.textContent = `Baixar CSV Google Maps (${{countTxt}})`;
+            if (lblDownloadSidebar) lblDownloadSidebar.textContent = `Baixar CSV Google Maps (${{countTxt}})`;
 
             // 3. Atualizar Marcadores (Cluster)
             if (markerClusterGroup) {{
@@ -1447,6 +1486,141 @@ def build_html(data_json, stats_json, bahia_geojson_str):
         btnCloseDrawer.addEventListener('click', () => {{
             detailDrawer.classList.remove('open');
         }});
+
+        // Exportar dados do filtro atual no formato oficial do Google Meus Mapas (Google My Maps)
+        function downloadFilteredCSVForGoogleMaps() {{
+            if (!currentFilteredSecoes || currentFilteredSecoes.length === 0) {{
+                alert("Nenhuma seção encontrada com os filtros selecionados para exportar.");
+                return;
+            }}
+
+            // Cabeçalho otimizado para o Google Meus Mapas
+            // Colunas Latitude e Longitude são reconhecidas nativamente para plotar os marcadores.
+            // Coluna Nome é selecionada como título exibido no mapa.
+            const headers = [
+                "Nome",
+                "Latitude",
+                "Longitude",
+                "Score_Anomalia",
+                "Nivel_Risco",
+                "Municipio",
+                "Zona",
+                "Secao",
+                "Local_Votacao",
+                "Bairro",
+                "Endereco",
+                "Modelo_Urna",
+                "Lib_Manual_Pct",
+                "Qtd_Manual",
+                "Votos_Pos_17h",
+                "Votos_Pos_17h_Manual",
+                "Abstencao_Pct",
+                "Eleitores_Aptos",
+                "Comparecimento",
+                "Votos_Lula_13",
+                "Votos_Bolsonaro_22",
+                "Pct_Lula_Validos",
+                "Pct_Bolsonaro_Validos",
+                "Primeiro_Voto",
+                "Ultimo_Voto",
+                "Votos_Por_Minuto",
+                "Tempo_Medio_Seg",
+                "Descricao"
+            ];
+
+            function escapeCSV(val) {{
+                if (val === null || val === undefined) return '""';
+                let str = String(val).replace(/"/g, '""');
+                return '"' + str + '"';
+            }}
+
+            const rows = [headers.join(",")];
+
+            currentFilteredSecoes.forEach(item => {{
+                const loc = item.loc;
+                const sec = item.sec;
+
+                const lat = loc.lat ? loc.lat.toFixed(6) : "";
+                const lng = loc.lng ? loc.lng.toFixed(6) : "";
+
+                // Título claro exibido no marcador do Google Maps
+                const nome = "[Score " + sec[16] + " | " + sec[17] + "] Z " + sec[0] + " S " + sec[1] + " - " + loc.l + " (" + loc.m + ")";
+
+                // Descrição formatada exibida no balão popup do Google Maps
+                const desc = "Município: " + loc.m + " | Zona: " + sec[0] + " | Seção: " + sec[1] + "\\n" +
+                    "Local: " + loc.l + " (" + (loc.b || "Bairro N/I") + ")\\n" +
+                    "Endereço: " + (loc.e || "N/A") + "\\n" +
+                    "Score Anomalia: " + sec[16] + " pts (" + sec[17] + ")\\n" +
+                    "Urna: " + sec[2] + "\\n" +
+                    "Liberação Manual Mesário: " + sec[6].toFixed(1) + "% (" + sec[7] + " eleitores sem biometria)\\n" +
+                    "Votos Registrados Pós-17h: " + sec[8] + " (sendo " + sec[9] + " manuais)\\n" +
+                    "Abstenção: " + sec[5].toFixed(1) + "% (" + sec[4] + " votantes de " + sec[3] + " aptos)\\n" +
+                    "Placar: Lula " + sec[12] + " (" + sec[14].toFixed(1) + "%) vs Bolsonaro " + sec[13] + " (" + sec[15].toFixed(1) + "%)\\n" +
+                    "Horários: 1º voto às " + (sec[10] || "-") + ", encerramento às " + (sec[11] || "-");
+
+                const rowData = [
+                    escapeCSV(nome),
+                    lat,
+                    lng,
+                    sec[16],
+                    escapeCSV(sec[17]),
+                    escapeCSV(loc.m),
+                    sec[0],
+                    sec[1],
+                    escapeCSV(loc.l),
+                    escapeCSV(loc.b),
+                    escapeCSV(loc.e),
+                    escapeCSV(sec[2]),
+                    escapeCSV(sec[6].toFixed(1) + "%"),
+                    sec[7],
+                    sec[8],
+                    sec[9],
+                    escapeCSV(sec[5].toFixed(1) + "%"),
+                    sec[3],
+                    sec[4],
+                    sec[12],
+                    sec[13],
+                    escapeCSV(sec[14].toFixed(1) + "%"),
+                    escapeCSV(sec[15].toFixed(1) + "%"),
+                    escapeCSV(sec[10]),
+                    escapeCSV(sec[11]),
+                    sec[18].toFixed(2),
+                    sec[19].toFixed(1),
+                    escapeCSV(desc)
+                ];
+
+                rows.push(rowData.join(","));
+            }});
+
+            const csvContent = "\\ufeff" + rows.join("\\r\\n");
+            const blob = new Blob([csvContent], {{ type: "text/csv;charset=utf-8;" }});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+
+            const mun = selectMunicipio.value ? "_" + selectMunicipio.value.toLowerCase().replace(/[^a-z0-9]/g, '_') : "";
+            const anom = selectAnomalia.value !== 'all' ? "_" + selectAnomalia.value : "";
+            const filename = "auditoria_google_meus_mapas" + mun + anom + "_" + currentFilteredSecoes.length + "secoes.csv";
+
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            if (currentFilteredSecoes.length > 2000) {{
+                setTimeout(() => {{
+                    alert("Arquivo \\"" + filename + "\\" baixado com sucesso com " + fmt(currentFilteredSecoes.length) + " seções!\\n\\nNota: O Google Meus Mapas recomenda até 2.000 pontos por camada. Caso queira importar sem restrições, você pode filtrar por município ou faixa de risco (ex: Risco Crítico ou Alto) para criar camadas separadas.");
+                }}, 300);
+            }}
+        }}
+
+        if (btnDownloadFilteredCSV) {{
+            btnDownloadFilteredCSV.addEventListener('click', downloadFilteredCSVForGoogleMaps);
+        }}
+        if (btnDownloadFilteredCSVSidebar) {{
+            btnDownloadFilteredCSVSidebar.addEventListener('click', downloadFilteredCSVForGoogleMaps);
+        }}
 
         // Event Listeners dos Filtros
         selectMunicipio.addEventListener('change', () => {{
