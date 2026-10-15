@@ -51,8 +51,8 @@
             justify-content: space-between;
             background: rgba(15, 23, 42, 0.92);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(51, 65, 85, 0.8);
-            border-radius: 12px;
+            border: 1px solid rgba(51, 65, 85, 0.85);
+            border-radius: 14px;
             padding: 8px 16px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
             pointer-events: auto;
@@ -60,75 +60,243 @@
         .top-navbar-left {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
-        .nav-brand {
-            font-size: 0.95rem;
-            font-weight: 800;
-            letter-spacing: -0.02em;
+        .nav-brand-container {
             display: flex;
             align-items: center;
-            gap: 8px;
-            color: #fff;
+            gap: 10px;
+            text-decoration: none;
         }
-        .nav-brand span {
+        .nav-brand-icon {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(217, 119, 6, 0.1));
+            border: 1px solid rgba(245, 158, 11, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: #f59e0b;
-            font-weight: 900;
+            font-size: 1.05rem;
+            box-shadow: 0 0 14px rgba(245, 158, 11, 0.2);
+        }
+        .nav-brand-text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 2px;
+        }
+        .nav-brand-title {
+            font-size: 0.96rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            white-space: nowrap;
+        }
+        .nav-brand-subtitle {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #f59e0b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            line-height: 1.1;
+            white-space: nowrap;
         }
         .nav-badge-pill {
-            background: rgba(239, 68, 68, 0.2);
-            color: #fca5a5;
-            border: 1px solid rgba(239, 68, 68, 0.5);
+            background: rgba(56, 189, 248, 0.12);
+            color: #7dd3fc;
+            border: 1px solid rgba(56, 189, 248, 0.35);
             font-size: 0.68rem;
             font-weight: 700;
-            padding: 2px 8px;
+            padding: 4px 10px;
             border-radius: 20px;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
-        }
-        .nav-badge-pill.orange {
-            background: rgba(245, 158, 11, 0.2);
-            color: #fde047;
-            border-color: rgba(245, 158, 11, 0.5);
+            gap: 5px;
+            white-space: nowrap;
         }
         .top-navbar-right {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            position: relative;
         }
         .nav-btn {
             background: #1e293b;
             border: 1px solid #334155;
             color: #f8fafc;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 0.75rem;
+            padding: 7px 14px;
+            border-radius: 9px;
+            font-size: 0.76rem;
             font-weight: 700;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             text-decoration: none;
             transition: all 0.2s ease;
+            white-space: nowrap;
         }
         .nav-btn:hover {
-            background: #334155;
+            background: #273549;
             border-color: #38bdf8;
             color: #fff;
             transform: translateY(-1px);
         }
-        .nav-btn.primary {
-            background: linear-gradient(135deg, #0284c7, #2563eb);
+        .nav-btn.btn-export-csv {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.9), rgba(185, 28, 28, 0.9));
+            border: 1px solid #ef4444;
+            color: #ffffff;
+            box-shadow: 0 2px 10px rgba(239, 68, 68, 0.3);
+        }
+        .nav-btn.btn-export-csv:hover {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border-color: #f87171;
+            box-shadow: 0 4px 16px rgba(239, 68, 68, 0.5);
+            color: #ffffff;
+        }
+
+        /* Dropdown Menu */
+        .nav-dropdown-wrapper {
+            position: relative;
+        }
+        .nav-dropdown-btn {
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #f8fafc;
+        }
+        .nav-dropdown-btn.active {
+            background: #273549;
             border-color: #38bdf8;
+            color: #fff;
         }
-        .nav-btn.primary:hover {
-            background: linear-gradient(135deg, #0369a1, #1d4ed8);
+        .dropdown-arrow {
+            font-size: 0.65rem;
+            transition: transform 0.2s ease;
+            color: #94a3b8;
         }
-        .nav-btn.danger {
-            background: rgba(239, 68, 68, 0.2);
-            border-color: #ef4444;
-            color: #fca5a5;
+        .nav-dropdown-btn.active .dropdown-arrow {
+            transform: rotate(180deg);
+            color: #38bdf8;
+        }
+        .nav-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 330px;
+            background: rgba(15, 23, 42, 0.97);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(51, 65, 85, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 20px 45px rgba(0,0,0,0.75), 0 0 20px rgba(56, 189, 248, 0.08);
+            padding: 8px;
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            z-index: 1200;
+            animation: dropdownFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .nav-dropdown-menu.open {
+            display: flex;
+        }
+        @keyframes dropdownFadeIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .dropdown-header {
+            font-size: 0.68rem;
+            font-weight: 800;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 6px 10px 4px 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #f1f5f9;
+            transition: all 0.15s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        .dropdown-item:hover {
+            background: rgba(30, 41, 59, 0.85);
+            border-color: rgba(56, 189, 248, 0.3);
+            transform: translateX(2px);
+        }
+        .dropdown-item-icon {
+            width: 32px;
+            height: 32px;
+            min-width: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+        .dropdown-item-icon.amber {
+            background: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.35);
+        }
+        .dropdown-item-icon.sky {
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.35);
+        }
+        .dropdown-item-icon.emerald {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.35);
+        }
+        .dropdown-item-icon.blue {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.35);
+        }
+        .dropdown-item-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+            overflow: hidden;
+        }
+        .dropdown-item-title {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #f8fafc;
+            line-height: 1.2;
+        }
+        .dropdown-item-desc {
+            font-size: 0.67rem;
+            color: #94a3b8;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .dropdown-item-action {
+            color: #64748b;
+            font-size: 0.72rem;
+            transition: color 0.15s ease;
+        }
+        .dropdown-item:hover .dropdown-item-action {
+            color: #38bdf8;
+        }
+        .dropdown-divider {
+            height: 1px;
+            background: #1e293b;
+            margin: 4px 6px;
         }
 
         /* Sidebar Styling */
@@ -530,30 +698,82 @@
     <!-- Top Floating Navbar -->
     <div class="top-navbar">
         <div class="top-navbar-left">
-            <div class="nav-brand">
-                <i class="fa-solid fa-scale-balanced" style="color: #f59e0b;"></i>
-                Sentinela Juris • <span>Inteligência Forense Eleitoral</span>
+            <div class="nav-brand-container">
+                <div class="nav-brand-icon">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                </div>
+                <div class="nav-brand-text">
+                    <div class="nav-brand-title">Sentinela Juris</div>
+                    <div class="nav-brand-subtitle">Inteligência Forense Eleitoral 2026</div>
+                </div>
             </div>
             <div class="nav-badge-pill">
-                <i class="fa-solid fa-triangle-exclamation"></i> Auditoria Pericial de Urnas
-            </div>
-            <div class="nav-badge-pill orange">
-                <i class="fa-solid fa-shield-halved"></i> Instrução Probatória 2026
+                <i class="fa-solid fa-shield-halved"></i> Auditoria Oficial de Urnas
             </div>
         </div>
         <div class="top-navbar-right">
-            <button class="nav-btn danger" id="btnDownloadFilteredCSV" title="Exportar o recorte pericial filtrado para importar no Google Meus Mapas">
-                <i class="fa-solid fa-file-csv"></i> <span id="lblDownloadBtn">Baixar CSV Google Maps</span>
+            <!-- Botão Principal de Exportação CSV Filtrado -->
+            <button class="nav-btn btn-export-csv" id="btnDownloadFilteredCSV" title="Exportar o recorte pericial filtrado para importar no Google Meus Mapas">
+                <i class="fa-solid fa-cloud-arrow-down"></i> <span id="lblDownloadBtn">Baixar CSV Google Maps</span>
             </button>
-            <a href="index.html" class="nav-btn primary">
-                <i class="fa-solid fa-layer-group"></i> Painel Geral de Colégios
-            </a>
-            <a href="auditoria_secoes_anomalias_BA_2026.csv" download class="nav-btn" title="Baixar base pericial completa com todas as 35.472 seções para instrução probatória">
-                <i class="fa-solid fa-database"></i> Base Pericial Completa
-            </a>
-            <button class="nav-btn" id="btnHelp">
-                <i class="fa-solid fa-scale-balanced"></i> Metodologia &amp; Instrução Probatória
-            </button>
+
+            <!-- Menu Dropdown de Recursos & Metodologia -->
+            <div class="nav-dropdown-wrapper">
+                <button class="nav-btn nav-dropdown-btn" id="btnMenuDropdown" aria-expanded="false" title="Abrir menu de recursos periciais, metodologia e bases completas">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                    <span>Recursos</span>
+                    <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+                </button>
+                <div class="nav-dropdown-menu" id="navDropdownMenu">
+                    <div class="dropdown-header">
+                        <i class="fa-solid fa-folder-tree"></i> Central de Recursos Periciais
+                    </div>
+
+                    <a href="javascript:void(0)" class="dropdown-item" id="menuItemMetodologia">
+                        <div class="dropdown-item-icon amber">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                        </div>
+                        <div class="dropdown-item-content">
+                            <div class="dropdown-item-title">Metodologia &amp; Instrução Probatória</div>
+                            <div class="dropdown-item-desc">Critérios do Score Forense (0-100 pts) para instrução processual</div>
+                        </div>
+                    </a>
+
+                    <a href="javascript:void(0)" class="dropdown-item" id="menuItemGoogleMapsGuide">
+                        <div class="dropdown-item-icon sky">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                        </div>
+                        <div class="dropdown-item-content">
+                            <div class="dropdown-item-title">Como Importar no Google Meus Mapas</div>
+                            <div class="dropdown-item-desc">Passo a passo para gerar camadas geográficas no My Maps</div>
+                        </div>
+                    </a>
+
+                    <div class="dropdown-divider"></div>
+
+                    <a href="auditoria_secoes_anomalias_BA_2026.csv" download class="dropdown-item" title="Baixar base pericial completa com todas as 35.472 seções para instrução probatória">
+                        <div class="dropdown-item-icon emerald">
+                            <i class="fa-solid fa-database"></i>
+                        </div>
+                        <div class="dropdown-item-content">
+                            <div class="dropdown-item-title">Base Pericial Completa (.csv)</div>
+                            <div class="dropdown-item-desc">Download das 35.472 seções com métricas de urna e logd.dat</div>
+                        </div>
+                        <i class="fa-solid fa-download dropdown-item-action"></i>
+                    </a>
+
+                    <a href="index.html" class="dropdown-item" title="Navegar para o mapa com visão agregada por colégio eleitoral">
+                        <div class="dropdown-item-icon blue">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <div class="dropdown-item-content">
+                            <div class="dropdown-item-title">Painel Geral de Colégios</div>
+                            <div class="dropdown-item-desc">Visão agregada por municípios, escolas e bairros da Bahia</div>
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square dropdown-item-action"></i>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -941,8 +1161,11 @@
         const btnGoogleMapsExt = document.getElementById('btnGoogleMapsExt');
 
         const modalMetodologia = document.getElementById('modalMetodologia');
-        const btnHelp = document.getElementById('btnHelp');
         const btnCloseHelp = document.getElementById('btnCloseHelp');
+        const btnMenuDropdown = document.getElementById('btnMenuDropdown');
+        const navDropdownMenu = document.getElementById('navDropdownMenu');
+        const menuItemMetodologia = document.getElementById('menuItemMetodologia');
+        const menuItemGoogleMapsGuide = document.getElementById('menuItemGoogleMapsGuide');
 
         const btnDownloadFilteredCSV = document.getElementById('btnDownloadFilteredCSV');
         const btnDownloadFilteredCSVSidebar = document.getElementById('btnDownloadFilteredCSVSidebar');
@@ -950,8 +1173,59 @@
         const lblDownloadSidebar = document.getElementById('lblDownloadSidebar');
         let currentFilteredSecoes = [];
 
+        // Dropdown Menu Handlers
+        function toggleDropdown(show) {
+            const isOpen = show !== undefined ? show : !navDropdownMenu.classList.contains('open');
+            if (isOpen) {
+                navDropdownMenu.classList.add('open');
+                btnMenuDropdown.classList.add('active');
+                btnMenuDropdown.setAttribute('aria-expanded', 'true');
+            } else {
+                navDropdownMenu.classList.remove('open');
+                btnMenuDropdown.classList.remove('active');
+                btnMenuDropdown.setAttribute('aria-expanded', 'false');
+            }
+        }
+
+        if (btnMenuDropdown && navDropdownMenu) {
+            btnMenuDropdown.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleDropdown();
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!navDropdownMenu.contains(e.target) && !btnMenuDropdown.contains(e.target)) {
+                    toggleDropdown(false);
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    toggleDropdown(false);
+                    modalMetodologia.classList.remove('open');
+                }
+            });
+        }
+
+        if (menuItemMetodologia) {
+            menuItemMetodologia.addEventListener('click', () => {
+                toggleDropdown(false);
+                modalMetodologia.classList.add('open');
+            });
+        }
+
+        if (menuItemGoogleMapsGuide) {
+            menuItemGoogleMapsGuide.addEventListener('click', () => {
+                toggleDropdown(false);
+                modalMetodologia.classList.add('open');
+                setTimeout(() => {
+                    const card = modalMetodologia.querySelector('.modal-card');
+                    if (card) card.scrollTop = card.scrollHeight;
+                }, 120);
+            });
+        }
+
         // Modal Help Handlers
-        btnHelp.addEventListener('click', () => modalMetodologia.classList.add('open'));
         btnCloseHelp.addEventListener('click', () => modalMetodologia.classList.remove('open'));
         modalMetodologia.addEventListener('click', (e) => {
             if (e.target === modalMetodologia) modalMetodologia.classList.remove('open');
