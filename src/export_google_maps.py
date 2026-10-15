@@ -594,7 +594,7 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path, df_secoes=None, char
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bahia à Direita • Mapeamento Eleitoral 2026</title>
+    <title>Sentinela Juris • Inteligência Forense Eleitoral 2026</title>
     <!-- Leaflet & MarkerCluster CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.min.css" />
@@ -1485,8 +1485,8 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path, df_secoes=None, char
         <div class="title-container">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
                 <div>
-                    <h1>Bahia à Direita</h1>
-                    <div class="title-subtitle">Mapeamento Eleitoral 2026</div>
+                    <h1>Sentinela Juris</h1>
+                    <div class="title-subtitle">Inteligência Forense Eleitoral 2026</div>
                 </div>
                 <div style="display: flex; gap: 6px;">
                     <button id="btnOpenAnalytics" class="btn-help" style="background:#1e1b4b; border-color:#6366f1; color:#a5b4fc;" title="Gráficos de Correlação: Ensino Superior x Zonas Eleitorais">
@@ -1497,9 +1497,9 @@ def gerar_heatmap_dashboard_html(df, df_zonas, output_path, df_secoes=None, char
                     </button>
                 </div>
             </div>
-            <p class="subtitle">Análise geoespacial de urnas, votação presidencial, abstenção e perfil demográfico.</p>
+            <p class="subtitle">Auditoria pericial de urnas, votação presidencial, desvios operacionais e evidências técnicas.</p>
             <a href="mapa_auditoria_secoes_BA.html" style="margin-top: 10px; background: linear-gradient(135deg, #b91c1c, #d97706); border: 1px solid #f59e0b; color: #ffffff; text-decoration: none; padding: 8px 12px; border-radius: 8px; font-size: 0.74rem; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35); transition: transform 0.2s;">
-                <i class="fa-solid fa-fingerprint"></i> Abrir Mapa de Auditoria de Seções (Biometria &amp; Horário)
+                <i class="fa-solid fa-scale-balanced"></i> Abrir Painel de Auditoria &amp; Evidências Periciais
             </a>
         </div>
 

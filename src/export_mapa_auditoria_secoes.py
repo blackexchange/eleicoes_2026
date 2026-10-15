@@ -147,7 +147,7 @@ def build_html(data_json, stats_json, bahia_geojson_str):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bahia à Direita • Mapa de Auditoria de Seções Eleitorais 2026</title>
+    <title>Sentinela Juris • Inteligência Forense e Auditoria de Urnas 2026</title>
     <!-- Leaflet & MarkerCluster CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.min.css" />
@@ -413,7 +413,9 @@ def build_html(data_json, stats_json, bahia_geojson_str):
             margin-top: 4px;
         }}
         .ranking-container {{
-            max-height: 280px;
+            flex: 1;
+            min-height: 280px;
+            max-height: 480px;
             overflow-y: auto;
             border: 1px solid var(--border-color);
             border-radius: 8px;
@@ -673,28 +675,28 @@ def build_html(data_json, stats_json, bahia_geojson_str):
     <div class="top-navbar">
         <div class="top-navbar-left">
             <div class="nav-brand">
-                <i class="fa-solid fa-fingerprint" style="color: #f59e0b;"></i>
-                Bahia à Direita • <span>Auditoria de Seções 2026</span>
+                <i class="fa-solid fa-scale-balanced" style="color: #f59e0b;"></i>
+                Sentinela Juris • <span>Inteligência Forense Eleitoral</span>
             </div>
             <div class="nav-badge-pill">
-                <i class="fa-solid fa-triangle-exclamation"></i> 103 Seções Críticas (≥ 70 pts)
+                <i class="fa-solid fa-triangle-exclamation"></i> Auditoria Pericial de Urnas
             </div>
             <div class="nav-badge-pill orange">
-                <i class="fa-solid fa-clock"></i> 672.845 Votos Pós-17h
+                <i class="fa-solid fa-shield-halved"></i> Instrução Probatória 2026
             </div>
         </div>
         <div class="top-navbar-right">
-            <button class="nav-btn danger" id="btnDownloadFilteredCSV" title="Exportar o recorte filtrado para importar no Google Meus Mapas">
-                <i class="fa-solid fa-map-location-dot"></i> <span id="lblDownloadBtn">Baixar CSV Google Maps</span>
+            <button class="nav-btn danger" id="btnDownloadFilteredCSV" title="Exportar o recorte pericial filtrado para importar no Google Meus Mapas">
+                <i class="fa-solid fa-file-csv"></i> <span id="lblDownloadBtn">Baixar CSV Google Maps</span>
             </button>
             <a href="index.html" class="nav-btn primary">
-                <i class="fa-solid fa-layer-group"></i> Ir ao Mapa Geral (Colégios)
+                <i class="fa-solid fa-layer-group"></i> Painel Geral de Colégios
             </a>
-            <a href="auditoria_secoes_anomalias_BA_2026.csv" download class="nav-btn" title="Baixar CSV bruto original com todas as 35.472 seções">
-                <i class="fa-solid fa-database"></i> Base Completa
+            <a href="auditoria_secoes_anomalias_BA_2026.csv" download class="nav-btn" title="Baixar base pericial completa com todas as 35.472 seções para instrução probatória">
+                <i class="fa-solid fa-database"></i> Base Pericial Completa
             </a>
             <button class="nav-btn" id="btnHelp">
-                <i class="fa-solid fa-circle-question"></i> Metodologia &amp; Meus Mapas
+                <i class="fa-solid fa-scale-balanced"></i> Metodologia &amp; Instrução Probatória
             </button>
         </div>
     </div>
@@ -771,16 +773,6 @@ def build_html(data_json, stats_json, bahia_geojson_str):
                 <option value="voto13">🔴 Votos Lula (13)</option>
                 <option value="voto22">🔵 Votos Bolsonaro (22)</option>
             </select>
-        </div>
-
-        <!-- Botão de Download do Recorte no Sidebar -->
-        <div style="padding: 10px 14px; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(239, 68, 68, 0.35); border-radius: 10px; margin: 10px 14px 6px 14px; box-shadow: 0 4px 14px rgba(0,0,0,0.3);">
-            <button class="nav-btn danger" id="btnDownloadFilteredCSVSidebar" style="width: 100%; justify-content: center; padding: 10px 12px; font-size: 0.76rem; border-radius: 8px; font-weight: 700; cursor: pointer;">
-                <i class="fa-solid fa-cloud-arrow-down"></i> <span id="lblDownloadSidebar">Baixar CSV p/ Google Meus Mapas</span>
-            </button>
-            <div style="font-size: 0.65rem; color: #94a3b8; text-align: center; margin-top: 6px; line-height: 1.35;">
-                Exporta apenas as seções do <strong>filtro ativo</strong> com <code>Latitude</code>, <code>Longitude</code> e <code>Nome</code> prontos para o <strong>Google My Maps</strong>.
-            </div>
         </div>
 
         <!-- KPIs Dinâmicos do Recorte Atual -->
@@ -920,11 +912,11 @@ def build_html(data_json, stats_json, bahia_geojson_str):
     <div class="modal-overlay" id="modalMetodologia">
         <div class="modal-card">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 8px;">
-                <h3 style="font-size: 1.05rem; font-weight: 800; color: #fff;"><i class="fa-solid fa-scale-balanced" style="color:#f59e0b;"></i> Metodologia do Score de Anomalia</h3>
+                <h3 style="font-size: 1.05rem; font-weight: 800; color: #fff;"><i class="fa-solid fa-scale-balanced" style="color:#f59e0b;"></i> Sentinela Juris • Metodologia Forense &amp; Instrução Probatória</h3>
                 <button class="drawer-close-btn" id="btnCloseHelp"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div style="font-size: 0.78rem; color: #cbd5e1; line-height: 1.5; display: flex; flex-direction: column; gap: 10px;">
-                <p>O <strong>Score de Anomalia Forense</strong> pontua cada urna de <strong>0 a 100 pontos</strong> a partir do cruzamento dos logs brutos da urna (<code>logd.dat</code>), votação nominal do TSE e cadastro oficial de locais e seções agregadas.</p>
+                <p>O <strong>Sentinela Juris</strong> estrutura a auditoria de cada urna através do <strong>Score de Anomalia Forense (0 a 100 pontos)</strong>, consolidado a partir dos registros oficiais de máquina (<code>logd.dat</code>, RDV, BU) e cadastro de aptos do TSE para fins de análise pericial e sustentação probatória.</p>
                 <div style="background:#0b0f19; padding:10px; border-radius:8px; border-left:3px solid #ef4444;">
                     <strong>1. Abstenção Atípica Consolidada (Até 25 pts)</strong><br>
                     Calculada sobre a <em>capacidade real consolidada</em> da urna (incluindo eleitores de seções agregadas). Seções com abstenção real ≤ 5% ou ≤ 10% recebem pontuação por estarem muito distantes da média estadual (~20%).
@@ -1620,7 +1612,7 @@ def build_html(data_json, stats_json, bahia_geojson_str):
                 const nome = "[Score " + sec[16] + " | " + sec[17] + "] Z " + sec[0] + " S " + sec[1] + agrBadge + " - " + loc.l + " (" + loc.m + ")";
 
                 // Descrição formatada exibida no balão popup do Google Maps
-                let desc = "Município: " + loc.m + " | Zona: " + sec[0] + " | Seção: " + sec[1];
+                let desc = "[Sentinela Juris - Evidência Pericial]\\nMunicípio: " + loc.m + " | Zona: " + sec[0] + " | Seção: " + sec[1];
                 if (sec[26] === 1 && sec[25]) {{
                     desc += " (Urna Agregada com Seções: " + sec[25] + ")";
                 }}
@@ -1684,7 +1676,7 @@ def build_html(data_json, stats_json, bahia_geojson_str):
 
             const mun = selectMunicipio.value ? "_" + selectMunicipio.value.toLowerCase().replace(/[^a-z0-9]/g, '_') : "";
             const anom = selectAnomalia.value !== 'all' ? "_" + selectAnomalia.value : "";
-            const filename = "auditoria_google_meus_mapas" + mun + anom + "_" + currentFilteredSecoes.length + "secoes.csv";
+            const filename = "sentinela_juris_evidencias_forenses" + mun + anom + "_" + currentFilteredSecoes.length + "secoes.csv";
 
             a.href = url;
             a.download = filename;
