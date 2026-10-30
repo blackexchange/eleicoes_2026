@@ -456,6 +456,110 @@ def gerar_dashboard_clusters():
       color: var(--text-main);
       line-height: 1.6;
     }}
+
+    /* Estilos da Seção Didática */
+    .didactic-card {{
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.85));
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 20px;
+      padding: 24px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      margin-bottom: 8px;
+    }}
+
+    .didactic-header {{
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }}
+
+    .didactic-title {{
+      font-family: 'Outfit', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }}
+
+    .didactic-grid-4 {{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }}
+
+    .didactic-subcard {{
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 12px;
+      padding: 16px;
+      border-top: 3px solid var(--accent-subcard, #38bdf8);
+    }}
+
+    .didactic-subcard h4 {{
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }}
+
+    .didactic-subcard p {{
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }}
+
+    .didactic-badge {{
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.1);
+    }}
+
+    .didactic-insight-box {{
+      background: rgba(168, 85, 247, 0.08);
+      border-left: 4px solid #a855f7;
+      padding: 14px 18px;
+      border-radius: 0 10px 10px 0;
+      font-size: 13px;
+      color: #e2e8f0;
+      line-height: 1.6;
+      margin-top: 14px;
+    }}
+
+    .didactic-takeaways {{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }}
+
+    .takeaway-item {{
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 12px;
+      line-height: 1.5;
+    }}
+
+    .takeaway-item strong {{
+      color: #38bdf8;
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }}
   </style>
 </head>
 <body>
@@ -524,6 +628,100 @@ def gerar_dashboard_clusters():
       </div>
     </section>
 
+    <!-- Seção Explicativa Didática -->
+    <section class="didactic-card">
+      <div class="didactic-header">
+        <span style="font-size: 26px;">💡</span>
+        <div>
+          <div class="didactic-title">Resumo Didático: Entendendo as Descobertas da IA em Linguagem Simples</div>
+          <div style="font-size: 13px; color: var(--text-muted);">
+            O que os algoritmos de Machine Learning revelaram ao analisar os 417 municípios da Bahia cruzando Censo IBGE, ANATEL e TSE.
+          </div>
+        </div>
+      </div>
+
+      <!-- Pergunta Central -->
+      <div style="background: rgba(6, 182, 212, 0.08); border-left: 4px solid var(--cyan); padding: 14px 18px; border-radius: 0 10px 10px 0; font-size: 13px; color: #f8fafc; line-height: 1.6; margin-bottom: 16px;">
+        <strong style="color: #22d3ee; font-size: 14px;">🎯 A Pergunta Central Respondida pela Máquina:</strong><br>
+        <em>"No 2º turno, para onde foram os votos de quem votou em Ciro, Simone Tebet, brancos/nulos ou não tinha ido votar no 1º turno?"</em><br>
+        <strong>Resposta Estatística Geral:</strong> Em toda a Bahia, verificou-se uma altíssima absorção: <strong>para cada 10 votos que sobraram ou surgiram no 2º turno, entre 7,6 e 8,5 migraram diretamente para Lula</strong>. Porém, o algoritmo comprovou que a Bahia não é homogênea, dividindo o estado em <strong>4 realidades distintas (Clusters)</strong>:
+      </div>
+
+      <!-- 4 Bahias Grid -->
+      <div class="didactic-grid-4">
+        <div class="didactic-subcard" style="--accent-subcard: #06b6d4;">
+          <h4>
+            <span>🏙️ C1: Metrópoles &amp; Polos</span>
+            <span class="didactic-badge" style="color: #22d3ee; border: 1px solid #06b6d4;">85,0% Lula</span>
+          </h4>
+          <p>
+            <strong>Quem são:</strong> 28 grandes centros urbanos (Salvador, Feira, Camaçari, Juazeiro).<br>
+            <strong>Perfil:</strong> Mais de 55% dos celulares são <em>pós-pagos</em> (internet móvel 24h) e alta escolaridade.<br>
+            <strong>O que houve:</strong> Lula teve a <strong>maior absorção do estado (85%)</strong> sobre os 10,8% de votos da 3ª via. O eleitor hiperconectado no WhatsApp converteu maciçamente.
+          </p>
+        </div>
+
+        <div class="didactic-subcard" style="--accent-subcard: #10b981;">
+          <h4>
+            <span>🌵 C2: Sertão &amp; Semiárido</span>
+            <span class="didactic-badge" style="color: #34d399; border: 1px solid #10b981;">83,2% Lula</span>
+          </h4>
+          <p>
+            <strong>Quem são:</strong> 138 cidades do semiárido rural e interior profundo.<br>
+            <strong>Perfil:</strong> Renda mais vulnerável (R$ 738) e 75% dos celulares pré-pagos.<br>
+            <strong>O que houve:</strong> A "bastilha histórica". Lula já tinha 72% no 1º turno e manteve fidelidade de <strong>83,2% dos votos que sobraram</strong>, ancorado em laços comunitários consolidados.
+          </p>
+        </div>
+
+        <div class="didactic-subcard" style="--accent-subcard: #a855f7;">
+          <h4>
+            <span>🏬 C3: Centros Médios</span>
+            <span class="didactic-badge" style="color: #c084fc; border: 1px solid #a855f7;">81,9% Lula</span>
+          </h4>
+          <p>
+            <strong>Quem são:</strong> 120 cidades médias em processo de expansão econômica e digital.<br>
+            <strong>Perfil:</strong> Conectividade intermediária (36% pós-pago, 86 celulares/100 hab).<br>
+            <strong>O que houve:</strong> Avanço firme e consistente de Lula (+1,18 p.p. na votação válida), absorvendo <strong>81,9% dos votos disponíveis</strong> com equilíbrio socioeconômico.
+          </p>
+        </div>
+
+        <div class="didactic-subcard" style="--accent-subcard: #f59e0b;">
+          <h4>
+            <span>🚜 C4: Regiões Agro &amp; Resistência</span>
+            <span class="didactic-badge" style="color: #fbbf24; border: 1px solid #f59e0b;">75,7% Lula</span>
+          </h4>
+          <p>
+            <strong>Quem são:</strong> 131 municípios no Oeste Baiano e eixos com agronegócio forte.<br>
+            <strong>Perfil:</strong> Menor inclusão digital pós-paga e melhor base bolsonarista prévia (26% a 35%).<br>
+            <strong>O que houve:</strong> Onde Bolsonaro mais reteve votos (24,3%). Ainda assim, <strong>3 em cada 4 votos disputados (75,7%) migraram para Lula</strong>.
+          </p>
+        </div>
+      </div>
+
+      <!-- O Papel da ANATEL / Conectividade -->
+      <div class="didactic-insight-box">
+        <strong style="color: #c084fc; font-size: 14px;">📱 O Papel Surpreendente das Telecomunicações (ANATEL):</strong><br>
+        O modelo de <em>Random Forest Regressor</em> identificou que a <strong>3ª variável mais importante de todas</strong> para prever o trânsito de votos foi a <strong>proporção de celulares pós-pagos</strong> (10,9% de importância no modelo), superando renda e faixa etária.<br>
+        <em>Por que isso acontece?</em> O eleitor com plano pós-pago possui tráfego contínuo de alta velocidade para assistir vídeos, ouvir áudios e interagir no WhatsApp sem esgotamento de franquia. Onde a internet era ilimitada (Cluster 1), a esteira de transmissão de campanha no 2º turno operou com máxima eficiência.
+      </div>
+
+      <!-- 3 Conclusões Rápidas -->
+      <div class="didactic-takeaways">
+        <div class="takeaway-item">
+          <strong>1. O fenômeno não foi uniforme</strong>
+          A taxa de migração variou de 75,7% no polo do agronegócio até 85,0% na Região Metropolitana e polos urbanos.
+        </div>
+        <div class="takeaway-item">
+          <strong>2. Tecnologia e dados importaram</strong>
+          O Índice Ponderado de Conectividade (ICCD) teve correlação positiva direta com a velocidade de absorção (r = +0,197, p &lt; 0,0001).
+        </div>
+        <div class="takeaway-item">
+          <strong>3. Piso elevado em todo o estado</strong>
+          Mesmo no cluster mais favorável a Bolsonaro (Agro), Lula venceu a disputa dos votos restantes com folga de 75,7% contra 24,3%.
+        </div>
+      </div>
+    </section>
+
     <!-- Box Metodológico -->
     <div class="method-box">
       <strong>Resposta Metodológica sobre Conectividade Ponderada (ICCD):</strong>
@@ -533,7 +731,7 @@ def gerar_dashboard_clusters():
       <strong>1) Penetração de Dispositivos</strong> (Densidade SMP, peso 0.35); 
       <strong>2) Velocidade da Rede</strong> (% 4G/5G, peso 0.15); e 
       <strong>3) Consumo Ativo Contínuo</strong> (% Pós-Pago/Smartphones, peso 0.50). 
-      O ICCD correlaciona-se positiva e significativamente com o trânsito pró-Lula (<strong>r = +0,1974, p < 0,0001</strong>), eliminando a multicolinearidade.
+      O ICCD correlaciona-se positiva e significativamente com o trânsito pró-Lula (<strong>r = +0,1974, p &lt; 0,0001</strong>), eliminando a multicolinearidade.
     </div>
 
     <!-- Cards dos 4 Clusters -->
