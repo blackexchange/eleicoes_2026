@@ -34,13 +34,13 @@ def gerar_dashboard_clusters():
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- Plotly.js: Carregamento Local com Fallback para CDN Oficial -->
-  <script src="plotly-2.27.0.min.js"></script>
+  <!-- Plotly.js: CDN Oficial com Fallback Local para Uso Offline -->
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
   <script>
     if (typeof Plotly === 'undefined') {{
-      console.warn("Plotly local não encontrado, carregando via CDN oficial...");
+      console.warn("CDN offline, carregando Plotly local...");
       var s = document.createElement('script');
-      s.src = 'https://cdn.plot.ly/plotly-2.27.0.min.js';
+      s.src = 'plotly-2.27.0.min.js';
       s.onload = function() {{ if (typeof renderAllCharts === 'function') renderAllCharts(); }};
       document.head.appendChild(s);
     }}
@@ -475,7 +475,11 @@ def gerar_dashboard_clusters():
       <div style="font-size: 12px; color: var(--text-muted); text-align: right;">
         <div>População Total: <strong>417 Municípios da Bahia (Censo Completo)</strong></div>
         <div>Features: <strong>16 Variáveis (Demografia IBGE, Conectividade ANATEL e 1ºT TSE)</strong></div>
-        <a href="dashboard_estatistico_biometria_1000_urnas.html" style="display:inline-block; margin-top:8px; padding:5px 12px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.4); border-radius:8px; color:#38bdf8; text-decoration:none; font-size:11px; font-weight:600;">🏛️ Ver Auditoria 1.000 Urnas (TSE) →</a>
+        <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px; flex-wrap: wrap;">
+          <a href="index.html" style="display:inline-block; padding:5px 12px; background:rgba(99,102,241,0.15); border:1px solid rgba(99,102,241,0.4); border-radius:8px; color:#a5b4fc; text-decoration:none; font-size:11px; font-weight:600;">🗺️ Mapa Sentinela Juris →</a>
+          <a href="mapa_auditoria_secoes_BA.html" style="display:inline-block; padding:5px 12px; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.4); border-radius:8px; color:#fbbf24; text-decoration:none; font-size:11px; font-weight:600;">⚖️ Painel Auditoria Seções →</a>
+          <a href="dashboard_estatistico_biometria_1000_urnas.html" style="display:inline-block; padding:5px 12px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.4); border-radius:8px; color:#38bdf8; text-decoration:none; font-size:11px; font-weight:600;">🏛️ Auditoria 1.000 Urnas →</a>
+        </div>
       </div>
     </div>
   </header>
@@ -999,6 +1003,13 @@ def gerar_dashboard_clusters():
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(html_content)
     print(f"Dashboard de Machine Learning atualizado com sucesso em: {output_path.resolve()} ({output_path.stat().st_size:,} bytes)")
+
+    # Publica na pasta docs/ para disponibilidade online no GitHub Pages
+    docs_path = Path("docs/dashboard_clusters_ml_anatel_ibge.html")
+    docs_path.parent.mkdir(exist_ok=True)
+    with open(docs_path, "w", encoding="utf-8") as f:
+        f.write(html_content)
+    print(f"Dashboard publicado em docs/ para acesso online: {docs_path.resolve()} ({docs_path.stat().st_size:,} bytes)")
 
 if __name__ == "__main__":
     gerar_dashboard_clusters()
