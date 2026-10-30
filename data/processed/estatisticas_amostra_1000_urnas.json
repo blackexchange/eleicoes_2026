@@ -1,0 +1,83 @@
+{
+  "status": "DADOS_100%_OFICIAIS_TSE",
+  "amostra_tamanho": 1000,
+  "totais": {
+    "aptos": 316582,
+    "comp_t1": 252460,
+    "comp_t2": 263105,
+    "delta_comp": 10645,
+    "abst_t1": 64122,
+    "abst_t2": 53510,
+    "queda_abst": 10612,
+    "man_t1": 30284,
+    "man_t2": 32317,
+    "delta_man": 2033,
+    "bio_t1": 222176,
+    "bio_t2": 230788,
+    "votos_13_t1": 158344,
+    "votos_13_t2": 180953,
+    "delta_13": 22609,
+    "votos_22_t1": 68214,
+    "votos_22_t2": 72785,
+    "delta_22": 4571
+  },
+  "t1": {
+    "mean": 12.21,
+    "std": 6.67,
+    "median": 11.0,
+    "iqr": 6.2
+  },
+  "t2": {
+    "mean": 12.5,
+    "std": 6.57,
+    "median": 11.36,
+    "iqr": 6.84
+  },
+  "diff": {
+    "mean": 0.29,
+    "std": 2.92,
+    "sem": 0.092,
+    "ci_95": [
+      0.1,
+      0.46
+    ]
+  },
+  "tests": {
+    "paired_t": 3.114,
+    "paired_t_p": 0.0019,
+    "wilcoxon_w": 209538.0,
+    "wilcoxon_p": 0.0,
+    "cohens_d": 0.098,
+    "cohen_label": "Desprezível",
+    "shapiro_w": 0.7795,
+    "shapiro_p": 0.0,
+    "dagostino_stat": 1159.16,
+    "dagostino_p": 0.0
+  },
+  "abstencao": {
+    "mean_abst_t1": 20.03,
+    "mean_abst_t2": 16.87,
+    "mean_queda_abst": 3.16,
+    "mean_dif_comp": 10.6,
+    "mean_comp_t1": 252.5,
+    "mean_comp_t2": 263.1,
+    "r_comp_13": 0.595,
+    "p_comp_13": "7.95e-97",
+    "rho_comp_13": 0.726,
+    "r_comp_22": 0.267,
+    "p_comp_22": "8.14e-18",
+    "rho_comp_22": 0.331,
+    "slope_13": 0.697,
+    "int_13": 15.19,
+    "r2_13": 0.354,
+    "se_13": 0.03,
+    "p_ols_13": "7.95e-97",
+    "slope_22": 0.1291,
+    "int_22": 3.2,
+    "r2_22": 0.071,
+    "se_22": 0.015,
+    "p_ols_22": "8.14e-18",
+    "share_marginal_13": 84.4,
+    "share_marginal_22": 15.6
+  }
+}

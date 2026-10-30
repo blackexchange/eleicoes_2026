@@ -1,0 +1,160 @@
+{
+  "clusters": [
+    {
+      "cluster_code": "C1",
+      "nome": "Cluster 1: Metrópoles & Polos Hiperconectados",
+      "descricao": "Grandes centros urbanos com máxima densidade de telefonia (110,5 ac/100 hab), alta renda, concentração de ensino superior (13,5%) e massiva migração da 3ª via para Lula.",
+      "n_cidades": 28,
+      "transito_lula_medio": 85.04464285714286,
+      "transito_lula_mediana": 85.18,
+      "delta_pct_lula": 2.2207142857142856,
+      "delta_comp": 3.6514285714285712,
+      "iccd_medio": 59.152857142857144,
+      "densidade_media": 109.3032915956178,
+      "pct_pos_medio": 55.65464285714285,
+      "pct_4g5g_medio": 90.77571428571427,
+      "renda_media": 1036.1089285714286,
+      "pct_superior": 13.38107142857143,
+      "pct_baixa_escolaridade": 9.449642857142857,
+      "pct_lula_1t": 58.518214285714286,
+      "pct_bolso_1t": 30.642857142857142,
+      "pct_outros_1t": 10.8375
+    },
+    {
+      "cluster_code": "C2",
+      "nome": "Cluster 2: Sertão & Semiárido Rural (Bastilha Histórica)",
+      "descricao": "Municípios do interior profundo com alta vulnerabilidade, forte base petista prévia (72% no 1T), conectividade móvel predominante pré-paga e alta absorção marginal.",
+      "n_cidades": 138,
+      "transito_lula_medio": 83.16492753623189,
+      "transito_lula_mediana": 84.72,
+      "delta_pct_lula": 0.4540579710144928,
+      "delta_comp": 2.5710869565217394,
+      "iccd_medio": 29.90420289855072,
+      "densidade_media": 64.08208851567116,
+      "pct_pos_medio": 25.067971014492755,
+      "pct_4g5g_medio": 94.39246376811595,
+      "renda_media": 738.9892753623188,
+      "pct_superior": 5.835724637681159,
+      "pct_baixa_escolaridade": 24.93376811594203,
+      "pct_lula_1t": 71.92021739130435,
+      "pct_bolso_1t": 20.42268115942029,
+      "pct_outros_1t": 7.657536231884058
+    },
+    {
+      "cluster_code": "C3",
+      "nome": "Cluster 3: Centros Médios em Transição Tecnológica",
+      "descricao": "Cidades médias do interior com telecomunicações intermediárias (86,4 ac/100 hab), equilíbrio socioeconômico e crescimento firme de Lula no 2º turno (+1,18 p.p.).",
+      "n_cidades": 120,
+      "transito_lula_medio": 81.88799999999999,
+      "transito_lula_mediana": 81.75999999999999,
+      "delta_pct_lula": 1.1741666666666668,
+      "delta_comp": 3.0564166666666663,
+      "iccd_medio": 41.64566666666666,
+      "densidade_media": 86.01188463449687,
+      "pct_pos_medio": 35.99783333333333,
+      "pct_4g5g_medio": 93.26741666666666,
+      "renda_media": 729.1769166666667,
+      "pct_superior": 8.349333333333332,
+      "pct_baixa_escolaridade": 18.968916666666665,
+      "pct_lula_1t": 62.69441666666667,
+      "pct_bolso_1t": 27.6835,
+      "pct_outros_1t": 9.621749999999999
+    },
+    {
+      "cluster_code": "C4",
+      "nome": "Cluster 4: Regiões Agro & Cidades de Maior Resistência",
+      "descricao": "Regiões agropecuárias e pequenas cidades onde Bolsonaro teve melhor desempenho (26% a 35% no 1T), baixa renda per capita e o menor trânsito proporcional para Lula (75,8%).",
+      "n_cidades": 131,
+      "transito_lula_medio": 75.71099236641221,
+      "transito_lula_mediana": 75.87,
+      "delta_pct_lula": 0.36786259541984734,
+      "delta_comp": 2.720152671755725,
+      "iccd_medio": 27.45091603053435,
+      "densidade_media": 60.56151947691273,
+      "pct_pos_medio": 22.212977099236642,
+      "pct_4g5g_medio": 94.83618320610688,
+      "renda_media": 529.0158778625954,
+      "pct_superior": 5.973587786259542,
+      "pct_baixa_escolaridade": 28.449465648854964,
+      "pct_lula_1t": 65.38137404580154,
+      "pct_bolso_1t": 25.691679389312977,
+      "pct_outros_1t": 8.927099236641222
+    }
+  ],
+  "feature_importances": [
+    {
+      "Feature": "PCT_BOLSONARO",
+      "Importance": 0.1677954578956482
+    },
+    {
+      "Feature": "PCT_LULA",
+      "Importance": 0.11847805761051193
+    },
+    {
+      "Feature": "pct_pos_pago",
+      "Importance": 0.10910052185010895
+    },
+    {
+      "Feature": "PCT_JOVENS_16_24",
+      "Importance": 0.07887877448574533
+    },
+    {
+      "Feature": "PCT_IDOSOS_60_MAIS",
+      "Importance": 0.07687092875789954
+    },
+    {
+      "Feature": "densidade_smp",
+      "Importance": 0.059037638376939545
+    },
+    {
+      "Feature": "indice_conectividade_anatel",
+      "Importance": 0.05330055403765304
+    },
+    {
+      "Feature": "PCT_FEM",
+      "Importance": 0.05122151047935294
+    },
+    {
+      "Feature": "PCT_MEDIO",
+      "Importance": 0.04723332179661212
+    },
+    {
+      "Feature": "PCT_BIOMETRIA",
+      "Importance": 0.046402130945048296
+    },
+    {
+      "Feature": "PCT_OUTROS",
+      "Importance": 0.044967548554185666
+    },
+    {
+      "Feature": "pct_4g_5g",
+      "Importance": 0.04075165587473768
+    },
+    {
+      "Feature": "PCT_SUPERIOR",
+      "Importance": 0.0365462599002342
+    },
+    {
+      "Feature": "PCT_BAIXA_ESCOLARIDADE",
+      "Importance": 0.030079239778451655
+    },
+    {
+      "Feature": "PCT_RENDA_ACIMA_4SM",
+      "Importance": 0.018151321252640407
+    },
+    {
+      "Feature": "RENDIMENTO_DOMICILIAR_RS",
+      "Importance": 0.013156836812826585
+    },
+    {
+      "Feature": "SALARIO_MEDIO_SM",
+      "Importance": 0.008028241591404101
+    }
+  ],
+  "pca_variance": [
+    37.11,
+    12.66
+  ],
+  "correlacao_iccd_lula": 0.1974,
+  "p_iccd_lula": 4.9101773548818014e-05
+}

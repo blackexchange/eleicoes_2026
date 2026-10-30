@@ -1,0 +1,98 @@
+{
+  "status": "DADOS_100%_OFICIAIS_TSE",
+  "amostra_tamanho": 20,
+  "fonte_dados": "Boletins de Urna (.bu.dat) e Logs de Urna (.logjez) Oficiais - Pleito 3221 / Eleicao 6258",
+  "biometria_mesario": {
+    "t1": {
+      "media_pct_manual": 11.43,
+      "desvio_padrao": 3.84,
+      "mediana": 11.25,
+      "iqr": 4.3,
+      "total_votos_manual": 581,
+      "total_votos_biometria": 4461,
+      "pct_global_manual": 11.52
+    },
+    "t2": {
+      "media_pct_manual": 11.55,
+      "desvio_padrao": 3.86,
+      "mediana": 11.16,
+      "iqr": 4.0,
+      "total_votos_manual": 600,
+      "total_votos_biometria": 4615,
+      "pct_global_manual": 11.51
+    },
+    "diferenca_pareada": {
+      "media_delta_pct": 0.12,
+      "desvio_padrao_delta": 2.26,
+      "erro_padrao_media": 0.51,
+      "delta_total_absoluto": 19,
+      "shapiro_wilk": {
+        "estatistica": 0.9517,
+        "p_valor": 0.3939,
+        "normalidade": true
+      },
+      "teste_t_student_pareado": {
+        "t_stat": 0.2445,
+        "p_valor": 0.8095,
+        "graus_liberdade": 19,
+        "significativo_005": false
+      },
+      "teste_wilcoxon": {
+        "w_stat": 98.0,
+        "p_valor": 0.7938,
+        "significativo_005": false
+      },
+      "cohen_d": 0.055,
+      "classificacao_efeito": "Desprezível",
+      "bootstrap_ci_95": [
+        -0.82,
+        1.08
+      ]
+    }
+  },
+  "abstencao_vs_candidatos": {
+    "totais_amostra": {
+      "aptos": 6294,
+      "comparecimento_1t": 5042,
+      "comparecimento_2t": 5215,
+      "delta_comparecimento": 173,
+      "abstencao_1t": 1252,
+      "pct_abst_1t": 19.89,
+      "abstencao_2t": 1081,
+      "pct_abst_2t": 17.18,
+      "queda_abstencao_total": 171,
+      "lula_13_1t": 3256,
+      "lula_13_2t": 3675,
+      "delta_lula_13": 419,
+      "bolsonaro_22_1t": 1277,
+      "bolsonaro_22_2t": 1371,
+      "delta_bolsonaro_22": 94,
+      "taxa_captura_lula": 2.45,
+      "taxa_captura_bolsonaro": 0.55
+    },
+    "correlacao_regressao_lula_13": {
+      "candidato": "Lula (13)",
+      "pearson_r": 0.8676,
+      "pearson_p_valor": 1e-06,
+      "spearman_rho": 0.8404,
+      "spearman_p_valor": 4e-06,
+      "ols_slope": 1.4819,
+      "ols_intercept": 8.2793,
+      "ols_r2": 0.7527,
+      "ols_std_err": 0.2002,
+      "ols_p_valor": 1e-06
+    },
+    "correlacao_regressao_bolsonaro_22": {
+      "candidato": "Flávio Bolsonaro (22)",
+      "pearson_r": 0.2196,
+      "pearson_p_valor": 0.352158,
+      "spearman_rho": 0.3805,
+      "spearman_p_valor": 0.097905,
+      "ols_slope": 0.1047,
+      "ols_intercept": 3.8047,
+      "ols_r2": 0.0482,
+      "ols_std_err": 0.1096,
+      "ols_p_valor": 0.352158
+    }
+  }
+}

@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Estatístico Avançado • Auditoria Biometria & Dinâmica de Abstenção (Amostra 20 Urnas)</title>
+  
+  <!-- Fontes Google Inter e Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  
+  <style>
+    :root {
+      --bg-main: #090d16;
+      --bg-card: rgba(17, 24, 39, 0.75);
+      --bg-card-hover: rgba(30, 41, 59, 0.85);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(56, 189, 248, 0.3);
+      --primary: #38bdf8;
+      --primary-glow: rgba(56, 189, 248, 0.25);
+      --pt-red: #f43f5e;
+      --pl-blue: #38bdf8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --purple: #a855f7;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding-bottom: 60px;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 25%, rgba(168, 85, 247, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 50% 85%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    /* Header */
+    header {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 24px 32px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .header-title h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .header-title p {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .badge-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 10px var(--primary);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1440px;
+      margin: 32px auto 0 auto;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    /* Section Headers */
+    .section-title-wrap {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 12px;
+      margin-bottom: 4px;
+    }
+
+    .section-heading {
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-subheading {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    /* Grid de KPIs */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.25s ease;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-accent);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--card-accent, var(--primary)), transparent);
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .kpi-value {
+      font-family: 'Outfit', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.1;
+    }
+
+    .kpi-sub {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 6px;
+      font-family: 'Fira Code', monospace;
+    }
+
+    /* Seções e Cards */
+    .glass-panel {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .panel-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .panel-title span.icon {
+      font-size: 20px;
+    }
+
+    .panel-subtitle {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 2px;
+    }
+
+    /* Gráficos em Grid */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 1024px) {
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .chart-container {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px;
+      min-height: 420px;
+    }
+
+    /* Tabela de Testes Estatísticos */
+    .tests-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .tests-table th {
+      text-align: left;
+      padding: 12px 16px;
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .tests-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
+    }
+
+    .tests-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .code-tag {
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--primary);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .status-pass {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+    }
+
+    .status-info {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: #7dd3fc;
+    }
+
+    .status-warn {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: #fbbf24;
+    }
+
+    /* Tabela de Amostra das 20 Urnas */
+    .table-wrapper {
+      overflow-x: auto;
+      max-height: 520px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .data-table th {
+      position: sticky;
+      top: 0;
+      background: #0f172a;
+      z-index: 10;
+      text-align: left;
+      padding: 12px 14px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 11px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .data-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .data-table tr:hover td {
+      background: rgba(56, 189, 248, 0.04);
+    }
+
+    .model-badge {
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .model-ue2022 { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+    .model-ue2020 { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .model-ue2015 { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+    .model-ue2013 { background: rgba(244, 63, 94, 0.15); color: #f43f5e; }
+
+    .diff-pos { color: #f43f5e; font-weight: 600; }
+    .diff-neg { color: #34d399; font-weight: 600; }
+    .diff-zero { color: var(--text-dim); }
+
+    /* Explicação Metodológica */
+    .method-box {
+      background: rgba(15, 23, 42, 0.5);
+      border-left: 4px solid var(--primary);
+      padding: 16px 20px;
+      border-radius: 0 12px 12px 0;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .method-box.accent-purple {
+      border-left-color: var(--purple);
+    }
+
+    .method-box strong {
+      color: var(--text-main);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <div class="header-title">
+        <h1>Auditoria Estatística Avançada • Biometria, Abstenção & Votos</h1>
+        <p>Comparação Granular 1º vs 2º Turno em Amostra Aleatória Rigorosa de 20 Urnas Eletrônicas da Bahia (TSE)</p>
+      </div>
+      <div>
+        <span class="badge-tag">
+          <span class="badge-dot"></span>
+          Amostra Probabilística N = 20 Urnas
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Container Principal -->
+  <main class="container">
+
+    <!-- ========================================================================= -->
+    <!-- PARTE 1: AUDITORIA DE BIOMETRIA E LIBERAÇÃO MANUAL PELO MESÁRIO           -->
+    <!-- ========================================================================= -->
+    <div class="section-title-wrap">
+      <div class="section-heading"><span>🛡️</span> Parte 1: Auditoria de Biometria & Liberação Manual pelo Mesário</div>
+      <div class="section-subheading">Teste de hipóteses pareadas para verificar se houve alteração sistemática na taxa de votos sem biometria entre turnos</div>
+    </div>
+
+    <!-- KPI Summary Grid (Biometria) -->
+    <section class="kpi-grid">
+      <div class="kpi-card" style="--card-accent: #38bdf8;">
+        <div class="kpi-label">Média 1º Turno (T1) <span>μ₁</span></div>
+        <div class="kpi-value">11.43%</div>
+        <div class="kpi-sub">σ = 3.84% | Mediana: 11.25%</div>
+      </div>
+
+      <div class="kpi-card" style="--card-accent: #a855f7;">
+        <div class="kpi-label">Média 2º Turno (T2) <span>μ₂</span></div>
+        <div class="kpi-value">11.55%</div>
+        <div class="kpi-sub">σ = 3.86% | Mediana: 11.16%</div>
+      </div>
+
+      <div class="kpi-card" style="--card-accent: #10b981;">
+        <div class="kpi-label">Diferença Pareada <span>Δ (T2 - T1)</span></div>
+        <div class="kpi-value">+0.12%</div>
+        <div class="kpi-sub">IC 95% Bootstrap: [-0.82%, +1.08%]</div>
+      </div>
+
+      <div class="kpi-card" style="--card-accent: #f59e0b;">
+        <div class="kpi-label">Teste t Pareado <span>p-valor</span></div>
+        <div class="kpi-value">p = 0.8095</div>
+        <div class="kpi-sub">t(19) = 0.244 (Não Rejeita H₀)</div>
+      </div>
+
+      <div class="kpi-card" style="--card-accent: #f43f5e;">
+        <div class="kpi-label">Tamanho do Efeito <span>Cohen's d</span></div>
+        <div class="kpi-value">0.055</div>
+        <div class="kpi-sub">Magnitude: Desprezível (|d| < 0.5)</div>
+      </div>
+
+      <div class="kpi-card" style="--card-accent: #64748b;">
+        <div class="kpi-label">Teste de Normalidade <span>Shapiro-Wilk</span></div>
+        <div class="kpi-value">W = 0.9517</div>
+        <div class="kpi-sub">p = 0.3939 (Distribuição Normal)</div>
+      </div>
+    </section>
+
+    <!-- Gráficos de Biometria -->
+    <section class="charts-grid">
+      <!-- Gráfico 1: Slopegraph Pareado -->
+      <div class="glass-panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title"><span class="icon">📈</span> Slopegraph Pareado: Mudança Seção a Seção</div>
+            <div class="panel-subtitle">Trajetória individual da taxa de mesário (%) em cada uma das 20 urnas amostradas</div>
+          </div>
+        </div>
+        <div id="chart-slope" class="chart-container"></div>
+      </div>
+
+      <!-- Gráfico 2: Boxplot Comparativo -->
+      <div class="glass-panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title"><span class="icon">📊</span> Distribuição por Quartis e Densidade (1º vs 2º Turno)</div>
+            <div class="panel-subtitle">Boxplot com indicação de mediana, IQR, desvio padrão e dispersão de pontos</div>
+          </div>
+        </div>
+        <div id="chart-boxplot" class="chart-container"></div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- PARTE 2: DINÂMICA DE ABSTENÇÃO E EVOLUÇÃO DE VOTOS NOS CANDIDATOS         -->
+    <!-- ========================================================================= -->
+    <div class="section-title-wrap">
+      <div class="section-heading"><span>🗳️</span> Parte 2: Diminuição da Abstenção vs. Evolução de Votos nos Candidatos</div>
+      <div class="section-subheading">Análise econométrica e inferencial da taxa marginal de absorção de novos votantes entre Lula (13) e Flávio Bolsonaro (22)</div>
+    </div>
+
+    <!-- KPI Grid (Abstenção e Votos) -->
+    <section class="kpi-grid">
+      <div class="kpi-card" style="--card-accent: #10b981;">
+        <div class="kpi-label">Queda Média Abstenção <span>Δ Taxa</span></div>
+        <div class="kpi-value">-2.21%</div>
+        <div class="kpi-sub">Abst: 19.78% (T1) → 17.57% (T2)</div>
+      </div>
+
+      <div class="kpi-card" style="--card-accent: #38bdf8;">
+        <div class="kpi-label">Comparecimento Adicional <span>Δ Médio</span></div>
+        <div class="kpi-value">+8.7</div>
+        <div class="kpi-sub">Eleitores a mais/seção (252.1 → 260.8)</div>
+      </div>
+
+      <div class="kpi-card" style="--card-accent: #f43f5e;">
+        <div class="kpi-label">Correlação Lula x Mobilização <span>Pearson r</span></div>
+        <div class="kpi-value">r = +0.87</div>
+        <div class="kpi-sub">p = 6.20e-07 (Significativo a 95%)</div>
+      </div>
+
+      <div class="kpi-card" style="--card-accent: #38bdf8;">
+        <div class="kpi-label">Correlação Flávio x Mobilização <span>Pearson r</span></div>
+        <div class="kpi-value">r = +0.213</div>
+        <div class="kpi-sub">p = 0.3674 (Não Significativo)</div>
+      </div>
+
+      <div class="kpi-card" style="--card-accent: #a855f7;">
+        <div class="kpi-label">Taxa Marginal Lula (13) <span>β₁ (OLS)</span></div>
+        <div class="kpi-value">1.4784</div>
+        <div class="kpi-sub">Share Marginal: 93.6% dos novos votos</div>
+      </div>
+
+      <div class="kpi-card" style="--card-accent: #f59e0b;">
+        <div class="kpi-label">Taxa Marginal Flávio (22) <span>β₂ (OLS)</span></div>
+        <div class="kpi-value">0.101</div>
+        <div class="kpi-sub">Share Marginal: 6.4% dos novos votos</div>
+      </div>
+    </section>
+
+    <!-- Explicação Econométrica -->
+    <div class="method-box accent-purple">
+      <strong>Diagnóstico Econométrico da Mobilização (100% Oficial TSE):</strong> A análise de regressão linear Mínimos Quadrados Ordinários (OLS) testa a hipótese de quem mais se beneficiou da diminuição da abstenção (aumento de comparecimento) no 2º turno. O coeficiente angular estimado β₁₃ = 1.4784 (p = 6.20e-07, R² = 0.757) confirma uma forte captura: nas seções onde a abstenção caiu, para cada 10 eleitores a mais no comparecimento, <strong>Lula adicionou cerca de 14,8 votos líquidos</strong> (capturando praticamente todos os novos eleitores e atraindo os votos migrados de outros candidatos do 1º turno). Em contrapartida, Flávio Bolsonaro (β₂₂ = 0.101, p = 0.3674, R² = 0.045) não apresentou significância estatística (p > 0.05), indicando que a mobilização eleitoral no 2º turno na Bahia favoreceu predominantemente a consolidação pró-Lula.
+    </div>
+
+    <!-- Gráficos de Abstenção e Votos -->
+    <section class="charts-grid">
+      <!-- Gráfico 3: Regressão OLS Comparativa -->
+      <div class="glass-panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title"><span class="icon">🎯</span> Regressão Linear: Aumento de Comparecimento vs Ganho de Votos</div>
+            <div class="panel-subtitle">Modelo OLS de Conversão Marginal: Δ Votos Nominais = α + β · Δ Comparecimento</div>
+          </div>
+        </div>
+        <div id="chart-regression-turnout" class="chart-container"></div>
+      </div>
+
+      <!-- Gráfico 4: Gráfico de Barras Divergente Seção a Seção -->
+      <div class="glass-panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title"><span class="icon">📊</span> Variação Seção a Seção: Queda de Abstenção vs Votos Ganhos</div>
+            <div class="panel-subtitle">Balanço individual de cada urna mostrando a absorção de eleitores adicionais</div>
+          </div>
+        </div>
+        <div id="chart-waterfall" class="chart-container"></div>
+      </div>
+    </section>
+
+    <!-- Tabela Formal de Modelagem Econométrica -->
+    <section class="glass-panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title"><span class="icon">📐</span> Quadro Paramétrico dos Modelos Econométricos de Votação (Dados Oficiais TSE)</div>
+          <div class="panel-subtitle">Estimativas de Mínimos Quadrados Ordinários (OLS) e Testes de Hipótese para os Coeficientes</div>
+        </div>
+      </div>
+      <table class="tests-table">
+        <thead>
+          <tr>
+            <th>Candidato / Modelo</th>
+            <th>Equação Estimada (OLS)</th>
+            <th>Coeficiente Angular (β)</th>
+            <th>Erro Padrão (SE)</th>
+            <th>R² (Explicação)</th>
+            <th>p-valor (t-stat)</th>
+            <th>Interpretação Eleitoral</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color:#f43f5e;">Lula (13 - PT)</strong><br><small>Ganho Nominal vs Novos Eleitores</small></td>
+            <td><span class="code-tag">ΔV₁₃ = 8.16 + 1.4784 · ΔComp</span></td>
+            <td><strong style="color:#f43f5e;">+1.4784</strong></td>
+            <td>± 0.197</td>
+            <td><span class="code-tag">R² = 0.757 (75.7%)</span></td>
+            <td><span class="code-tag">p = 6.20e-07</span></td>
+            <td><span class="status-badge status-pass">Significativo (p < 0.001) - Forte Captura de Novos Votantes e Migração</span></td>
+          </tr>
+          <tr>
+            <td><strong style="color:#38bdf8;">Flávio Bolsonaro (22 - PL)</strong><br><small>Ganho Nominal vs Novos Eleitores</small></td>
+            <td><span class="code-tag">ΔV₂₂ = 3.83 + 0.101 · ΔComp</span></td>
+            <td><strong style="color:#38bdf8;">+0.101</strong></td>
+            <td>± 0.109</td>
+            <td><span class="code-tag">R² = 0.045 (4.5%)</span></td>
+            <td><span class="code-tag">p = 0.3674</span></td>
+            <td><span class="status-badge status-warn">Não Significativo (p = 0.3674) - Crescimento Residual / Inelástico</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- PARTE 3: TABELA ANALÍTICA GRANULAR COMPLETA DAS 20 URNAS                 -->
+    <!-- ========================================================================= -->
+    <section class="glass-panel">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title"><span class="icon">📋</span> Amostra Randômica das 20 Urnas (Auditoria Completa Seção a Seção)</div>
+          <div class="panel-subtitle">Auditoria individualizada cruzando biometria, abstenção e evolução de votos nominais nos dois turnos</div>
+        </div>
+      </div>
+      
+      <div class="table-wrapper">
+        <table class="data-table" id="sample-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Município</th>
+              <th>Zona</th>
+              <th>Seção</th>
+              <th>Modelo Urna</th>
+              <th>Local de Votação</th>
+              <th>Comp T1</th>
+              <th>Comp T2</th>
+              <th>Δ Comp</th>
+              <th>Abst T1 (%)</th>
+              <th>Abst T2 (%)</th>
+              <th>Δ Abst (%)</th>
+              <th>% Man T1</th>
+              <th>% Man T2</th>
+              <th>Δ Man (%)</th>
+              <th>Lula T1</th>
+              <th>Lula T2</th>
+              <th>Δ Lula</th>
+              <th>Flávio T1</th>
+              <th>Flávio T2</th>
+              <th>Δ Flávio</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Preenchido via JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const sampleData = [{"MUNICIPIO": "SERRA DO RAMALHO", "ZONA": 71, "SECAO": 268, "COD_MUNICIPIO": "39047", "MODELO_URNA": "UE2015", "1T_APTOS": 244, "1T_COMPARECIMENTO": 214, "1T_ABSTENCAO": 30, "1T_PCT_ABSTENCAO": 12.3, "1T_QTD_BIOMETRIA": 172, "1T_QTD_MANUAL": 42, "1T_PCT_MANUAL": 19.63, "1T_VOTOS_13": 192, "1T_VOTOS_22": 12, "1T_PCT_13": 94.12, "1T_PCT_22": 5.88, "2T_APTOS": 244, "2T_COMPARECIMENTO": 213, "2T_ABSTENCAO": 31, "2T_PCT_ABSTENCAO": 12.7, "2T_QTD_BIOMETRIA": 165, "2T_QTD_MANUAL": 48, "2T_PCT_MANUAL": 22.54, "2T_VOTOS_13": 196, "2T_VOTOS_22": 13, "2T_BRANCOS": 1, "2T_NULOS": 3, "2T_PCT_13": 93.78, "2T_PCT_22": 6.22, "2T_VOTOS_POS_17H": 0, "2T_VOTOS_POS_17H_MANUAL": 0, "DELTA_MANUAL": 6, "DELTA_PCT_MANUAL": 2.91, "DELTA_COMPARECIMENTO": -1, "DELTA_ABSTENCAO": 1, "DELTA_VOTOS_13": 4, "DELTA_VOTOS_22": 1, "LOCAL_VOTACAO": "ESCOLA MUNICIPAL TOM JOBIM", "COMP_T1": 214, "COMP_T2": 213, "DIF_COMP": -1, "ABST_T1": 30, "ABST_T2": 31, "PCT_ABST_T1": 12.3, "PCT_ABST_T2": 12.7, "DIF_PCT_ABST": 0.4, "QUEDA_ABST_PCT": -0.4, "MAN_T1": 42, "MAN_T2": 48, "PCT_MAN_T1": 19.63, "PCT_MAN_T2": 22.54, "DIF_PCT_MANUAL": 2.91, "DIF_ABS_MANUAL": 6, "BIO_T1": 172, "BIO_T2": 165, "VOTOS_13_T1": 192, "VOTOS_13_T2": 196, "DIF_VOTOS_13": 4, "VOTOS_22_T1": 12, "VOTOS_22_T2": 13, "DIF_VOTOS_22": 1, "PCT_13_T1": 94.12, "PCT_13_T2": 93.78, "PCT_22_T1": 5.88, "PCT_22_T2": 6.22}, {"MUNICIPIO": "OLINDINA", "ZONA": 81, "SECAO": 167, "COD_MUNICIPIO": "37630", "MODELO_URNA": "UE2022", "1T_APTOS": 366, "1T_COMPARECIMENTO": 286, "1T_ABSTENCAO": 80, "1T_PCT_ABSTENCAO": 21.86, "1T_QTD_BIOMETRIA": 253, "1T_QTD_MANUAL": 33, "1T_PCT_MANUAL": 11.54, "1T_VOTOS_13": 249, "1T_VOTOS_22": 23, "1T_PCT_13": 91.54, "1T_PCT_22": 8.46, "2T_APTOS": 366, "2T_COMPARECIMENTO": 298, "2T_ABSTENCAO": 68, "2T_PCT_ABSTENCAO": 18.58, "2T_QTD_BIOMETRIA": 272, "2T_QTD_MANUAL": 26, "2T_PCT_MANUAL": 8.72, "2T_VOTOS_13": 271, "2T_VOTOS_22": 24, "2T_BRANCOS": 1, "2T_NULOS": 2, "2T_PCT_13": 91.86, "2T_PCT_22": 8.14, "2T_VOTOS_POS_17H": 0, "2T_VOTOS_POS_17H_MANUAL": 0, "DELTA_MANUAL": -7, "DELTA_PCT_MANUAL": -2.82, "DELTA_COMPARECIMENTO": 12, "DELTA_ABSTENCAO": -12, "DELTA_VOTOS_13": 22, "DELTA_VOTOS_22": 1, "LOCAL_VOTACAO": "ESCOLA MUNICIPAL JOAQUIM BARRETO BORGES", "COMP_T1": 286, "COMP_T2": 298, "DIF_COMP": 12, "ABST_T1": 80, "ABST_T2": 68, "PCT_ABST_T1": 21.86, "PCT_ABST_T2": 18.58, "DIF_PCT_ABST": -3.28, "QUEDA_ABST_PCT": 3.28, "MAN_T1": 33, "MAN_T2": 26, "PCT_MAN_T1": 11.54, "PCT_MAN_T2": 8.72, "DIF_PCT_MANUAL": -2.82, "DIF_ABS_MANUAL": -7, "BIO_T1": 253, "BIO_T2": 272, "VOTOS_13_T1": 249, "VOTOS_13_T2": 271, "DIF_VOTOS_13": 22, "VOTOS_22_T1": 23, "VOTOS_22_T2": 24, "DIF_VOTOS_22": 1, "PCT_13_T1": 91.54, "PCT_13_T2": 91.86, "PCT_22_T1": 8.46, "PCT_22_T2": 8.14}, {"MUNICIPIO": "IBITITÁ", "ZONA": 104, "SECAO": 191, "COD_MUNICIPIO": "35637", "MODELO_URNA": "UE2022", "1T_APTOS": 244, "1T_COMPARECIMENTO": 212, "1T_ABSTENCAO": 32, "1T_PCT_ABSTENCAO": 13.11, "1T_QTD_BIOMETRIA": 173, "1T_QTD_MANUAL": 39, "1T_PCT_MANUAL": 18.4, "1T_VOTOS_13": 140, "1T_VOTOS_22": 52, "1T_PCT_13": 72.92, "1T_PCT_22": 27.08, "2T_APTOS": 244, "2T_COMPARECIMENTO": 215, "2T_ABSTENCAO": 29, "2T_PCT_ABSTENCAO": 11.89, "2T_QTD_BIOMETRIA": 184, "2T_QTD_MANUAL": 31, "2T_PCT_MANUAL": 14.42, "2T_VOTOS_13": 141, "2T_VOTOS_22": 66, "2T_BRANCOS": 4, "2T_NULOS": 4, "2T_PCT_13": 68.12, "2T_PCT_22": 31.88, "2T_VOTOS_POS_17H": 0, "2T_VOTOS_POS_17H_MANUAL": 0, "DELTA_MANUAL": -8, "DELTA_PCT_MANUAL": -3.98, "DELTA_COMPARECIMENTO": 3, "DELTA_ABSTENCAO": -3, "DELTA_VOTOS_13": 1, "DELTA_VOTOS_22": 14, "LOCAL_VOTACAO": "COLÉGIO MUNICIPAL EUFRASIO VILELA DOURADO", "COMP_T1": 212, "COMP_T2": 215, "DIF_COMP": 3, "ABST_T1": 32, "ABST_T2": 29, "PCT_ABST_T1": 13.11, "PCT_ABST_T2": 11.89, "DIF_PCT_ABST": -1.22, "QUEDA_ABST_PCT": 1.22, "MAN_T1": 39, "MAN_T2": 31, "PCT_MAN_T1": 18.4, "PCT_MAN_T2": 14.42, "DIF_PCT_MANUAL": -3.98, "DIF_ABS_MANUAL": -8, "BIO_T1": 173, "BIO_T2": 184, "VOTOS_13_T1": 140, "VOTOS_13_T2": 141, "DIF_VOTOS_13": 1, "VOTOS_22_T1": 52, "VOTOS_22_T2": 66, "DIF_VOTOS_22": 14, "PCT_13_T1": 72.92, "PCT_13_T2": 68.12, "PCT_22_T1": 27.08, "PCT_22_T2": 31.88}, {"MUNICIPIO": "FEIRA DE SANTANA", "ZONA": 157, "SECAO": 307, "COD_MUNICIPIO": "35157", "MODELO_URNA": "UE2015", "1T_APTOS": 420, "1T_COMPARECIMENTO": 342, "1T_ABSTENCAO": 78, "1T_PCT_ABSTENCAO": 18.57, "1T_QTD_BIOMETRIA": 282, "1T_QTD_MANUAL": 60, "1T_PCT_MANUAL": 17.54, "1T_VOTOS_13": 169, "1T_VOTOS_22": 133, "1T_PCT_13": 55.96, "1T_PCT_22": 44.04, "2T_APTOS": 420, "2T_COMPARECIMENTO": 357, "2T_ABSTENCAO": 63, "2T_PCT_ABSTENCAO": 15.0, "2T_QTD_BIOMETRIA": 300, "2T_QTD_MANUAL": 57, "2T_PCT_MANUAL": 15.97, "2T_VOTOS_13": 207, "2T_VOTOS_22": 141, "2T_BRANCOS": 3, "2T_NULOS": 6, "2T_PCT_13": 59.48, "2T_PCT_22": 40.52, "2T_VOTOS_POS_17H": 0, "2T_VOTOS_POS_17H_MANUAL": 0, "DELTA_MANUAL": -3, "DELTA_PCT_MANUAL": -1.57, "DELTA_COMPARECIMENTO": 15, "DELTA_ABSTENCAO": -15, "DELTA_VOTOS_13": 38, "DELTA_VOTOS_22": 8, "LOCAL_VOTACAO": "COLÉGIO MODELO LUIS EDUARDO MAGALHÃES", "COMP_T1": 342, "COMP_T2": 357, "DIF_COMP": 15, "ABST_T1": 78, "ABST_T2": 63, "PCT_ABST_T1": 18.57, "PCT_ABST_T2": 15.0, "DIF_PCT_ABST": -3.57, "QUEDA_ABST_PCT": 3.57, "MAN_T1": 60, "MAN_T2": 57, "PCT_MAN_T1": 17.54, "PCT_MAN_T2": 15.97, "DIF_PCT_MANUAL": -1.57, "DIF_ABS_MANUAL": -3, "BIO_T1": 282, "BIO_T2": 300, "VOTOS_13_T1": 169, "VOTOS_13_T2": 207, "DIF_VOTOS_13": 38, "VOTOS_22_T1": 133, "VOTOS_22_T2": 141, "DIF_VOTOS_22": 8, "PCT_13_T1": 55.96, "PCT_13_T2": 59.48, "PCT_22_T1": 44.04, "PCT_22_T2": 40.52}, {"MUNICIPIO": "ANGUERA", "ZONA": 157, "SECAO": 840, "COD_MUNICIPIO": "33294", "MODELO_URNA": "UE2015", "1T_APTOS": 308, "1T_COMPARECIMENTO": 255, "1T_ABSTENCAO": 53, "1T_PCT_ABSTENCAO": 17.21, "1T_QTD_BIOMETRIA": 220, "1T_QTD_MANUAL": 35, "1T_PCT_MANUAL": 13.73, "1T_VOTOS_13": 183, "1T_VOTOS_22": 43, "1T_PCT_13": 80.97, "1T_PCT_22": 19.03, "2T_APTOS": 308, "2T_COMPARECIMENTO": 253, "2T_ABSTENCAO": 55, "2T_PCT_ABSTENCAO": 17.86, "2T_QTD_BIOMETRIA": 225, "2T_QTD_MANUAL": 28, "2T_PCT_MANUAL": 11.07, "2T_VOTOS_13": 201, "2T_VOTOS_22": 44, "2T_BRANCOS": 3, "2T_NULOS": 5, "2T_PCT_13": 82.04, "2T_PCT_22": 17.96, "2T_VOTOS_POS_17H": 2, "2T_VOTOS_POS_17H_MANUAL": 0, "DELTA_MANUAL": -7, "DELTA_PCT_MANUAL": -2.66, "DELTA_COMPARECIMENTO": -2, "DELTA_ABSTENCAO": 2, "DELTA_VOTOS_13": 18, "DELTA_VOTOS_22": 1, "LOCAL_VOTACAO": "ESCOLA MUNICIPAL VITOR BEZERRA LOLA", "COMP_T1": 255, "COMP_T2": 253, "DIF_COMP": -2, "ABST_T1": 53, "ABST_T2": 55, "PCT_ABST_T1": 17.21, "PCT_ABST_T2": 17.86, "DIF_PCT_ABST": 0.65, "QUEDA_ABST_PCT": -0.65, "MAN_T1": 35, "MAN_T2": 28, "PCT_MAN_T1": 13.73, "PCT_MAN_T2": 11.07, "DIF_PCT_MANUAL": -2.66, "DIF_ABS_MANUAL": -7, "BIO_T1": 220, "BIO_T2": 225, "VOTOS_13_T1": 183, "VOTOS_13_T2": 201, "DIF_VOTOS_13": 18, "VOTOS_22_T1": 43, "VOTOS_22_T2": 44, "DIF_VOTOS_22": 1, "PCT_13_T1": 80.97, "PCT_13_T2": 82.04, "PCT_22_T1": 19.03, "PCT_22_T2": 17.96}, {"MUNICIPIO": "JUSSARI", "ZONA": 28, "SECAO": 426, "COD_MUNICIPIO": "30694", "MODELO_URNA": "UE2020", "1T_APTOS": 398, "1T_COMPARECIMENTO": 312, "1T_ABSTENCAO": 86, "1T_PCT_ABSTENCAO": 21.61, "1T_QTD_BIOMETRIA": 270, "1T_QTD_MANUAL": 42, "1T_PCT_MANUAL": 13.46, "1T_VOTOS_13": 193, "1T_VOTOS_22": 100, "1T_PCT_13": 65.87, "1T_PCT_22": 34.13, "2T_APTOS": 398, "2T_COMPARECIMENTO": 337, "2T_ABSTENCAO": 61, "2T_PCT_ABSTENCAO": 15.33, "2T_QTD_BIOMETRIA": 289, "2T_QTD_MANUAL": 48, "2T_PCT_MANUAL": 14.24, "2T_VOTOS_13": 220, "2T_VOTOS_22": 107, "2T_BRANCOS": 1, "2T_NULOS": 9, "2T_PCT_13": 67.28, "2T_PCT_22": 32.72, "2T_VOTOS_POS_17H": 0, "2T_VOTOS_POS_17H_MANUAL": 0, "DELTA_MANUAL": 6, "DELTA_PCT_MANUAL": 0.78, "DELTA_COMPARECIMENTO": 25, "DELTA_ABSTENCAO": -25, "DELTA_VOTOS_13": 27, "DELTA_VOTOS_22": 7, "LOCAL_VOTACAO": "COLÉGIO ESTADUAL AMÉLIA AMADO", "COMP_T1": 312, "COMP_T2": 337, "DIF_COMP": 25, "ABST_T1": 86, "ABST_T2": 61, "PCT_ABST_T1": 21.61, "PCT_ABST_T2": 15.33, "DIF_PCT_ABST": -6.28, "QUEDA_ABST_PCT": 6.28, "MAN_T1": 42, "MAN_T2": 48, "PCT_MAN_T1": 13.46, "PCT_MAN_T2": 14.24, "DIF_PCT_MANUAL": 0.78, "DIF_ABS_MANUAL": 6, "BIO_T1": 270, "BIO_T2": 289, "VOTOS_13_T1": 193, "VOTOS_13_T2": 220, "DIF_VOTOS_13": 27, "VOTOS_22_T1": 100, "VOTOS_22_T2": 107, "DIF_VOTOS_22": 7, "PCT_13_T1": 65.87, "PCT_13_T2": 67.28, "PCT_22_T1": 34.13, "PCT_22_T2": 32.72}, {"MUNICIPIO": "SIMÕES FILHO", "ZONA": 33, "SECAO": 24, "COD_MUNICIPIO": "39136", "MODELO_URNA": "UE2013", "1T_APTOS": 369, "1T_COMPARECIMENTO": 289, "1T_ABSTENCAO": 80, "1T_PCT_ABSTENCAO": 21.68, "1T_QTD_BIOMETRIA": 253, "1T_QTD_MANUAL": 36, "1T_PCT_MANUAL": 12.46, "1T_VOTOS_13": 177, "1T_VOTOS_22": 65, "1T_PCT_13": 73.14, "1T_PCT_22": 26.86, "2T_APTOS": 369, "2T_COMPARECIMENTO": 304, "2T_ABSTENCAO": 65, "2T_PCT_ABSTENCAO": 17.62, "2T_QTD_BIOMETRIA": 264, "2T_QTD_MANUAL": 40, "2T_PCT_MANUAL": 13.16, "2T_VOTOS_13": 217, "2T_VOTOS_22": 68, "2T_BRANCOS": 6, "2T_NULOS": 13, "2T_PCT_13": 76.14, "2T_PCT_22": 23.86, "2T_VOTOS_POS_17H": 0, "2T_VOTOS_POS_17H_MANUAL": 0, "DELTA_MANUAL": 4, "DELTA_PCT_MANUAL": 0.7, "DELTA_COMPARECIMENTO": 15, "DELTA_ABSTENCAO": -15, "DELTA_VOTOS_13": 40, "DELTA_VOTOS_22": 3, "LOCAL_VOTACAO": "COLÉGIO ESTADUAL REGINA SIMÕES", "COMP_T1": 289, "COMP_T2": 304, "DIF_COMP": 15, "ABST_T1": 80, "ABST_T2": 65, "PCT_ABST_T1": 21.68, "PCT_ABST_T2": 17.62, "DIF_PCT_ABST": -4.06, "QUEDA_ABST_PCT": 4.06, "MAN_T1": 36, "MAN_T2": 40, "PCT_MAN_T1": 12.46, "PCT_MAN_T2": 13.16, "DIF_PCT_MANUAL": 0.7, "DIF_ABS_MANUAL": 4, "BIO_T1": 253, "BIO_T2": 264, "VOTOS_13_T1": 177, "VOTOS_13_T2": 217, "DIF_VOTOS_13": 40, "VOTOS_22_T1": 65, "VOTOS_22_T2": 68, "DIF_VOTOS_22": 3, "PCT_13_T1": 73.14, "PCT_13_T2": 76.14, "PCT_22_T1": 26.86, "PCT_22_T2": 23.86}, {"MUNICIPIO": "SALVADOR", "ZONA": 3, "SECAO": 424, "COD_MUNICIPIO": "38490", "MODELO_URNA": "UE2022", "1T_APTOS": 412, "1T_COMPARECIMENTO": 342, "1T_ABSTENCAO": 70, "1T_PCT_ABSTENCAO": 16.99, "1T_QTD_BIOMETRIA": 303, "1T_QTD_MANUAL": 39, "1T_PCT_MANUAL": 11.4, "1T_VOTOS_13": 229, "1T_VOTOS_22": 69, "1T_PCT_13": 76.85, "1T_PCT_22": 23.15, "2T_APTOS": 412, "2T_COMPARECIMENTO": 364, "2T_ABSTENCAO": 48, "2T_PCT_ABSTENCAO": 11.65, "2T_QTD_BIOMETRIA": 323, "2T_QTD_MANUAL": 41, "2T_PCT_MANUAL": 11.26, "2T_VOTOS_13": 279, "2T_VOTOS_22": 73, "2T_BRANCOS": 5, "2T_NULOS": 7, "2T_PCT_13": 79.26, "2T_PCT_22": 20.74, "2T_VOTOS_POS_17H": 0, "2T_VOTOS_POS_17H_MANUAL": 0, "DELTA_MANUAL": 2, "DELTA_PCT_MANUAL": -0.14, "DELTA_COMPARECIMENTO": 22, "DELTA_ABSTENCAO": -22, "DELTA_VOTOS_13": 50, "DELTA_VOTOS_22": 4, "LOCAL_VOTACAO": "ESCOLA MUNICIPAL JULIETA VIANA", "COMP_T1": 342, "COMP_T2": 364, "DIF_COMP": 22, "ABST_T1": 70, "ABST_T2": 48, "PCT_ABST_T1": 16.99, "PCT_ABST_T2": 11.65, "DIF_PCT_ABST": -5.34, "QUEDA_ABST_PCT": 5.34, "MAN_T1": 39, "MAN_T2": 41, "PCT_MAN_T1": 11.4, "PCT_MAN_T2": 11.26, "DIF_PCT_MANUAL": -0.14, "DIF_ABS_MANUAL": 2, "BIO_T1": 303, "BIO_T2": 323, "VOTOS_13_T1": 229, "VOTOS_13_T2": 279, "DIF_VOTOS_13": 50, "VOTOS_22_T1": 69, "VOTOS_22_T2": 73, "DIF_VOTOS_22": 4, "PCT_13_T1": 76.85, "PCT_13_T2": 79.26, "PCT_22_T1": 23.15, "PCT_22_T2": 20.74}, {"MUNICIPIO": "SALVADOR", "ZONA": 4, "SECAO": 169, "COD_MUNICIPIO": "38490", "MODELO_URNA": "UE2022", "1T_APTOS": 331, "1T_COMPARECIMENTO": 270, "1T_ABSTENCAO": 61, "1T_PCT_ABSTENCAO": 18.43, "1T_QTD_BIOMETRIA": 240, "1T_QTD_MANUAL": 30, "1T_PCT_MANUAL": 11.11, "1T_VOTOS_13": 197, "1T_VOTOS_22": 40, "1T_PCT_13": 83.12, "1T_PCT_22": 16.88, "2T_APTOS": 331, "2T_COMPARECIMENTO": 282, "2T_ABSTENCAO": 49, "2T_PCT_ABSTENCAO": 14.8, "2T_QTD_BIOMETRIA": 251, "2T_QTD_MANUAL": 31, "2T_PCT_MANUAL": 10.99, "2T_VOTOS_13": 233, "2T_VOTOS_22": 39, "2T_BRANCOS": 4, "2T_NULOS": 6, "2T_PCT_13": 85.66, "2T_PCT_22": 14.34, "2T_VOTOS_POS_17H": 0, "2T_VOTOS_POS_17H_MANUAL": 0, "DELTA_MANUAL": 1, "DELTA_PCT_MANUAL": -0.12, "DELTA_COMPARECIMENTO": 12, "DELTA_ABSTENCAO": -12, "DELTA_VOTOS_13": 36, "DELTA_VOTOS_22": -1, "LOCAL_VOTACAO": "ESCOLA MUNICIPAL ESTHER FÉLIX DA SILVA", "COMP_T1": 270, "COMP_T2": 282, "DIF_COMP": 12, "ABST_T1": 61, "ABST_T2": 49, "PCT_ABST_T1": 18.43, "PCT_ABST_T2": 14.8, "DIF_PCT_ABST": -3.63, "QUEDA_ABST_PCT": 3.63, "MAN_T1": 30, "MAN_T2": 31, "PCT_MAN_T1": 11.11, "PCT_MAN_T2": 10.99, "DIF_PCT_MANUAL": -0.12, "DIF_ABS_MANUAL": 1, "BIO_T1": 240, "BIO_T2": 251, "VOTOS_13_T1": 197, "VOTOS_13_T2": 233, "DIF_VOTOS_13": 36, "VOTOS_22_T1": 40, "VOTOS_22_T2": 39, "DIF_VOTOS_22": -1, "PCT_13_T1": 83.12, "PCT_13_T2": 85.66, "PCT_22_T1": 16.88, "PCT_22_T2": 14.34}, {"MUNICIPIO": "CASTRO ALVES", "ZONA": 43, "SECAO": 1, "COD_MUNICIPIO": "34452", "MODELO_URNA": "UE2020", "1T_APTOS": 315, "1T_COMPARECIMENTO": 273, "1T_ABSTENCAO": 42, "1T_PCT_ABSTENCAO": 13.33, "1T_QTD_BIOMETRIA": 245, "1T_QTD_MANUAL": 28, "1T_PCT_MANUAL": 10.26, "1T_VOTOS_13": 161, "1T_VOTOS_22": 80, "1T_PCT_13": 66.8, "1T_PCT_22": 33.2, "2T_APTOS": 317, "2T_COMPARECIMENTO": 280, "2T_ABSTENCAO": 37, "2T_PCT_ABSTENCAO": 11.67, "2T_QTD_BIOMETRIA": 242, "2T_QTD_MANUAL": 38, "2T_PCT_MANUAL": 13.57, "2T_VOTOS_13": 180, "2T_VOTOS_22": 84, "2T_BRANCOS": 1, "2T_NULOS": 15, "2T_PCT_13": 68.18, "2T_PCT_22": 31.82, "2T_VOTOS_POS_17H": 4, "2T_VOTOS_POS_17H_MANUAL": 0, "DELTA_MANUAL": 10, "DELTA_PCT_MANUAL": 3.31, "DELTA_COMPARECIMENTO": 7, "DELTA_ABSTENCAO": -5, "DELTA_VOTOS_13": 19, "DELTA_VOTOS_22": 4, "LOCAL_VOTACAO": "ESCOLA LUIZ EDUARDO MAGALHÃES", "COMP_T1": 273, "COMP_T2": 280, "DIF_COMP": 7, "ABST_T1": 42, "ABST_T2": 37, "PCT_ABST_T1": 13.33, "PCT_ABST_T2": 11.67, "DIF_PCT_ABST": -1.66, "QUEDA_ABST_PCT": 1.66, "MAN_T1": 28, "MAN_T2": 38, "PCT_MAN_T1": 10.26, "PCT_MAN_T2": 13.57, "DIF_PCT_MANUAL": 3.31, "DIF_ABS_MANUAL": 10, "BIO_T1": 245, "BIO_T2": 242, "VOTOS_13_T1": 161, "VOTOS_13_T2": 180, "DIF_VOTOS_13": 19, "VOTOS_22_T1": 80, "VOTOS_22_T2": 84, "DIF_VOTOS_22": 4, "PCT_13_T1": 66.8, "PCT_13_T2": 68.18, "PCT_22_T1": 33.2, "PCT_22_T2": 31.82}, {"MUNICIPIO": "SALVADOR", "ZONA": 19, "SECAO": 459, "COD_MUNICIPIO": "38490", "MODELO_URNA": "UE2022", "1T_APTOS": 432, "1T_COMPARECIMENTO": 345, "1T_ABSTENCAO": 87, "1T_PCT_ABSTENCAO": 20.14, "1T_QTD_BIOMETRIA": 311, "1T_QTD_MANUAL": 34, "1T_PCT_MANUAL": 9.86, "1T_VOTOS_13": 208, "1T_VOTOS_22": 90, "1T_PCT_13": 69.8, "1T_PCT_22": 30.2, "2T_APTOS": 432, "2T_COMPARECIMENTO": 369, "2T_ABSTENCAO": 63, "2T_PCT_ABSTENCAO": 14.58, "2T_QTD_BIOMETRIA": 334, "2T_QTD_MANUAL": 35, "2T_PCT_MANUAL": 9.49, "2T_VOTOS_13": 256, "2T_VOTOS_22": 94, "2T_BRANCOS": 7, "2T_NULOS": 12, "2T_PCT_13": 73.14, "2T_PCT_22": 26.86, "2T_VOTOS_POS_17H": 2, "2T_VOTOS_POS_17H_MANUAL": 0, "DELTA_MANUAL": 1, "DELTA_PCT_MANUAL": -0.37, "DELTA_COMPARECIMENTO": 24, "DELTA_ABSTENCAO": -24, "DELTA_VOTOS_13": 48, "DELTA_VOTOS_22": 4, "LOCAL_VOTACAO": "ESCOLA MUNICIPAL PROFESSORA IRENE DA SILVA COSTA SANTOS", "COMP_T1": 345, "COMP_T2": 369, "DIF_COMP": 24, "ABST_T1": 87, "ABST_T2": 63, "PCT_ABST_T1": 20.14, "PCT_ABST_T2": 14.58, "DIF_PCT_ABST": -5.56, "QUEDA_ABST_PCT": 5.56, "MAN_T1": 34, "MAN_T2": 35, "PCT_MAN_T1": 9.86, "PCT_MAN_T2": 9.49, "DIF_PCT_MANUAL": -0.37, "DIF_ABS_MANUAL": 1, "BIO_T1": 311, "BIO_T2": 334, "VOTOS_13_T1": 208, "VOTOS_13_T2": 256, "DIF_VOTOS_13": 48, "VOTOS_22_T1": 90, "VOTOS_22_T2": 94, "DIF_VOTOS_22": 4, "PCT_13_T1": 69.8, "PCT_13_T2": 73.14, "PCT_22_T1": 30.2, "PCT_22_T2": 26.86}, {"MUNICIPIO": "PARAMIRIM", "ZONA": 111, "SECAO": 262, "COD_MUNICIPIO": "37737", "MODELO_URNA": "UE2022", "1T_APTOS": 331, "1T_COMPARECIMENTO": 267, "1T_ABSTENCAO": 64, "1T_PCT_ABSTENCAO": 19.34, "1T_QTD_BIOMETRIA": 243, "1T_QTD_MANUAL": 24, "1T_PCT_MANUAL": 8.99, "1T_VOTOS_13": 187, "1T_VOTOS_22": 54, "1T_PCT_13": 77.59, "1T_PCT_22": 22.41, "2T_APTOS": 332, "2T_COMPARECIMENTO": 283, "2T_ABSTENCAO": 49, "2T_PCT_ABSTENCAO": 14.76, "2T_QTD_BIOMETRIA": 251, "2T_QTD_MANUAL": 32, "2T_PCT_MANUAL": 11.31, "2T_VOTOS_13": 216, "2T_VOTOS_22": 56, "2T_BRANCOS": 7, "2T_NULOS": 4, "2T_PCT_13": 79.41, "2T_PCT_22": 20.59, "2T_VOTOS_POS_17H": 0, "2T_VOTOS_POS_17H_MANUAL": 0, "DELTA_MANUAL": 8, "DELTA_PCT_MANUAL": 2.32, "DELTA_COMPARECIMENTO": 16, "DELTA_ABSTENCAO": -15, "DELTA_VOTOS_13": 29, "DELTA_VOTOS_22": 2, "LOCAL_VOTACAO": "COLÉGIO ULYSSES CAIRES DE BRITO", "COMP_T1": 267, "COMP_T2": 283, "DIF_COMP": 16, "ABST_T1": 64, "ABST_T2": 49, "PCT_ABST_T1": 19.34, "PCT_ABST_T2": 14.76, "DIF_PCT_ABST": -4.58, "QUEDA_ABST_PCT": 4.58, "MAN_T1": 24, "MAN_T2": 32, "PCT_MAN_T1": 8.99, "PCT_MAN_T2": 11.31, "DIF_PCT_MANUAL": 2.32, "DIF_ABS_MANUAL": 8, "BIO_T1": 243, "BIO_T2": 251, "VOTOS_13_T1": 187, "VOTOS_13_T2": 216, "DIF_VOTOS_13": 29, "VOTOS_22_T1": 54, "VOTOS_22_T2": 56, "DIF_VOTOS_22": 2, "PCT_13_T1": 77.59, "PCT_13_T2": 79.41, "PCT_22_T1": 22.41, "PCT_22_T2": 20.59}, {"MUNICIPIO": "ILHÉUS", "ZONA": 26, "SECAO": 341, "COD_MUNICIPIO": "35734", "MODELO_URNA": "UE2020", "1T_APTOS": 357, "1T_COMPARECIMENTO": 278, "1T_ABSTENCAO": 79, "1T_PCT_ABSTENCAO": 22.13, "1T_QTD_BIOMETRIA": 253, "1T_QTD_MANUAL": 25, "1T_PCT_MANUAL": 8.99, "1T_VOTOS_13": 154, "1T_VOTOS_22": 86, "1T_PCT_13": 64.17, "1T_PCT_22": 35.83, "2T_APTOS": 357, "2T_COMPARECIMENTO": 293, "2T_ABSTENCAO": 64, "2T_PCT_ABSTENCAO": 17.93, "2T_QTD_BIOMETRIA": 272, "2T_QTD_MANUAL": 21, "2T_PCT_MANUAL": 7.17, "2T_VOTOS_13": 182, "2T_VOTOS_22": 100, "2T_BRANCOS": 4, "2T_NULOS": 7, "2T_PCT_13": 64.54, "2T_PCT_22": 35.46, "2T_VOTOS_POS_17H": 0, "2T_VOTOS_POS_17H_MANUAL": 0, "DELTA_MANUAL": -4, "DELTA_PCT_MANUAL": -1.82, "DELTA_COMPARECIMENTO": 15, "DELTA_ABSTENCAO": -15, "DELTA_VOTOS_13": 28, "DELTA_VOTOS_22": 14, "LOCAL_VOTACAO": "ESCOLA EMÍLIA DE BRITO CORREIA", "COMP_T1": 278, "COMP_T2": 293, "DIF_COMP": 15, "ABST_T1": 79, "ABST_T2": 64, "PCT_ABST_T1": 22.13, "PCT_ABST_T2": 17.93, "DIF_PCT_ABST": -4.2, "QUEDA_ABST_PCT": 4.2, "MAN_T1": 25, "MAN_T2": 21, "PCT_MAN_T1": 8.99, "PCT_MAN_T2": 7.17, "DIF_PCT_MANUAL": -1.82, "DIF_ABS_MANUAL": -4, "BIO_T1": 253, "BIO_T2": 272, "VOTOS_13_T1": 154, "VOTOS_13_T2": 182, "DIF_VOTOS_13": 28, "VOTOS_22_T1": 86, "VOTOS_22_T2": 100, "DIF_VOTOS_22": 14, "PCT_13_T1": 64.17, "PCT_13_T2": 64.54, "PCT_22_T1": 35.83, "PCT_22_T2": 35.46}, {"MUNICIPIO": "MATA DE SÃO JOÃO", "ZONA": 185, "SECAO": 149, "COD_MUNICIPIO": "37214", "MODELO_URNA": "UE2020", "1T_APTOS": 171, "1T_COMPARECIMENTO": 137, "1T_ABSTENCAO": 34, "1T_PCT_ABSTENCAO": 19.88, "1T_QTD_BIOMETRIA": 126, "1T_QTD_MANUAL": 11, "1T_PCT_MANUAL": 8.03, "1T_VOTOS_13": 77, "1T_VOTOS_22": 46, "1T_PCT_13": 62.6, "1T_PCT_22": 37.4, "2T_APTOS": 171, "2T_COMPARECIMENTO": 137, "2T_ABSTENCAO": 34, "2T_PCT_ABSTENCAO": 19.88, "2T_QTD_BIOMETRIA": 123, "2T_QTD_MANUAL": 14, "2T_PCT_MANUAL": 10.22, "2T_VOTOS_13": 87, "2T_VOTOS_22": 47, "2T_BRANCOS": 1, "2T_NULOS": 2, "2T_PCT_13": 64.93, "2T_PCT_22": 35.07, "2T_VOTOS_POS_17H": 0, "2T_VOTOS_POS_17H_MANUAL": 0, "DELTA_MANUAL": 3, "DELTA_PCT_MANUAL": 2.19, "DELTA_COMPARECIMENTO": 0, "DELTA_ABSTENCAO": 0, "DELTA_VOTOS_13": 10, "DELTA_VOTOS_22": 1, "LOCAL_VOTACAO": "ESCOLA MUNICIPAL SÃO FRANCISCO", "COMP_T1": 137, "COMP_T2": 137, "DIF_COMP": 0, "ABST_T1": 34, "ABST_T2": 34, "PCT_ABST_T1": 19.88, "PCT_ABST_T2": 19.88, "DIF_PCT_ABST": 0.0, "QUEDA_ABST_PCT": -0.0, "MAN_T1": 11, "MAN_T2": 14, "PCT_MAN_T1": 8.03, "PCT_MAN_T2": 10.22, "DIF_PCT_MANUAL": 2.19, "DIF_ABS_MANUAL": 3, "BIO_T1": 126, "BIO_T2": 123, "VOTOS_13_T1": 77, "VOTOS_13_T2": 87, "DIF_VOTOS_13": 10, "VOTOS_22_T1": 46, "VOTOS_22_T2": 47, "DIF_VOTOS_22": 1, "PCT_13_T1": 62.6, "PCT_13_T2": 64.93, "PCT_22_T1": 37.4, "PCT_22_T2": 35.07}, {"MUNICIPIO": "URANDI", "ZONA": 117, "SECAO": 121, "COD_MUNICIPIO": "39519", "MODELO_URNA": "UE2020", "1T_APTOS": 305, "1T_COMPARECIMENTO": 232, "1T_ABSTENCAO": 73, "1T_PCT_ABSTENCAO": 23.93, "1T_QTD_BIOMETRIA": 215, "1T_QTD_MANUAL": 17, "1T_PCT_MANUAL": 7.33, "1T_VOTOS_13": 180, "1T_VOTOS_22": 40, "1T_PCT_13": 81.82, "1T_PCT_22": 18.18, "2T_APTOS": 305, "2T_COMPARECIMENTO": 233, "2T_ABSTENCAO": 72, "2T_PCT_ABSTENCAO": 23.61, "2T_QTD_BIOMETRIA": 222, "2T_QTD_MANUAL": 11, "2T_PCT_MANUAL": 4.72, "2T_VOTOS_13": 183, "2T_VOTOS_22": 46, "2T_BRANCOS": 3, "2T_NULOS": 1, "2T_PCT_13": 79.91, "2T_PCT_22": 20.09, "2T_VOTOS_POS_17H": 0, "2T_VOTOS_POS_17H_MANUAL": 0, "DELTA_MANUAL": -6, "DELTA_PCT_MANUAL": -2.61, "DELTA_COMPARECIMENTO": 1, "DELTA_ABSTENCAO": -1, "DELTA_VOTOS_13": 3, "DELTA_VOTOS_22": 6, "LOCAL_VOTACAO": "ESCOLA MUNICIPAL JOVENTINA DE SENA CARVALHO", "COMP_T1": 232, "COMP_T2": 233, "DIF_COMP": 1, "ABST_T1": 73, "ABST_T2": 72, "PCT_ABST_T1": 23.93, "PCT_ABST_T2": 23.61, "DIF_PCT_ABST": -0.32, "QUEDA_ABST_PCT": 0.32, "MAN_T1": 17, "MAN_T2": 11, "PCT_MAN_T1": 7.33, "PCT_MAN_T2": 4.72, "DIF_PCT_MANUAL": -2.61, "DIF_ABS_MANUAL": -6, "BIO_T1": 215, "BIO_T2": 222, "VOTOS_13_T1": 180, "VOTOS_13_T2": 183, "DIF_VOTOS_13": 3, "VOTOS_22_T1": 40, "VOTOS_22_T2": 46, "DIF_VOTOS_22": 6, "PCT_13_T1": 81.82, "PCT_13_T2": 79.91, "PCT_22_T1": 18.18, "PCT_22_T2": 20.09}, {"MUNICIPIO": "TEIXEIRA DE FREITAS", "ZONA": 183, "SECAO": 312, "COD_MUNICIPIO": "39934", "MODELO_URNA": "UE2022", "1T_APTOS": 373, "1T_COMPARECIMENTO": 274, "1T_ABSTENCAO": 99, "1T_PCT_ABSTENCAO": 26.54, "1T_QTD_BIOMETRIA": 260, "1T_QTD_MANUAL": 14, "1T_PCT_MANUAL": 5.11, "1T_VOTOS_13": 94, "1T_VOTOS_22": 156, "1T_PCT_13": 37.6, "1T_PCT_22": 62.4, "2T_APTOS": 373, "2T_COMPARECIMENTO": 286, "2T_ABSTENCAO": 87, "2T_PCT_ABSTENCAO": 23.32, "2T_QTD_BIOMETRIA": 268, "2T_QTD_MANUAL": 18, "2T_PCT_MANUAL": 6.29, "2T_VOTOS_13": 117, "2T_VOTOS_22": 165, "2T_BRANCOS": 1, "2T_NULOS": 3, "2T_PCT_13": 41.49, "2T_PCT_22": 58.51, "2T_VOTOS_POS_17H": 0, "2T_VOTOS_POS_17H_MANUAL": 0, "DELTA_MANUAL": 4, "DELTA_PCT_MANUAL": 1.18, "DELTA_COMPARECIMENTO": 12, "DELTA_ABSTENCAO": -12, "DELTA_VOTOS_13": 23, "DELTA_VOTOS_22": 9, "LOCAL_VOTACAO": "ESCOLA MUNICIPAL ANTONIO CHICON SOBRINHO", "COMP_T1": 274, "COMP_T2": 286, "DIF_COMP": 12, "ABST_T1": 99, "ABST_T2": 87, "PCT_ABST_T1": 26.54, "PCT_ABST_T2": 23.32, "DIF_PCT_ABST": -3.22, "QUEDA_ABST_PCT": 3.22, "MAN_T1": 14, "MAN_T2": 18, "PCT_MAN_T1": 5.11, "PCT_MAN_T2": 6.29, "DIF_PCT_MANUAL": 1.18, "DIF_ABS_MANUAL": 4, "BIO_T1": 260, "BIO_T2": 268, "VOTOS_13_T1": 94, "VOTOS_13_T2": 117, "DIF_VOTOS_13": 23, "VOTOS_22_T1": 156, "VOTOS_22_T2": 165, "DIF_VOTOS_22": 9, "PCT_13_T1": 37.6, "PCT_13_T2": 41.49, "PCT_22_T1": 62.4, "PCT_22_T2": 58.51}, {"MUNICIPIO": "CANUDOS", "ZONA": 83, "SECAO": 110, "COD_MUNICIPIO": "30856", "MODELO_URNA": "UE2022", "1T_APTOS": 207, "1T_COMPARECIMENTO": 161, "1T_ABSTENCAO": 46, "1T_PCT_ABSTENCAO": 22.22, "1T_QTD_BIOMETRIA": 150, "1T_QTD_MANUAL": 11, "1T_PCT_MANUAL": 6.83, "1T_VOTOS_13": 129, "1T_VOTOS_22": 24, "1T_PCT_13": 84.31, "1T_PCT_22": 15.69, "2T_APTOS": 207, "2T_COMPARECIMENTO": 155, "2T_ABSTENCAO": 52, "2T_PCT_ABSTENCAO": 25.12, "2T_QTD_BIOMETRIA": 139, "2T_QTD_MANUAL": 16, "2T_PCT_MANUAL": 10.32, "2T_VOTOS_13": 125, "2T_VOTOS_22": 26, "2T_BRANCOS": 1, "2T_NULOS": 3, "2T_PCT_13": 82.78, "2T_PCT_22": 17.22, "2T_VOTOS_POS_17H": 0, "2T_VOTOS_POS_17H_MANUAL": 0, "DELTA_MANUAL": 5, "DELTA_PCT_MANUAL": 3.49, "DELTA_COMPARECIMENTO": -6, "DELTA_ABSTENCAO": 6, "DELTA_VOTOS_13": -4, "DELTA_VOTOS_22": 2, "LOCAL_VOTACAO": "EDUCANDARIO MUNICIPAL NOSSA SENHORA DO ROSARIO", "COMP_T1": 161, "COMP_T2": 155, "DIF_COMP": -6, "ABST_T1": 46, "ABST_T2": 52, "PCT_ABST_T1": 22.22, "PCT_ABST_T2": 25.12, "DIF_PCT_ABST": 2.9, "QUEDA_ABST_PCT": -2.9, "MAN_T1": 11, "MAN_T2": 16, "PCT_MAN_T1": 6.83, "PCT_MAN_T2": 10.32, "DIF_PCT_MANUAL": 3.49, "DIF_ABS_MANUAL": 5, "BIO_T1": 150, "BIO_T2": 139, "VOTOS_13_T1": 129, "VOTOS_13_T2": 125, "DIF_VOTOS_13": -4, "VOTOS_22_T1": 24, "VOTOS_22_T2": 26, "DIF_VOTOS_22": 2, "PCT_13_T1": 84.31, "PCT_13_T2": 82.78, "PCT_22_T1": 15.69, "PCT_22_T2": 17.22}, {"MUNICIPIO": "RIO REAL", "ZONA": 49, "SECAO": 124, "COD_MUNICIPIO": "38415", "MODELO_URNA": "UE2020", "1T_APTOS": 201, "1T_COMPARECIMENTO": 160, "1T_ABSTENCAO": 41, "1T_PCT_ABSTENCAO": 20.4, "1T_QTD_BIOMETRIA": 139, "1T_QTD_MANUAL": 21, "1T_PCT_MANUAL": 13.12, "1T_VOTOS_13": 111, "1T_VOTOS_22": 28, "1T_PCT_13": 79.86, "1T_PCT_22": 20.14, "2T_APTOS": 201, "2T_COMPARECIMENTO": 158, "2T_ABSTENCAO": 43, "2T_PCT_ABSTENCAO": 21.39, "2T_QTD_BIOMETRIA": 140, "2T_QTD_MANUAL": 18, "2T_PCT_MANUAL": 11.39, "2T_VOTOS_13": 123, "2T_VOTOS_22": 27, "2T_BRANCOS": 3, "2T_NULOS": 5, "2T_PCT_13": 82.0, "2T_PCT_22": 18.0, "2T_VOTOS_POS_17H": 0, "2T_VOTOS_POS_17H_MANUAL": 0, "DELTA_MANUAL": -3, "DELTA_PCT_MANUAL": -1.73, "DELTA_COMPARECIMENTO": -2, "DELTA_ABSTENCAO": 2, "DELTA_VOTOS_13": 12, "DELTA_VOTOS_22": -1, "LOCAL_VOTACAO": "ESCOLA MUNICIPAL PRINCESA ISABEL", "COMP_T1": 160, "COMP_T2": 158, "DIF_COMP": -2, "ABST_T1": 41, "ABST_T2": 43, "PCT_ABST_T1": 20.4, "PCT_ABST_T2": 21.39, "DIF_PCT_ABST": 0.99, "QUEDA_ABST_PCT": -0.99, "MAN_T1": 21, "MAN_T2": 18, "PCT_MAN_T1": 13.12, "PCT_MAN_T2": 11.39, "DIF_PCT_MANUAL": -1.73, "DIF_ABS_MANUAL": -3, "BIO_T1": 139, "BIO_T2": 140, "VOTOS_13_T1": 111, "VOTOS_13_T2": 123, "DIF_VOTOS_13": 12, "VOTOS_22_T1": 28, "VOTOS_22_T2": 27, "DIF_VOTOS_22": -1, "PCT_13_T1": 79.86, "PCT_13_T2": 82.0, "PCT_22_T1": 20.14, "PCT_22_T2": 18.0}, {"MUNICIPIO": "XIQUE-XIQUE", "ZONA": 68, "SECAO": 29, "COD_MUNICIPIO": "39713", "MODELO_URNA": "UE2022", "1T_APTOS": 226, "1T_COMPARECIMENTO": 173, "1T_ABSTENCAO": 53, "1T_PCT_ABSTENCAO": 23.45, "1T_QTD_BIOMETRIA": 152, "1T_QTD_MANUAL": 21, "1T_PCT_MANUAL": 12.14, "1T_VOTOS_13": 108, "1T_VOTOS_22": 50, "1T_PCT_13": 68.35, "1T_PCT_22": 31.65, "2T_APTOS": 225, "2T_COMPARECIMENTO": 174, "2T_ABSTENCAO": 51, "2T_PCT_ABSTENCAO": 22.67, "2T_QTD_BIOMETRIA": 149, "2T_QTD_MANUAL": 25, "2T_PCT_MANUAL": 14.37, "2T_VOTOS_13": 113, "2T_VOTOS_22": 55, "2T_BRANCOS": 2, "2T_NULOS": 4, "2T_PCT_13": 67.26, "2T_PCT_22": 32.74, "2T_VOTOS_POS_17H": 0, "2T_VOTOS_POS_17H_MANUAL": 0, "DELTA_MANUAL": 4, "DELTA_PCT_MANUAL": 2.23, "DELTA_COMPARECIMENTO": 1, "DELTA_ABSTENCAO": -2, "DELTA_VOTOS_13": 5, "DELTA_VOTOS_22": 5, "LOCAL_VOTACAO": "COLEGIO ESTADUAL PROFESSORA GILDETE DE SOUZA VIANA", "COMP_T1": 173, "COMP_T2": 174, "DIF_COMP": 1, "ABST_T1": 53, "ABST_T2": 51, "PCT_ABST_T1": 23.45, "PCT_ABST_T2": 22.67, "DIF_PCT_ABST": -0.78, "QUEDA_ABST_PCT": 0.78, "MAN_T1": 21, "MAN_T2": 25, "PCT_MAN_T1": 12.14, "PCT_MAN_T2": 14.37, "DIF_PCT_MANUAL": 2.23, "DIF_ABS_MANUAL": 4, "BIO_T1": 152, "BIO_T2": 149, "VOTOS_13_T1": 108, "VOTOS_13_T2": 113, "DIF_VOTOS_13": 5, "VOTOS_22_T1": 50, "VOTOS_22_T2": 55, "DIF_VOTOS_22": 5, "PCT_13_T1": 68.35, "PCT_13_T2": 67.26, "PCT_22_T1": 31.65, "PCT_22_T2": 32.74}, {"MUNICIPIO": "LAJEDÃO", "ZONA": 153, "SECAO": 26, "COD_MUNICIPIO": "36790", "MODELO_URNA": "UE2022", "1T_APTOS": 284, "1T_COMPARECIMENTO": 220, "1T_ABSTENCAO": 64, "1T_PCT_ABSTENCAO": 22.54, "1T_QTD_BIOMETRIA": 201, "1T_QTD_MANUAL": 19, "1T_PCT_MANUAL": 8.64, "1T_VOTOS_13": 118, "1T_VOTOS_22": 86, "1T_PCT_13": 57.84, "1T_PCT_22": 42.16, "2T_APTOS": 284, "2T_COMPARECIMENTO": 224, "2T_ABSTENCAO": 60, "2T_PCT_ABSTENCAO": 21.13, "2T_QTD_BIOMETRIA": 202, "2T_QTD_MANUAL": 22, "2T_PCT_MANUAL": 9.82, "2T_VOTOS_13": 128, "2T_VOTOS_22": 96, "2T_BRANCOS": 0, "2T_NULOS": 0, "2T_PCT_13": 57.14, "2T_PCT_22": 42.86, "2T_VOTOS_POS_17H": 0, "2T_VOTOS_POS_17H_MANUAL": 0, "DELTA_MANUAL": 3, "DELTA_PCT_MANUAL": 1.18, "DELTA_COMPARECIMENTO": 4, "DELTA_ABSTENCAO": -4, "DELTA_VOTOS_13": 10, "DELTA_VOTOS_22": 10, "LOCAL_VOTACAO": "ESCOLA MUNICIPAL BLANDINO SEVERO BATISTA", "COMP_T1": 220, "COMP_T2": 224, "DIF_COMP": 4, "ABST_T1": 64, "ABST_T2": 60, "PCT_ABST_T1": 22.54, "PCT_ABST_T2": 21.13, "DIF_PCT_ABST": -1.41, "QUEDA_ABST_PCT": 1.41, "MAN_T1": 19, "MAN_T2": 22, "PCT_MAN_T1": 8.64, "PCT_MAN_T2": 9.82, "DIF_PCT_MANUAL": 1.18, "DIF_ABS_MANUAL": 3, "BIO_T1": 201, "BIO_T2": 202, "VOTOS_13_T1": 118, "VOTOS_13_T2": 128, "DIF_VOTOS_13": 10, "VOTOS_22_T1": 86, "VOTOS_22_T2": 96, "DIF_VOTOS_22": 10, "PCT_13_T1": 57.84, "PCT_13_T2": 57.14, "PCT_22_T1": 42.16, "PCT_22_T2": 42.86}];
+    const statsData = {"n": 20, "t1": {"mean": 11.43, "std": 3.84, "median": 11.25, "iqr": 4.3}, "t2": {"mean": 11.55, "std": 3.86, "median": 11.16, "iqr": 4.0}, "diff": {"mean": 0.12, "std": 2.26, "sem": 0.51, "ci_95": [-0.82, 1.08]}, "tests": {"paired_t": 0.244, "paired_t_p": 0.8095, "wilcoxon_w": 98.0, "wilcoxon_p": 0.7938, "cohens_d": 0.055, "cohen_label": "Desprezível", "shapiro_w": 0.9517, "shapiro_p": 0.3939, "normal": true}, "abstencao": {"mean_abst_t1": 19.78, "mean_abst_t2": 17.57, "mean_queda_abst": 2.21, "mean_dif_comp": 8.7, "mean_comp_t1": 252.1, "mean_comp_t2": 260.8, "r_comp_13": 0.87, "p_comp_13": "6.20e-07", "r_comp_22": 0.213, "p_comp_22": "0.3674", "slope_13": 1.4784, "int_13": 8.16, "r2_13": 0.757, "se_13": 0.197, "p_ols_13": "6.20e-07", "slope_22": 0.101, "int_22": 3.83, "r2_22": 0.045, "se_22": 0.109, "p_ols_22": "0.3674", "share_marginal_13": 93.6, "share_marginal_22": 6.4}};
+
+    // Preenche Tabela Completa
+    const tbody = document.querySelector("#sample-table tbody");
+    sampleData.forEach((row, i) => {
+      const tr = document.createElement("tr");
+      const modelClass = 'model-' + (row.MODELO_URNA ? row.MODELO_URNA.toLowerCase() : 'ue2020');
+      
+      const diffMan = row.DIF_PCT_MANUAL;
+      const diffManClass = diffMan > 0 ? 'diff-pos' : (diffMan < 0 ? 'diff-neg' : 'diff-zero');
+      const diffManSign = diffMan > 0 ? '+' : '';
+
+      const diffComp = row.DIF_COMP;
+      const diffCompSign = diffComp > 0 ? '+' : '';
+      const diffCompClass = diffComp > 0 ? 'diff-neg' : 'diff-pos'; // mais comparecimento = verde
+
+      const diffAbst = row.DIF_PCT_ABST;
+      const diffAbstSign = diffAbst > 0 ? '+' : '';
+      const diffAbstClass = diffAbst < 0 ? 'diff-neg' : 'diff-pos'; // queda de abstenção = verde
+
+      const diffLula = row.DIF_VOTOS_13;
+      const diffFlavio = row.DIF_VOTOS_22;
+
+      tr.innerHTML = `
+        <td><strong>${i + 1}</strong></td>
+        <td><strong>${row.MUNICIPIO}</strong></td>
+        <td>${row.ZONA}</td>
+        <td>${row.SECAO}</td>
+        <td><span class="model-badge ${modelClass}">${row.MODELO_URNA}</span></td>
+        <td title="${row.LOCAL_VOTACAO}">${row.LOCAL_VOTACAO.substring(0, 24)}...</td>
+        <td>${row.COMP_T1}</td>
+        <td>${row.COMP_T2}</td>
+        <td class="${diffCompClass}"><strong>${diffCompSign}${diffComp}</strong></td>
+        <td>${row.PCT_ABST_T1}%</td>
+        <td>${row.PCT_ABST_T2}%</td>
+        <td class="${diffAbstClass}">${diffAbstSign}${diffAbst}%</td>
+        <td>${row.PCT_MAN_T1}%</td>
+        <td>${row.PCT_MAN_T2}%</td>
+        <td class="${diffManClass}">${diffManSign}${diffMan}%</td>
+        <td>${row.VOTOS_13_T1}</td>
+        <td style="color:#f43f5e; font-weight:600;">${row.VOTOS_13_T2}</td>
+        <td style="color:#f43f5e; font-weight:700;">${diffLula > 0 ? '+' : ''}${diffLula}</td>
+        <td>${row.VOTOS_22_T1}</td>
+        <td style="color:#38bdf8; font-weight:600;">${row.VOTOS_22_T2}</td>
+        <td style="color:#38bdf8; font-weight:700;">${diffFlavio > 0 ? '+' : ''}${diffFlavio}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    // Configurações Comuns Plotly
+    const plotlyLayoutCommon = {
+      paper_bgcolor: 'rgba(0,0,0,0)',
+      plot_bgcolor: 'rgba(0,0,0,0)',
+      font: { family: 'Inter, sans-serif', color: '#94a3b8', size: 11 },
+      margin: { l: 50, r: 30, t: 30, b: 50 },
+      hovermode: 'closest'
+    };
+
+    // 1. Slopegraph Pareado (Biometria)
+    const slopeTraces = sampleData.map((row, idx) => {
+      const isUp = row.DIF_PCT_MANUAL > 0;
+      const lineColor = isUp ? 'rgba(244, 63, 94, 0.7)' : 'rgba(16, 185, 129, 0.7)';
+      return {
+        x: ['1º Turno', '2º Turno'],
+        y: [row.PCT_MAN_T1, row.PCT_MAN_T2],
+        mode: 'lines+markers',
+        line: { color: lineColor, width: 2 },
+        marker: { size: 7, color: lineColor },
+        name: `${row.MUNICIPIO} (Sec ${row.SECAO})`,
+        hoverinfo: 'text',
+        text: `${row.MUNICIPIO} (Zona ${row.ZONA}, Seção ${row.SECAO})<br>1º Turno: ${row.PCT_MAN_T1}%<br>2º Turno: ${row.PCT_MAN_T2}%<br>Δ: ${row.DIF_PCT_MANUAL > 0 ? '+' : ''}${row.DIF_PCT_MANUAL}%`
+      };
+    });
+
+    Plotly.newPlot('chart-slope', slopeTraces, {
+      ...plotlyLayoutCommon,
+      showlegend: false,
+      yaxis: { title: '% Liberação Manual pelo Mesário', gridcolor: 'rgba(255,255,255,0.06)' },
+      xaxis: { gridcolor: 'transparent' }
+    }, { responsive: true, displayModeBar: false });
+
+    // 2. Boxplot Comparativo (Biometria)
+    const boxTraces = [
+      {
+        y: sampleData.map(r => r.PCT_MAN_T1),
+        type: 'box',
+        name: '1º Turno (T1)',
+        boxpoints: 'all',
+        jitter: 0.3,
+        pointpos: -1.8,
+        marker: { color: '#38bdf8' },
+        line: { color: '#38bdf8' }
+      },
+      {
+        y: sampleData.map(r => r.PCT_MAN_T2),
+        type: 'box',
+        name: '2º Turno (T2)',
+        boxpoints: 'all',
+        jitter: 0.3,
+        pointpos: -1.8,
+        marker: { color: '#a855f7' },
+        line: { color: '#a855f7' }
+      }
+    ];
+
+    Plotly.newPlot('chart-boxplot', boxTraces, {
+      ...plotlyLayoutCommon,
+      yaxis: { title: '% Eleitores Habilitados pelo Mesário', gridcolor: 'rgba(255,255,255,0.06)' },
+      showlegend: false
+    }, { responsive: true, displayModeBar: false });
+
+    // 3. Regressão OLS: Aumento de Comparecimento vs Ganho de Votos Nominais
+    const xComp = sampleData.map(r => r.DIF_COMP);
+    const yDiff13 = sampleData.map(r => r.DIF_VOTOS_13);
+    const yDiff22 = sampleData.map(r => r.DIF_VOTOS_22);
+    const labelsMun = sampleData.map(r => `${r.MUNICIPIO} (Sec ${r.SECAO})`);
+
+    // Linhas OLS
+    const xSortedComp = [...xComp].sort((a,b) => a - b);
+    const regLine13 = xSortedComp.map(x => statsData.abstencao.int_13 + statsData.abstencao.slope_13 * x);
+    const regLine22 = xSortedComp.map(x => statsData.abstencao.int_22 + statsData.abstencao.slope_22 * x);
+
+    const regressionTurnoutTraces = [
+      {
+        x: xComp,
+        y: yDiff13,
+        text: labelsMun,
+        mode: 'markers',
+        type: 'scatter',
+        name: 'Lula (Δ Votos)',
+        marker: { color: '#f43f5e', size: 9, opacity: 0.85, line: { color: '#ffffff', width: 1 } }
+      },
+      {
+        x: xSortedComp,
+        y: regLine13,
+        mode: 'lines',
+        name: `Regressão Lula (β=${statsData.abstencao.slope_13}, R²=${statsData.abstencao.r2_13})`,
+        line: { color: '#f43f5e', width: 2.5 }
+      },
+      {
+        x: xComp,
+        y: yDiff22,
+        text: labelsMun,
+        mode: 'markers',
+        type: 'scatter',
+        name: 'Flávio (Δ Votos)',
+        marker: { color: '#38bdf8', size: 9, opacity: 0.85, line: { color: '#ffffff', width: 1 } }
+      },
+      {
+        x: xSortedComp,
+        y: regLine22,
+        mode: 'lines',
+        name: `Regressão Flávio (β=${statsData.abstencao.slope_22}, R²=${statsData.abstencao.r2_22})`,
+        line: { color: '#38bdf8', width: 2, dash: 'dash' }
+      }
+    ];
+
+    Plotly.newPlot('chart-regression-turnout', regressionTurnoutTraces, {
+      ...plotlyLayoutCommon,
+      xaxis: { title: 'Δ Comparecimento (Novos Eleitores que Compareceram no 2º Turno)', gridcolor: 'rgba(255,255,255,0.06)' },
+      yaxis: { title: 'Δ Votos Nominais Ganhos (T2 - T1)', gridcolor: 'rgba(255,255,255,0.06)' },
+      legend: { orientation: 'h', y: 1.15, x: 0.05 }
+    }, { responsive: true, displayModeBar: false });
+
+    // 4. Gráfico de Barras Divergente Seção a Seção
+    const barSecoes = sampleData.map(r => `${r.MUNICIPIO.substring(0, 10)} (${r.SECAO})`);
+    const barTraceLula = {
+      x: barSecoes,
+      y: sampleData.map(r => r.DIF_VOTOS_13),
+      type: 'bar',
+      name: 'Ganho Votos Lula (ΔV₁₃)',
+      marker: { color: 'rgba(244, 63, 94, 0.85)' }
+    };
+    const barTraceFlavio = {
+      x: barSecoes,
+      y: sampleData.map(r => r.DIF_VOTOS_22),
+      type: 'bar',
+      name: 'Ganho Votos Flávio (ΔV₂₂)',
+      marker: { color: 'rgba(56, 189, 248, 0.85)' }
+    };
+    const barTraceComp = {
+      x: barSecoes,
+      y: sampleData.map(r => r.DIF_COMP),
+      type: 'scatter',
+      mode: 'lines+markers',
+      name: 'Δ Comparecimento',
+      line: { color: '#10b981', width: 2 },
+      marker: { color: '#10b981', size: 6 }
+    };
+
+    Plotly.newPlot('chart-waterfall', [barTraceLula, barTraceFlavio, barTraceComp], {
+      ...plotlyLayoutCommon,
+      barmode: 'group',
+      xaxis: { tickangle: -45, gridcolor: 'transparent' },
+      yaxis: { title: 'Variação Absoluta de Eleitores / Votos', gridcolor: 'rgba(255,255,255,0.06)' },
+      legend: { orientation: 'h', y: 1.15, x: 0.1 }
+    }, { responsive: true, displayModeBar: false });
+  </script>
+</body>
+</html>
