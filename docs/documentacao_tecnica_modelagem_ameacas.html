@@ -1,18 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Documentação Técnica: Modelagem de Ameaças, Trânsito Eleitoral & Auditoria Forense • Sentinela Juris</title>
-
+  
   <!-- Fontes Google Inter, Outfit e Fira Code -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800;900&display=swap"
-    rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
@@ -47,11 +44,7 @@
       --font-mono: 'Fira Code', monospace;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: var(--font-main);
@@ -60,7 +53,7 @@
       line-height: 1.65;
       padding-bottom: 80px;
       overflow-x: hidden;
-      background-image:
+      background-image: 
         radial-gradient(circle at 10% 12%, rgba(6, 182, 212, 0.08) 0%, transparent 45%),
         radial-gradient(circle at 88% 18%, rgba(168, 85, 247, 0.08) 0%, transparent 45%),
         radial-gradient(circle at 50% 75%, rgba(244, 63, 94, 0.05) 0%, transparent 50%);
@@ -186,29 +179,10 @@
       letter-spacing: 0.5px;
     }
 
-    .badge-primary {
-      background: rgba(56, 189, 248, 0.12);
-      border: 1px solid rgba(56, 189, 248, 0.35);
-      color: #38bdf8;
-    }
-
-    .badge-purple {
-      background: rgba(168, 85, 247, 0.12);
-      border: 1px solid rgba(168, 85, 247, 0.35);
-      color: #c084fc;
-    }
-
-    .badge-emerald {
-      background: rgba(16, 185, 129, 0.12);
-      border: 1px solid rgba(16, 185, 129, 0.35);
-      color: #34d399;
-    }
-
-    .badge-rose {
-      background: rgba(244, 63, 94, 0.12);
-      border: 1px solid rgba(244, 63, 94, 0.35);
-      color: #fb7185;
-    }
+    .badge-primary { background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.35); color: #38bdf8; }
+    .badge-purple { background: rgba(168, 85, 247, 0.12); border: 1px solid rgba(168, 85, 247, 0.35); color: #c084fc; }
+    .badge-emerald { background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.35); color: #34d399; }
+    .badge-rose { background: rgba(244, 63, 94, 0.12); border: 1px solid rgba(244, 63, 94, 0.35); color: #fb7185; }
 
     .doc-title {
       font-family: var(--font-heading);
@@ -299,13 +273,8 @@
     }
 
     @media (max-width: 992px) {
-      .content-layout {
-        grid-template-columns: 1fr;
-      }
-
-      .toc-sidebar {
-        display: none;
-      }
+      .content-layout { grid-template-columns: 1fr; }
+      .toc-sidebar { display: none; }
     }
 
     /* Sumário Lateral Fixo */
@@ -405,16 +374,13 @@
       font-size: 14.5px;
     }
 
-    ul,
-    ol {
+    ul, ol {
       margin: 10px 0 18px 24px;
       color: #cbd5e1;
       font-size: 14px;
     }
 
-    li {
-      margin-bottom: 8px;
-    }
+    li { margin-bottom: 8px; }
 
     /* Callouts e Caixas de Destaque */
     .callout {
@@ -558,14 +524,8 @@
     }
 
     @media (max-width: 900px) {
-      .pipeline-arrow {
-        display: none;
-      }
-
-      .pipeline-card {
-        min-width: 100%;
-        margin-bottom: 10px;
-      }
+      .pipeline-arrow { display: none; }
+      .pipeline-card { min-width: 100%; margin-bottom: 10px; }
     }
 
     /* Container do Gráfico Interativo */
@@ -612,27 +572,9 @@
       gap: 6px;
     }
 
-    .dot-hist {
-      width: 10px;
-      height: 10px;
-      background: #38bdf8;
-      border-radius: 2px;
-    }
-
-    .dot-kde {
-      width: 14px;
-      height: 3px;
-      background: #06b6d4;
-      border-radius: 2px;
-    }
-
-    .dot-normal {
-      width: 14px;
-      height: 3px;
-      background: #f59e0b;
-      border-radius: 2px;
-      border-top: 1px dashed #f59e0b;
-    }
+    .dot-hist { width: 10px; height: 10px; background: #38bdf8; border-radius: 2px; }
+    .dot-kde { width: 14px; height: 3px; background: #06b6d4; border-radius: 2px; }
+    .dot-normal { width: 14px; height: 3px; background: #f59e0b; border-radius: 2px; border-top: 1px dashed #f59e0b; }
 
     /* Dilema do Desenvolvedor (Grid Moderno) */
     .dilemma-grid {
@@ -668,13 +610,8 @@
       margin-bottom: 8px;
     }
 
-    .dilemma-a .dilemma-badge {
-      color: #38bdf8;
-    }
-
-    .dilemma-b .dilemma-badge {
-      color: #c084fc;
-    }
+    .dilemma-a .dilemma-badge { color: #38bdf8; }
+    .dilemma-b .dilemma-badge { color: #c084fc; }
 
     .dilemma-card h4 {
       font-family: var(--font-heading);
@@ -701,13 +638,8 @@
       font-size: 12px;
     }
 
-    .dilemma-subtitle.pros {
-      color: #10b981;
-    }
-
-    .dilemma-subtitle.cons {
-      color: #f43f5e;
-    }
+    .dilemma-subtitle.pros { color: #10b981; }
+    .dilemma-subtitle.cons { color: #f43f5e; }
 
     /* Bloco de Código C */
     pre code {
@@ -802,7 +734,6 @@
     }
   </style>
 </head>
-
 <body>
 
   <!-- Top Navigation Header -->
@@ -819,38 +750,30 @@
       </div>
       <div class="nav-links">
         <a href="index.html" class="nav-btn"><i class="fa-solid fa-map-location-dot"></i> Mapa Sentinela</a>
-        <a href="dashboard_clusters_ml_anatel_ibge.html" class="nav-btn"><i class="fa-solid fa-robot"></i> Dashboard ML
-          Clusters</a>
-        <a href="mapa_auditoria_secoes_BA.html" class="nav-btn"><i class="fa-solid fa-scale-balanced"></i> Painel
-          Seções</a>
-        <a href="dashboard_estatistico_biometria_1000_urnas.html" class="nav-btn"><i
-            class="fa-solid fa-fingerprint"></i> Auditoria 1.000 Urnas</a>
+        <a href="dashboard_clusters_ml_anatel_ibge.html" class="nav-btn"><i class="fa-solid fa-robot"></i> Dashboard ML Clusters</a>
+        <a href="mapa_auditoria_secoes_BA.html" class="nav-btn"><i class="fa-solid fa-scale-balanced"></i> Painel Seções</a>
+        <a href="dashboard_estatistico_biometria_1000_urnas.html" class="nav-btn"><i class="fa-solid fa-fingerprint"></i> Auditoria 1.000 Urnas</a>
       </div>
     </div>
   </header>
 
   <main class="container">
-
+    
     <!-- Hero Header -->
     <section class="hero-section">
       <div class="doc-badges">
         <span class="badge badge-primary"><i class="fa-solid fa-shield-halved"></i> Threat Modeling</span>
         <span class="badge badge-purple"><i class="fa-solid fa-calculator"></i> Econometria Eleitoral</span>
-        <span class="badge badge-emerald"><i class="fa-solid fa-database"></i> Microdados TSE + Censo IBGE +
-          ANATEL</span>
+        <span class="badge badge-emerald"><i class="fa-solid fa-database"></i> Microdados TSE + Censo IBGE + ANATEL</span>
         <span class="badge badge-rose"><i class="fa-solid fa-terminal"></i> Engenharia Reversa &amp; Low-Level</span>
       </div>
-      <h1 class="doc-title">Documentação Técnica: Modelagem de Ameaças, Análise de Trânsito Eleitoral e Metodologia
-        Pericial</h1>
+      <h1 class="doc-title">Documentação Técnica: Modelagem de Ameaças, Análise de Trânsito Eleitoral e Metodologia Pericial</h1>
       <p class="doc-description">
-        Dissecação aprofundada a partir da perspectiva técnica: confronto rigoroso entre as teses de migração
-        comportamental espontânea versus
-        hipóteses de manipulação algorítmica no 2º turno presidencial.
+        Dissecação aprofundada a partir da perspectiva de um <strong>analista de sistemas sênior (30 anos de experiência em engenharia de software de missão crítica)</strong>: confronto rigoroso entre as teses de migração comportamental espontânea versus hipóteses de manipulação algorítmica no 2º turno presidencial.
       </p>
       <div class="doc-meta">
         <span><i class="fa-regular fa-calendar-check"></i> Data: 30 de Outubro de 2026</span>
-        <span><i class="fa-solid fa-code-branch"></i> Versão: 2.5 (Gráficos Forenses Interativos Plotly &amp; Pipeline
-          Responsivo)</span>
+        <span><i class="fa-solid fa-code-branch"></i> Versão: 2.5 (Gráficos Forenses Interativos Plotly &amp; Pipeline Responsivo)</span>
         <span><i class="fa-solid fa-globe"></i> Universo Amostral: 417 Municípios da Bahia (Censo Completo)</span>
       </div>
     </section>
@@ -896,7 +819,7 @@
 
     <!-- Content Layout com Sumário Lateral -->
     <div class="content-layout">
-
+      
       <!-- Sidebar TOC -->
       <aside class="toc-sidebar">
         <div class="toc-title">
@@ -913,8 +836,7 @@
           <li><a href="#secao-7">7. Conclusão Pericial Integrada</a></li>
         </ul>
 
-        <div
-          style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-color); font-size: 11px; color: var(--text-dim);">
+        <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-color); font-size: 11px; color: var(--text-dim);">
           <strong style="color: var(--text-muted); display: block; margin-bottom: 6px;">Bases Integradas:</strong>
           • TSE Votação 1T e 2T 2026<br>
           • Censo Demográfico IBGE<br>
@@ -932,24 +854,13 @@
             <h2>Sumário Executivo</h2>
           </div>
           <p>
-            Este relatório estabelece um marco pericial aprofundado a partir da ótica técnica, dissecando as hipóteses
-            de comportamento eleitoral versus hipóteses de manipulação algorítmica no segundo turno presidencial:
+            Este relatório estabelece um marco pericial aprofundado a partir da ótica técnica, dissecando as hipóteses de comportamento eleitoral versus hipóteses de manipulação algorítmica no segundo turno presidencial:
           </p>
 
           <div class="callout callout-cyan">
-            <strong>1. A Mecânica de Intercepção em Software:</strong> Como um vetor de código operaria exatamente entre
-            o evento físico de teclado (<code>keypress</code>) e a matriz serializada no Registro Digital do Voto (RDV),
-            manipulando estritamente a "massa em trânsito" (eleitores de 3ª via, abstenção revertida, nulos e brancos)
-            sem alterar o total físico de votantes.<br><br>
-            <strong>2. A Ausência de Distribuição Estatística Natural (A Quebra da Curva de Gauss):</strong> Em nenhum
-            sistema biológico ou social natural 413 de 417 municípios (99,04%), espalhados por 560 mil km² de
-            diversidade socioeconômica extrema, convergem para uma taxa quase idêntica de trânsito (~80% a 85% para um
-            único lado).<br><br>
-            <strong>3. O Descarte da Conectividade como Causa Primária &amp; O Paradoxo de LEM:</strong> A
-            infraestrutura digital não explica a anomalia sistêmica. Municípios com altíssima conectividade no
-            agronegócio (Luís Eduardo Magalhães, onde Bolsonaro venceu com 60,2% no 1T e 61,6% no 2T) apresentaram o
-            mesmo trânsito de 79,3% pró-Lula, enquanto cidades desconectadas no interior profundo registraram os
-            extremos opostos (Nova Ibiá com 10,1% e Caldeirão Grande com 10,7%).
+            <strong>1. A Mecânica de Intercepção em Software:</strong> Como um vetor de código operaria exatamente entre o evento físico de teclado (<code>keypress</code>) e a matriz serializada no Registro Digital do Voto (RDV), manipulando estritamente a "massa em trânsito" (eleitores de 3ª via, abstenção revertida, nulos e brancos) sem alterar o total físico de votantes.<br><br>
+            <strong>2. A Ausência de Distribuição Estatística Natural (A Quebra da Curva de Gauss):</strong> Em nenhum sistema biológico ou social natural 413 de 417 municípios (99,04%), espalhados por 560 mil km² de diversidade socioeconômica extrema, convergem para uma taxa quase idêntica de trânsito (~80% a 85% para um único lado).<br><br>
+            <strong>3. O Descarte da Conectividade como Causa Primária &amp; O Paradoxo de LEM:</strong> A infraestrutura digital não explica a anomalia sistêmica. Municípios com altíssima conectividade no agronegócio (Luís Eduardo Magalhães, onde Bolsonaro venceu com 60,2% no 1T e 61,6% no 2T) apresentaram o mesmo trânsito de 79,3% pró-Lula, enquanto cidades desconectadas no interior profundo registraram os extremos opostos (Nova Ibiá com 10,1% e Caldeirão Grande com 10,7%).
           </div>
         </article>
 
@@ -960,8 +871,7 @@
             <h2>O Ciclo Computacional do Voto e o Ponto de Intercepção</h2>
           </div>
           <p>
-            A auditoria forense de sistemas informatizados exige a distinção rigorosa entre a <strong>camada de
-              transmissão</strong> e a <strong>camada de captura e consolidação interna</strong>.
+            A auditoria forense de sistemas informatizados exige a distinção rigorosa entre a <strong>camada de transmissão</strong> e a <strong>camada de captura e consolidação interna</strong>.
           </p>
 
           <!-- Diagrama de Pipeline Responsivo (Nunca desalinha) -->
@@ -993,8 +903,7 @@
                 <div class="step-num" style="color: #fb7185;">Etapa 3</div>
                 <div class="step-icon" style="color: #f43f5e;"><i class="fa-solid fa-gears"></i></div>
                 <div class="step-title" style="color: #fb7185;">Dispatcher de Votação</div>
-                <div class="step-desc">Lógica em memória volátil (RAM). Swap seletivo de votos de trânsito pré-gravação.
-                </div>
+                <div class="step-desc">Lógica em memória volátil (RAM). Swap seletivo de votos de trânsito pré-gravação.</div>
               </div>
 
               <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
@@ -1012,28 +921,22 @@
                 <div class="step-num">Etapa 5</div>
                 <div class="step-icon"><i class="fa-solid fa-file-signature"></i></div>
                 <div class="step-title">Assinatura &amp; Flash</div>
-                <div class="step-desc">Assinatura RSA-2048 / SHA-512 e gravação definitiva na memória flash lacrada.
-                </div>
+                <div class="step-desc">Assinatura RSA-2048 / SHA-512 e gravação definitiva na memória flash lacrada.</div>
               </div>
             </div>
           </div>
 
           <h3>1.1. O Ponto Exato de Injeção: O Dispatcher de Votação</h3>
           <p>
-            Um desenvolvedor experiente que projetasse uma manipulação indetectável descartaria imediatamente qualquer
-            ataque em arquivos pós-votação ou na transmissão para o TSE. Isso geraria quebra imediata de hash SHA-512 e
-            rejeição do lote na totalização.
+            Um desenvolvedor experiente que projetasse uma manipulação indetectável descartaria imediatamente qualquer ataque em arquivos pós-votação ou na transmissão para o TSE. Isso geraria quebra imediata de hash SHA-512 e rejeição do lote na totalização.
           </p>
           <p>
-            O único ponto de injeção arquiteturalmente viável situa-se no <strong>Dispatcher de Votação</strong>,
-            executado em memória volátil (RAM):
+            O único ponto de injeção arquiteturalmente viável situa-se no <strong>Dispatcher de Votação</strong>, executado em memória volátil (RAM):
           </p>
           <ul>
             <li>O eleitor digita <code>2</code>, <code>2</code> e pressiona a tecla verde <code>CONFIRMA</code>.</li>
             <li>A tela exibe a foto do candidato escolhido e a mensagem visual "FIM" toca o sinal sonoro de 440 Hz.</li>
-            <li>No entanto, no momento em que a função de persistência do voto é invocada antes da escrita no Registro
-              Digital do Voto (RDV), o objeto em memória sofreria uma <strong>troca de ponteiro de valor (payload
-                redirection)</strong>.</li>
+            <li>No entanto, no momento em que a função de persistência do voto é invocada antes da escrita no Registro Digital do Voto (RDV), o objeto em memória sofreria uma <strong>troca de ponteiro de valor (payload redirection)</strong>.</li>
           </ul>
 
           <h3>1.2. A Estratégia de Manipular Estritamente o "Trânsito de Votos"</h3>
@@ -1041,16 +944,11 @@
             Por que um código bem estruturado não mexeria nos eleitores da oposição que já votaram no 1º turno?
           </p>
           <ul>
-            <li>Se um eleitor votou em Bolsonaro no 1º turno e repete seu voto no 2º turno, alterar este voto para Lula
-              em seções pequenas cria um risco enorme de percepção se houver recontagem de boca de urna ou auditorias
-              locais de saída.</li>
+            <li>Se um eleitor votou em Bolsonaro no 1º turno e repete seu voto no 2º turno, alterar este voto para Lula em seções pequenas cria um risco enorme de percepção se houver recontagem de boca de urna ou auditorias locais de saída.</li>
             <li>A estratégia ótima de um malware furtivo reside na <strong>massa maleável em trânsito</strong>:
-              $$\text{Espaço Amostral de Trânsito} = \Delta \text{Comparecimento} + \text{Votos 3ª Via (Ciro + Tebet)} +
-              \text{Brancos} + \text{Nulos}$$
+              $$\text{Espaço Amostral de Trânsito} = \Delta \text{Comparecimento} + \text{Votos 3ª Via (Ciro + Tebet)} + \text{Brancos} + \text{Nulos}$$
             </li>
-            <li>Ao focar a manipulação nos eleitores que migraram ou que não compareceram no 1º turno, o algoritmo
-              simula um fenômeno sociológico perfeitamente plausível: <em>"o eleitor moderado e periférico decidiu pela
-                chapa governista no 2º turno"</em>.</li>
+            <li>Ao focar a manipulação nos eleitores que migraram ou que não compareceram no 1º turno, o algoritmo simula um fenômeno sociológico perfeitamente plausível: <em>"o eleitor moderado e periférico decidiu pela chapa governista no 2º turno"</em>.</li>
           </ul>
 
           <pre><code>// Representação conceitual da lógica de filtro no dispatcher de trânsito:
@@ -1086,9 +984,7 @@ void persist_vote(VoteRecord* vote, SectionContext* ctx) {
             <h2>A Quebra da Curva de Gauss: Por que Nenhuma Estatística Natural tem essa Distribuição</h2>
           </div>
           <p>
-            Na teoria das probabilidades, fenômenos biológicos, econômicos e sociológicos envolvendo agentes humanos
-            descentralizados e independentes geram distribuições contínuas (Gaussiana, Beta ou Log-Normal) com dispersão
-            orgânica de variância em torno da média:
+            Na teoria das probabilidades, fenômenos biológicos, econômicos e sociológicos envolvendo agentes humanos descentralizados e independentes geram distribuições contínuas (Gaussiana, Beta ou Log-Normal) com dispersão orgânica de variância em torno da média:
           </p>
           <p>
             $$f(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x - \mu}{\sigma}\right)^2}$$
@@ -1109,9 +1005,8 @@ void persist_vote(VoteRecord* vote, SectionContext* ctx) {
             </div>
 
             <div id="chart-distribuicao" style="width: 100%; height: 460px;"></div>
-
-            <div
-              style="font-size: 11.5px; color: var(--text-dim); margin-top: 8px; display: flex; justify-content: space-between; flex-wrap: wrap;">
+            
+            <div style="font-size: 11.5px; color: var(--text-dim); margin-top: 8px; display: flex; justify-content: space-between; flex-wrap: wrap;">
               <span>• Eixo X: Taxa Marginal de Absorção de Votos Pró-Lula no 2º Turno (%)</span>
               <span>• Eixo Y: Número de Municípios por Faixa de 2,5 p.p.</span>
             </div>
@@ -1119,12 +1014,10 @@ void persist_vote(VoteRecord* vote, SectionContext* ctx) {
 
           <h3>2.1. O Colapso da Variância em 413 Municípios</h3>
           <p>
-            A Bahia possui 417 municípios, estendendo-se por mais de 560 mil km², abrangendo desde o cerrado altamente
-            mecanizado do agronegócio até o sertão do semiárido e a Região Metropolitana de Salvador.
+            A Bahia possui 417 municípios, estendendo-se por mais de 560 mil km², abrangendo desde o cerrado altamente mecanizado do agronegócio até o sertão do semiárido e a Região Metropolitana de Salvador.
           </p>
           <p>
-            Em uma eleição orgânica natural, a taxa de migração de votos para Lula ($\alpha_{Lula}$) deveria variar
-            fortemente:
+            Em uma eleição orgânica natural, a taxa de migração de votos para Lula ($\alpha_{Lula}$) deveria variar fortemente:
           </p>
           <ul>
             <li>Em áreas conservadoras do agro: $\alpha_{Lula}$ deveria oscilar em torno de 30% a 45%;</li>
@@ -1135,10 +1028,8 @@ void persist_vote(VoteRecord* vote, SectionContext* ctx) {
             Contudo, os microdados oficiais revelam uma <strong>quase-invariância de Dirac</strong>:
           </p>
           <ul>
-            <li><strong>413 de 417 municípios (99,04%)</strong> registraram trânsito pró-Lula superior a 50%, com
-              mediana fixada em <strong>81,82%</strong>.</li>
-            <li>O Intervalo Interquartil (IQR) é de apenas <strong>14 pontos percentuais</strong> (de 74,4% a 88,4%). O
-              ruído natural foi praticamente suprimido.</li>
+            <li><strong>413 de 417 municípios (99,04%)</strong> registraram trânsito pró-Lula superior a 50%, com mediana fixada em <strong>81,82%</strong>.</li>
+            <li>O Intervalo Interquartil (IQR) é de apenas <strong>14 pontos percentuais</strong> (de 74,4% a 88,4%). O ruído natural foi praticamente suprimido.</li>
           </ul>
 
           <div class="table-container">
@@ -1151,41 +1042,13 @@ void persist_vote(VoteRecord* vote, SectionContext* ctx) {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>P01 (1%)</td>
-                  <td>50,62%</td>
-                  <td>Ponto de corte dos 4 outliers isolados</td>
-                </tr>
-                <tr>
-                  <td>P10 (10%)</td>
-                  <td>67,94%</td>
-                  <td>90% dos municípios da Bahia tiveram mais de 68% de trânsito</td>
-                </tr>
-                <tr>
-                  <td><strong>P25 (Q1)</strong></td>
-                  <td><strong>74,41%</strong></td>
-                  <td>Início da zona de saturação massiva</td>
-                </tr>
-                <tr>
-                  <td><strong>P50 (Mediana)</strong></td>
-                  <td><strong>81,82%</strong></td>
-                  <td>Centro de gravidade matemático estadual (Pico em 81,8% - 82,5%)</td>
-                </tr>
-                <tr>
-                  <td><strong>P75 (Q3)</strong></td>
-                  <td><strong>88,42%</strong></td>
-                  <td>Fim da zona interquartil (IQR = 14,0 p.p.)</td>
-                </tr>
-                <tr>
-                  <td>P90 (90%)</td>
-                  <td>93,31%</td>
-                  <td>Cidades com captura quase total de votos livres</td>
-                </tr>
-                <tr>
-                  <td>P99 (99%)</td>
-                  <td>100,00%</td>
-                  <td>11 cidades onde Bolsonaro teve saldo NOMINAL NEGATIVO</td>
-                </tr>
+                <tr><td>P01 (1%)</td><td>50,62%</td><td>Ponto de corte dos 4 outliers isolados</td></tr>
+                <tr><td>P10 (10%)</td><td>67,94%</td><td>90% dos municípios da Bahia tiveram mais de 68% de trânsito</td></tr>
+                <tr><td><strong>P25 (Q1)</strong></td><td><strong>74,41%</strong></td><td>Início da zona de saturação massiva</td></tr>
+                <tr><td><strong>P50 (Mediana)</strong></td><td><strong>81,82%</strong></td><td>Centro de gravidade matemático estadual (Pico em 81,8% - 82,5%)</td></tr>
+                <tr><td><strong>P75 (Q3)</strong></td><td><strong>88,42%</strong></td><td>Fim da zona interquartil (IQR = 14,0 p.p.)</td></tr>
+                <tr><td>P90 (90%)</td><td>93,31%</td><td>Cidades com captura quase total de votos livres</td></tr>
+                <tr><td>P99 (99%)</td><td>100,00%</td><td>11 cidades onde Bolsonaro teve saldo NOMINAL NEGATIVO</td></tr>
               </tbody>
             </table>
           </div>
@@ -1198,9 +1061,7 @@ void persist_vote(VoteRecord* vote, SectionContext* ctx) {
             <h2>O Paradoxo de Luís Eduardo Magalhães (LEM) e o Descarte da Conectividade</h2>
           </div>
           <p>
-            Uma das teses levantadas para justificar o trânsito homogêneo foi o impacto da infraestrutura de
-            telecomunicações móveis (WhatsApp, 4G e planos pós-pagos). No entanto, um olhar analítico aprofundado
-            <strong>descarta a conectividade como variável causal primária</strong>.
+            Uma das teses levantadas para justificar o trânsito homogêneo foi o impacto da infraestrutura de telecomunicações móveis (WhatsApp, 4G e planos pós-pagos). No entanto, um olhar analítico aprofundado <strong>descarta a conectividade como variável causal primária</strong>.
           </p>
           <p>
             O contraexemplo definitivo é o município de <strong>LUÍS EDUARDO MAGALHÃES (LEM)</strong>:
@@ -1214,13 +1075,10 @@ void persist_vote(VoteRecord* vote, SectionContext* ctx) {
               </div>
               <ul style="margin-left: 18px; font-size: 13px;">
                 <li><strong>População Eleitoral:</strong> 81.139 aptos.</li>
-                <li><strong>Conectividade ANATEL:</strong> ICCD de <strong>66,21 pts</strong> (superior a Salvador).
-                </li>
-                <li><strong>Smartphones Pós-Pago:</strong> <strong>60,74%</strong> da população (internet ilimitada
-                  24h).</li>
+                <li><strong>Conectividade ANATEL:</strong> ICCD de <strong>66,21 pts</strong> (superior a Salvador).</li>
+                <li><strong>Smartphones Pós-Pago:</strong> <strong>60,74%</strong> da população (internet ilimitada 24h).</li>
                 <li><strong>Densidade Móvel:</strong> 130,08 celulares por 100 habitantes.</li>
-                <li><strong>Perfil Político:</strong> Capital do agronegócio baiano, com forte rejeição histórica à
-                  esquerda.</li>
+                <li><strong>Perfil Político:</strong> Capital do agronegócio baiano, com forte rejeição histórica à esquerda.</li>
               </ul>
             </div>
 
@@ -1230,8 +1088,7 @@ void persist_vote(VoteRecord* vote, SectionContext* ctx) {
                 <span class="badge badge-emerald">Vitória de Bolsonaro</span>
               </div>
               <ul style="margin-left: 18px; font-size: 13px;">
-                <li><strong>1º Turno:</strong> Bolsonaro 38.496 (60,2%) | Lula 20.173 (31,6%) | Terceiros 5.263 (8,2%).
-                </li>
+                <li><strong>1º Turno:</strong> Bolsonaro 38.496 (60,2%) | Lula 20.173 (31,6%) | Terceiros 5.263 (8,2%).</li>
                 <li><strong>2º Turno:</strong> Bolsonaro venceu com 39.688 (61,6%) | Lula 24.739 (38,4%).</li>
                 <li><strong>Saldo de Novos Votos:</strong> Bolsonaro $+1.192$ | Lula $+4.566$.</li>
                 <li><strong>Taxa Marginal de Absorção:</strong>
@@ -1243,14 +1100,9 @@ void persist_vote(VoteRecord* vote, SectionContext* ctx) {
 
           <div class="callout callout-amber">
             <strong style="color: #fbbf24; font-size: 14px;">💡 A Implicação Pericial do Caso LEM:</strong><br>
-            Em uma cidade onde <strong>60% do eleitorado vota em Bolsonaro</strong>, onde a cultura do agro é hegemônica
-            e a renda per capita é a maior da região, como se explica que <strong>8 de cada 10 eleitores novos ou de
-              Simone Tebet/Ciro Gomes tenham migrado para Lula?</strong><br><br>
-            Se a conectividade gerasse o trânsito, por que LEM (com conectividade idêntica a Feira de Santana e
-            Salvador) votou 61,6% Bolsonaro no resultado final, mas <strong>sua taxa de absorção marginal foi fixada
-              exatamente nos mesmos 79,3% do semiárido?</strong><br>
-            Isso prova que a conectividade é apenas uma variável concomitante, e não a causa geradora da invariância
-            matemática.
+            Em uma cidade onde <strong>60% do eleitorado vota em Bolsonaro</strong>, onde a cultura do agro é hegemônica e a renda per capita é a maior da região, como se explica que <strong>8 de cada 10 eleitores novos ou de Simone Tebet/Ciro Gomes tenham migrado para Lula?</strong><br><br>
+            Se a conectividade gerasse o trânsito, por que LEM (com conectividade idêntica a Feira de Santana e Salvador) votou 61,6% Bolsonaro no resultado final, mas <strong>sua taxa de absorção marginal foi fixada exatamente nos mesmos 79,3% do semiárido?</strong><br>
+            Isso prova que a conectividade é apenas uma variável concomitante, e não a causa geradora da invariância matemática.
           </div>
         </article>
 
@@ -1261,8 +1113,7 @@ void persist_vote(VoteRecord* vote, SectionContext* ctx) {
             <h2>O Contrastante Estudo de Caso dos Outliers Inversos</h2>
           </div>
           <p>
-            Enquanto 413 municípios apresentaram o padrão simétrico de ~80% para Lula (inclusive LEM), <strong>apenas 4
-              municípios romperam essa barreira</strong>:
+            Enquanto 413 municípios apresentaram o padrão simétrico de ~80% para Lula (inclusive LEM), <strong>apenas 4 municípios romperam essa barreira</strong>:
           </p>
 
           <div class="table-container">
@@ -1321,14 +1172,10 @@ void persist_vote(VoteRecord* vote, SectionContext* ctx) {
 
           <h3>4.1. Por que a conectividade falha ao explicar esses casos?</h3>
           <ul>
-            <li><strong>Caldeirão Grande</strong> tem ICCD de 29,1 pts e registrou apenas <strong>10,7% de trânsito para
-                Lula</strong> (Bolsonaro capturou 491 de 550 novos votos).</li>
-            <li>Outros 100 municípios do sertão baiano com o <strong>mesmo ICCD de 29 pts e a mesma renda de R$
-                700</strong> registraram trânsito de <strong>84% para Lula</strong>.</li>
+            <li><strong>Caldeirão Grande</strong> tem ICCD de 29,1 pts e registrou apenas <strong>10,7% de trânsito para Lula</strong> (Bolsonaro capturou 491 de 550 novos votos).</li>
+            <li>Outros 100 municípios do sertão baiano com o <strong>mesmo ICCD de 29 pts e a mesma renda de R$ 700</strong> registraram trânsito de <strong>84% para Lula</strong>.</li>
             <li>Portanto, a mesma infraestrutura digital coexistiu com comportamentos 800% divergentes.</li>
-            <li>A explicação real reside na <strong>dinâmica política paroquial fechada</strong>: prefeitos e lideranças
-              locais da oposição fecharam acordos explícitos para o governo do estado no 2º turno e mobilizaram a
-              máquina de cabos eleitorais e transporte em bloco para Bolsonaro.</li>
+            <li>A explicação real reside na <strong>dinâmica política paroquial fechada</strong>: prefeitos e lideranças locais da oposição fecharam acordos explícitos para o governo do estado no 2º turno e mobilizaram a máquina de cabos eleitorais e transporte em bloco para Bolsonaro.</li>
           </ul>
         </article>
 
@@ -1339,8 +1186,7 @@ void persist_vote(VoteRecord* vote, SectionContext* ctx) {
             <h2>A Perspectiva do Desenvolvedor: Onde um Algoritmo Malicioso Trairia o Sistema</h2>
           </div>
           <p>
-            Se assumirmos a hipótese de um código invasor projetado para atuar sobre os dados em trânsito, como um
-            desenvolvedor experiente identificaria a falha de engenharia desse código?
+            Se assumirmos a hipótese de um código invasor projetado para atuar sobre os dados em trânsito, como um desenvolvedor experiente identificaria a falha de engenharia desse código?
           </p>
 
           <!-- Grid Comparativo do Dilema de Design -->
@@ -1349,46 +1195,33 @@ void persist_vote(VoteRecord* vote, SectionContext* ctx) {
               <div class="dilemma-badge"><i class="fa-solid fa-code"></i> Escolha A: O Código Global Simples</div>
               <h4>Regra Uniforme de Swap sobre a Margem</h4>
               <div class="dilemma-section">
-                <div class="dilemma-subtitle pros"><i class="fa-solid fa-circle-check"></i> Vantagem para o Malware:
-                </div>
-                <p>Binário extremamente compacto (&lt; 10 KB). Nenhuma tabela estática de parâmetros que chame atenção
-                  em análises de desmontagem.</p>
+                <div class="dilemma-subtitle pros"><i class="fa-solid fa-circle-check"></i> Vantagem para o Malware:</div>
+                <p>Binário extremamente compacto (&lt; 10 KB). Nenhuma tabela estática de parâmetros que chame atenção em análises de desmontagem.</p>
               </div>
               <div class="dilemma-section">
-                <div class="dilemma-subtitle cons"><i class="fa-solid fa-triangle-exclamation"></i> Assinatura Forense /
-                  Falha Fatal:</div>
-                <p>Invariância cega: impõe a mesma taxa de ~80% de absorção em cidades sociologicamente antagônicas.
-                  <strong>É exatamente a anomalia verificada em Luís Eduardo Magalhães</strong> (Bolsonaro venceu com
-                  61,6%, mas Lula capturou 79,3% dos novos votos).
-                </p>
+                <div class="dilemma-subtitle cons"><i class="fa-solid fa-triangle-exclamation"></i> Assinatura Forense / Falha Fatal:</div>
+                <p>Invariância cega: impõe a mesma taxa de ~80% de absorção em cidades sociologicamente antagônicas. <strong>É exatamente a anomalia verificada em Luís Eduardo Magalhães</strong> (Bolsonaro venceu com 61,6%, mas Lula capturou 79,3% dos novos votos).</p>
               </div>
             </div>
 
             <div class="dilemma-card dilemma-b">
-              <div class="dilemma-badge"><i class="fa-solid fa-table-list"></i> Escolha B: O Código Contextual Granular
-              </div>
+              <div class="dilemma-badge"><i class="fa-solid fa-table-list"></i> Escolha B: O Código Contextual Granular</div>
               <h4>Tabelas de Limites e Metas por Município</h4>
               <div class="dilemma-section">
-                <div class="dilemma-subtitle pros"><i class="fa-solid fa-circle-check"></i> Vantagem para o Malware:
-                </div>
-                <p>Ajusta as quotas de migração à curva sociológica histórica de cada município, evitando contrastes
-                  absurdos em redutos consolidados.</p>
+                <div class="dilemma-subtitle pros"><i class="fa-solid fa-circle-check"></i> Vantagem para o Malware:</div>
+                <p>Ajusta as quotas de migração à curva sociológica histórica de cada município, evitando contrastes absurdos em redutos consolidados.</p>
               </div>
               <div class="dilemma-section">
-                <div class="dilemma-subtitle cons"><i class="fa-solid fa-triangle-exclamation"></i> Assinatura Forense /
-                  Falha Fatal:</div>
-                <p>Exige uma tabela embutida com parâmetros de 5.570 municípios. Qualquer análise de <em>diff</em> de
-                  compilação oficial ou inspeção de strings no firmware revelaria imediatamente os dados espúrios.</p>
+                <div class="dilemma-subtitle cons"><i class="fa-solid fa-triangle-exclamation"></i> Assinatura Forense / Falha Fatal:</div>
+                <p>Exige uma tabela embutida com parâmetros de 5.570 municípios. Qualquer análise de <em>diff</em> de compilação oficial ou inspeção de strings no firmware revelaria imediatamente os dados espúrios.</p>
               </div>
             </div>
           </div>
 
           <p>
             <strong>Conclusão Técnica sobre o Dilema:</strong><br>
-            Se o desenvolvedor tentou incluir exceções, por que Nova Ibiá e Caldeirão Grande foram permitidas com 10%,
-            mas Luís Eduardo Magalhães foi forçada em 79,3%?
-            Isso sugere que ou o código não existiu e a dinâmica foi puramente humana, ou, se existiu, o algoritmo
-            operou com falhas crassas de parametrização em municípios polo.
+            Se o desenvolvedor tentou incluir exceções, por que Nova Ibiá e Caldeirão Grande foram permitidas com 10%, mas Luís Eduardo Magalhães foi forçada em 79,3%?
+            Isso sugere que ou o código não existiu e a dinâmica foi puramente humana, ou, se existiu, o algoritmo operou com falhas crassas de parametrização em municípios polo.
           </p>
         </article>
 
@@ -1399,44 +1232,33 @@ void persist_vote(VoteRecord* vote, SectionContext* ctx) {
             <h2>Roteiro de Verificação Forense em Baixo Nível (Kernel e Dispatcher)</h2>
           </div>
           <p>
-            Para ir além da conferência cega de somas de Boletins de Urna, a perícia de sistemas deve concentrar-se nos
-            seguintes pontos do sistema operacional embarcado da urna:
+            Para ir além da conferência cega de somas de Boletins de Urna, a perícia de sistemas deve concentrar-se nos seguintes pontos do sistema operacional embarcado da urna:
           </p>
 
           <div class="callout callout-purple">
-            <h4 style="color: #c084fc; font-size: 15px; margin-bottom: 8px;">1. Auditoria de Syscalls no Loop de Votação
-            </h4>
-            Verificar se o binário principal da urna executa chamadas de sistema anômalas (<code>fork</code>,
-            <code>mprotect</code>, <code>ptrace</code> ou leitura de descritores de hardware não-oficiais) na janela
-            entre o pressionamento de teclas e o commit no RDV.
+            <h4 style="color: #c084fc; font-size: 15px; margin-bottom: 8px;">1. Auditoria de Syscalls no Loop de Votação</h4>
+            Verificar se o binário principal da urna executa chamadas de sistema anômalas (<code>fork</code>, <code>mprotect</code>, <code>ptrace</code> ou leitura de descritores de hardware não-oficiais) na janela entre o pressionamento de teclas e o commit no RDV.
           </div>
 
           <div class="callout callout-cyan">
-            <h4 style="color: #22d3ee; font-size: 15px; margin-bottom: 8px;">2. Análise de Dispersão de Entropia PRNG no
-              RDV</h4>
-            O Registro Digital do Voto utiliza um gerador de números pseudoaleatórios para embaralhar a ordem física dos
-            votos. Se os votos de trânsito foram forçados, a entropia dos clusters de votos do 2º turno exibirá
-            <strong>assinaturas determinísticas de pseudo-embaralhamento</strong>, detectáveis por testes de Dieharder e
-            NIST SP 800-22.
+            <h4 style="color: #22d3ee; font-size: 15px; margin-bottom: 8px;">2. Análise de Dispersão de Entropia PRNG no RDV</h4>
+            O Registro Digital do Voto utiliza um gerador de números pseudoaleatórios para embaralhar a ordem física dos votos. Se os votos de trânsito foram forçados, a entropia dos clusters de votos do 2º turno exibirá <strong>assinaturas determinísticas de pseudo-embaralhamento</strong>, detectáveis por testes de Dieharder e NIST SP 800-22.
           </div>
 
           <div class="callout callout-amber">
-            <h4 style="color: #fbbf24; font-size: 15px; margin-bottom: 8px;">3. Auditoria de Latência de Confirmação
-              (Hardware Timers)</h4>
-            Em urnas reais, o tempo entre a digitação do 2º dígito e a gravação na flash varia organicamente de acordo
-            com a velocidade do processador. Se há uma rotina condicional de swap em memória volátil, o tempo de ciclo
-            de clock para confirmações de votos em trânsito apresenta um desvio de milissegundos (<em>timing
-              attack</em>) em relação aos votos preservados da base.
+            <h4 style="color: #fbbf24; font-size: 15px; margin-bottom: 8px;">3. Auditoria de Latência de Confirmação (Hardware Timers)</h4>
+            Em urnas reais, o tempo entre a digitação do 2º dígito e a gravação na flash varia organicamente de acordo com a velocidade do processador. Se há uma rotina condicional de swap em memória volátil, o tempo de ciclo de clock para confirmações de votos em trânsito apresenta um desvio de milissegundos (<em>timing attack</em>) em relação aos votos preservados da base.<br><br>
+            <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 8px; padding: 10px 14px; font-size: 12px; margin-top: 8px;">
+              <strong style="color: #fbbf24;">🔬 Dissecação Forense dos Logs da Urna (logd.dat / .logjez):</strong><br>
+              Os logs públicos do TSE possuem resolução de apenas 1 segundo (1 Hz) e omitem o candidato votado por sigilo constitucional, tornando o timing attack de CPU inviável via log público (exige bancada física de hardware). Porém, o log é irrefutável para detectar fraudes de liberação manual (código 01), votos em lote (&lt; 5s) e injeção pós-17h.<br>
+              Consulte a dissecação técnica completa e a matriz de impacto auditável em: 
+              <a href="dissecacao_forense_logs_urnas_tse.md" target="_blank" style="color: #38bdf8; font-weight: 700; text-decoration: underline;">docs/dissecacao_forense_logs_urnas_tse.md →</a>
+            </div>
           </div>
 
           <div class="callout callout-rose">
-            <h4 style="color: #fb7185; font-size: 15px; margin-bottom: 8px;">4. Verificação do Voto Impresso Auditável
-              (A Contraprova Física Definitiva)</h4>
-            Como anáose técnica, a única barreira criptograficamente perfeita contra adulteração em memória
-            volátil pré-assinatura é o <strong>Voto Impresso Conectado e Auditado pelo Eleitor</strong> (onde o eleitor
-            confere a cédula em papel através de um visor de vidro antes que ela caia na urna lacrada). Sem o registro
-            físico independente gerado no momento do voto, a correspondência entre o que foi digitado no teclado e o que
-            foi gravado no RDV permanece confinada à confiança cega na cadeia de execução do software.
+            <h4 style="color: #fb7185; font-size: 15px; margin-bottom: 8px;">4. Verificação do Voto Impresso Auditável (A Contraprova Física Definitiva)</h4>
+            Como analista de sistemas sênior, a única barreira criptograficamente perfeita contra adulteração em memória volátil pré-assinatura é o <strong>Voto Impresso Conectado e Auditado pelo Eleitor</strong> (onde o eleitor confere a cédula em papel através de um visor de vidro antes que ela caia na urna lacrada). Sem o registro físico independente gerado no momento do voto, a correspondência entre o que foi digitado no teclado e o que foi gravado no RDV permanece confinada à confiança cega na cadeia de execução do software.
           </div>
         </article>
 
@@ -1447,18 +1269,10 @@ void persist_vote(VoteRecord* vote, SectionContext* ctx) {
             <h2>Conclusão Pericial Integrada</h2>
           </div>
           <ol style="font-size: 15px; line-height: 1.7;">
-            <li><strong>A Conectividade não é a causa raiz:</strong> A presença de cidades hiperconectadas que deram
-              vitória a Bolsonaro (LEM) com a mesma taxa marginal de absorção do sertão (~80%) refuta a tese de que o
-              fenômeno foi puramente derivado de dados móveis ou WhatsApp.</li>
-            <li><strong>A anomalia sistêmica existe na homogeneidade:</strong> Uma taxa de absorção de 80% sustentada
-              transversalmente em 99% das cidades de um estado heterogêneo não possui paralelo em distribuições
-              estatísticas naturais.</li>
-            <li><strong>O comportamento de LEM vs. Nova Ibiá:</strong> Em Luís Eduardo Magalhães, a matemática eleitoral
-              operou com rigidez pró-governo na margem; em Nova Ibiá e Caldeirão Grande, a política paroquial rompeu o
-              padrão e canalizou 90% para a oposição.</li>
-            <li><strong>A auditoria de BUs é insuficiente:</strong> A integridade de ponta a ponta do sistema eleitoral
-              só pode ser garantida por auditoria de firmware em baixo nível, testes de integridade física em tempo real
-              no dia da eleição e compilações verificáveis (<em>Reproducible Builds</em>).</li>
+            <li><strong>A Conectividade não é a causa raiz:</strong> A presença de cidades hiperconectadas que deram vitória a Bolsonaro (LEM) com a mesma taxa marginal de absorção do sertão (~80%) refuta a tese de que o fenômeno foi puramente derivado de dados móveis ou WhatsApp.</li>
+            <li><strong>A anomalia sistêmica existe na homogeneidade:</strong> Uma taxa de absorção de 80% sustentada transversalmente em 99% das cidades de um estado heterogêneo não possui paralelo em distribuições estatísticas naturais.</li>
+            <li><strong>O comportamento de LEM vs. Nova Ibiá:</strong> Em Luís Eduardo Magalhães, a matemática eleitoral operou com rigidez pró-governo na margem; em Nova Ibiá e Caldeirão Grande, a política paroquial rompeu o padrão e canalizou 90% para a oposição.</li>
+            <li><strong>A auditoria de BUs é insuficiente:</strong> A integridade de ponta a ponta do sistema eleitoral só pode ser garantida por auditoria de firmware em baixo nível, testes de integridade física em tempo real no dia da eleição e compilações verificáveis (<em>Reproducible Builds</em>).</li>
           </ol>
         </article>
 
@@ -1654,7 +1468,7 @@ void persist_vote(VoteRecord* vote, SectionContext* ctx) {
       Plotly.newPlot('chart-distribuicao', [traceHist, traceKDE, traceNormal], layout, config);
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
       // 1. Renderiza o gráfico Plotly
       renderDistributionChart();
 
@@ -1662,20 +1476,19 @@ void persist_vote(VoteRecord* vote, SectionContext* ctx) {
       if (typeof renderMathInElement === 'function') {
         renderMathInElement(document.body, {
           delimiters: [
-            { left: '$$', right: '$$', display: true },
-            { left: '$', right: '$', display: false }
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
           ],
           throwOnError: false
         });
       }
     });
 
-    window.addEventListener('resize', function () {
+    window.addEventListener('resize', function() {
       if (typeof Plotly !== 'undefined') {
         Plotly.Plots.resize('chart-distribuicao');
       }
     });
   </script>
 </body>
-
 </html>

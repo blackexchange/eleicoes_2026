@@ -225,6 +225,7 @@ Para ir além da conferência cega de somas de Boletins de Urna, a perícia de s
 3. **Auditoria de Latência de Confirmação (Hardware Timers):**
    * Em urnas reais, o tempo entre a digitação do 2º dígito e a gravação na flash varia organicamente de acordo com a velocidade do processador.
    * Se há uma rotina condicional de swap em memória volátil, o tempo de ciclo de clock para confirmações de votos em trânsito apresenta um desvio de milissegundos (*timing attack*) em relação aos votos preservados da base.
+   * > 🔬 **Dissecação Forense de Logs:** Para a análise detalhada de por que os logs públicos (`logd.dat` / `.logjez`) são truncados em 1 segundo e não registram microcódigo de CPU, e para conhecer a matriz de indicadores de log ranqueados por impacto já implementados no Sentinela Juris, consulte: [`docs/dissecacao_forense_logs_urnas_tse.md`](file:///d:/Projetos/IA/eleicoes_2026/docs/dissecacao_forense_logs_urnas_tse.md).
 4. **Verificação do Voto Impresso Auditável (A Contraprova Física Definitiva):**
    * Como engenheiro de sistemas sênior, a única barreira criptograficamente perfeita contra adulteração em memória volátil pré-assinatura é o **Voto Impresso Conectado e Auditado pelo Eleitor** (onde o eleitor confere a cédula em papel através de um visor de vidro antes que ela caia na urna lacrada).
    * Sem o registro físico independente gerado no momento do voto, a correspondência entre o que foi digitado no teclado e o que foi gravado no RDV permanece confinada à confiança cega na cadeia de execução do software.

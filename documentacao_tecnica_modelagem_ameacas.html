@@ -1247,7 +1247,13 @@ void persist_vote(VoteRecord* vote, SectionContext* ctx) {
 
           <div class="callout callout-amber">
             <h4 style="color: #fbbf24; font-size: 15px; margin-bottom: 8px;">3. Auditoria de Latência de Confirmação (Hardware Timers)</h4>
-            Em urnas reais, o tempo entre a digitação do 2º dígito e a gravação na flash varia organicamente de acordo com a velocidade do processador. Se há uma rotina condicional de swap em memória volátil, o tempo de ciclo de clock para confirmações de votos em trânsito apresenta um desvio de milissegundos (<em>timing attack</em>) em relação aos votos preservados da base.
+            Em urnas reais, o tempo entre a digitação do 2º dígito e a gravação na flash varia organicamente de acordo com a velocidade do processador. Se há uma rotina condicional de swap em memória volátil, o tempo de ciclo de clock para confirmações de votos em trânsito apresenta um desvio de milissegundos (<em>timing attack</em>) em relação aos votos preservados da base.<br><br>
+            <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 8px; padding: 10px 14px; font-size: 12px; margin-top: 8px;">
+              <strong style="color: #fbbf24;">🔬 Dissecação Forense dos Logs da Urna (logd.dat / .logjez):</strong><br>
+              Os logs públicos do TSE possuem resolução de apenas 1 segundo (1 Hz) e omitem o candidato votado por sigilo constitucional, tornando o timing attack de CPU inviável via log público (exige bancada física de hardware). Porém, o log é irrefutável para detectar fraudes de liberação manual (código 01), votos em lote (&lt; 5s) e injeção pós-17h.<br>
+              Consulte a dissecação técnica completa e a matriz de impacto auditável em: 
+              <a href="dissecacao_forense_logs_urnas_tse.md" target="_blank" style="color: #38bdf8; font-weight: 700; text-decoration: underline;">docs/dissecacao_forense_logs_urnas_tse.md →</a>
+            </div>
           </div>
 
           <div class="callout callout-rose">
