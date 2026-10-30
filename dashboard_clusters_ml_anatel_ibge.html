@@ -557,6 +557,7 @@
         <div>Features: <strong>16 Variáveis (Demografia IBGE, Conectividade ANATEL e 1ºT TSE)</strong></div>
         <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px; flex-wrap: wrap;">
           <a href="index.html" style="display:inline-block; padding:5px 12px; background:rgba(99,102,241,0.15); border:1px solid rgba(99,102,241,0.4); border-radius:8px; color:#a5b4fc; text-decoration:none; font-size:11px; font-weight:600;">🗺️ Mapa Sentinela Juris →</a>
+          <a href="documentacao_tecnica_modelagem_ameacas.html" style="display:inline-block; padding:5px 12px; background:rgba(244,63,94,0.15); border:1px solid rgba(244,63,94,0.4); border-radius:8px; color:#fb7185; text-decoration:none; font-size:11px; font-weight:600;">📑 Relatório Pericial de Ameaças →</a>
           <a href="mapa_auditoria_secoes_BA.html" style="display:inline-block; padding:5px 12px; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.4); border-radius:8px; color:#fbbf24; text-decoration:none; font-size:11px; font-weight:600;">⚖️ Painel Auditoria Seções →</a>
           <a href="dashboard_estatistico_biometria_1000_urnas.html" style="display:inline-block; padding:5px 12px; background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.4); border-radius:8px; color:#38bdf8; text-decoration:none; font-size:11px; font-weight:600;">🏛️ Auditoria 1.000 Urnas →</a>
         </div>
@@ -695,6 +696,88 @@
           <strong>3. Piso elevado em todo o estado</strong>
           Mesmo no cluster mais favorável a Bolsonaro (Agro), Lula venceu a disputa dos votos restantes com folga de 75,7% contra 24,3%.
         </div>
+      </div>
+    </section>
+
+    <!-- Seção de Casos Forenses: LEM e Outliers -->
+    <section class="didactic-card" style="border-color: rgba(245, 158, 11, 0.35); background: linear-gradient(135deg, rgba(20, 26, 43, 0.85), rgba(15, 23, 42, 0.95)); margin-top: 14px;">
+      <div class="didactic-header" style="border-bottom-color: rgba(245, 158, 11, 0.2);">
+        <span style="font-size: 26px;">🔬</span>
+        <div style="flex: 1;">
+          <div class="didactic-title" style="color: #fbbf24;">
+            Estudos de Caso Forenses: O Paradoxo de LEM e os Outliers Inversos
+          </div>
+          <div style="font-size: 13px; color: var(--text-muted);">
+            Confronto empírico entre a tese da conectividade digital e as anomalias da margem eleitoral nos 417 municípios da Bahia.
+          </div>
+        </div>
+        <a href="documentacao_tecnica_modelagem_ameacas.html" style="padding: 6px 14px; background: linear-gradient(135deg, #be185d, #4338ca); border: 1px solid #f43f5e; color: #ffffff; text-decoration: none; border-radius: 8px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 15px rgba(244, 63, 94, 0.3);">
+          <span>📑</span> Relatório Técnico Completo →
+        </a>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin: 16px 0;">
+        
+        <!-- Card 1: LEM -->
+        <div style="background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 12px; padding: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <strong style="color: #fbbf24; font-size: 14px;">🌾 Luís Eduardo Magalhães: O Paradoxo do Agro</strong>
+            <span style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid #f59e0b; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 12px;">CLUSTER 1 (ICCD 66,2)</span>
+          </div>
+          <p style="font-size: 12.5px; color: #cbd5e1; line-height: 1.5; margin-bottom: 10px;">
+            <strong>A Fortaleza da Oposição:</strong> Polo do agronegócio baiano com alta renda e <strong>60,7% de internet pós-paga</strong> (saturação móvel superior a Salvador). No 2º turno, <strong>Bolsonaro venceu com 61,61% dos votos válidos</strong> (39.688 votos).
+          </p>
+          <div style="background: rgba(0,0,0,0.4); border-radius: 8px; padding: 10px; font-size: 11.5px; margin-bottom: 10px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span>1º Turno: Bolso 60,2% (38.496)</span>
+              <span>Lula 31,6% (20.173) | Outros: 5.263</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span>Novos Votos Bolso (2T): <strong>+1.192</strong></span>
+              <span>Novos Votos Lula (2T): <strong>+4.566</strong></span>
+            </div>
+            <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 6px; display: flex; justify-content: space-between; font-weight: 700; color: #38bdf8;">
+              <span>Taxa Marginal Absorção Lula:</span>
+              <span style="color: #fbbf24; font-size: 13px;">79,30% (4.566 / 5.758)</span>
+            </div>
+          </div>
+          <div style="font-size: 11.5px; color: #94a3b8; line-height: 1.45;">
+            <strong style="color: #e2e8f0;">Leitura Pericial:</strong> A conectividade móvel máxima não explica a anomalia. Mesmo onde 6 em cada 10 eleitores votaram na oposição, 8 de cada 10 votos que sobraram foram creditados a Lula, repetindo rigidamente o mesmo patamar (~80%) verificado no sertão.
+          </div>
+        </div>
+
+        <!-- Card 2: Outliers Inversos -->
+        <div style="background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(244, 63, 94, 0.25); border-radius: 12px; padding: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <strong style="color: #fb7185; font-size: 14px;">⚡ Os 4 Outliers Inversos (&lt; 50% Lula)</strong>
+            <span style="background: rgba(244, 63, 94, 0.15); color: #f43f5e; border: 1px solid #f43f5e; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 12px;">APENAS 4 DE 417 CIDADES</span>
+          </div>
+          <p style="font-size: 12.5px; color: #cbd5e1; line-height: 1.5; margin-bottom: 10px;">
+            Em 413 municípios (99,04%), a taxa de trânsito pró-Lula superou 50%. Apenas 4 cidades quebraram a simetria estatística:
+          </p>
+          <div style="background: rgba(0,0,0,0.4); border-radius: 8px; padding: 10px; font-size: 11.5px; margin-bottom: 10px;">
+            <div style="display: flex; justify-content: space-between; padding: 2px 0;">
+              <span>• <strong>Nova Ibiá (C4):</strong> Trânsito 10,1% Lula</span>
+              <span style="color: #60a5fa; font-weight: 700;">89,9% Bolsonaro (+196 votos)</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 2px 0;">
+              <span>• <strong>Caldeirão Grande (C2):</strong> Trânsito 10,7% Lula</span>
+              <span style="color: #60a5fa; font-weight: 700;">89,3% Bolsonaro (+491 votos)</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 2px 0;">
+              <span>• <strong>Sítio do Mato (C2):</strong> Trânsito 37,8% Lula</span>
+              <span style="color: #60a5fa; font-weight: 700;">62,2% Bolsonaro (+211 votos)</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 2px 0;">
+              <span>• <strong>Mansidão (C2):</strong> Trânsito 46,9% Lula</span>
+              <span style="color: #60a5fa; font-weight: 700;">53,1% Bolsonaro (+78 votos)</span>
+            </div>
+          </div>
+          <div style="font-size: 11.5px; color: #94a3b8; line-height: 1.45;">
+            <strong style="color: #e2e8f0;">Leitura Pericial:</strong> Caldeirão Grande tem o mesmo ICCD (29,1 pts) de outras 100 cidades sertanejas com 84% de trânsito pró-governo. A divergência extrema de 800% demonstra que acordos e mobilização de prefeituras locais conseguiram romper a barreira onde houve coesão política física.
+          </div>
+        </div>
+
       </div>
     </section>
 
