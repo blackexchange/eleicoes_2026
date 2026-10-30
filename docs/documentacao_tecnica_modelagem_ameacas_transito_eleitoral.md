@@ -95,26 +95,34 @@ Em uma eleição orgânica natural, a taxa de migração de votos de 3ª via par
 Contudo, os dados empíricos oficiais revelam uma **quase-invariância de Dirac**:
 * **413 de 417 municípios (99,04%)** registraram trânsito pró-Lula superior a 50%, com uma concentração massiva entre **78% e 85%**.
 * O ruído natural foi praticamente suprimido. A taxa marginal comportou-se como se estivesse ancorada em uma constante matemática fixa aplicada sobre o estado.
+* O Intervalo Interquartil (IQR) é de apenas **14,0 pontos percentuais** (de 74,4% a 88,4%).
+
+> 📊 **Gráfico Interativo de Alta Resolução:** A visualização contínua com histograma por faixa, curva de densidade real (KDE) e sobreposição da curva teórica de Gauss está disponível no relatório web interativo: [`documentacao_tecnica_modelagem_ameacas.html`](file:///d:/Projetos/IA/eleicoes_2026/docs/documentacao_tecnica_modelagem_ameacas.html).
+
+### 2.2. Tabela Forense de Dispersão e Percentis Reais (N = 417 Municípios)
+
+| Percentil | Taxa Marginal Pró-Lula ($\alpha$) | Diagnóstico Estatístico |
+| :--- | :---: | :--- |
+| **P01 (1%)** | **50,62%** | Limite inferior absoluto dos 4 outliers isolados |
+| **P10 (10%)** | **67,94%** | 90% dos municípios da Bahia tiveram mais de 68% de trânsito |
+| **P25 (Q1)** | **74,41%** | Início da zona de compressão massiva de votos |
+| **P50 (Mediana)** | **81,82%** | Centro de gravidade estadual (Pico modal em 81,8% - 82,5%) |
+| **P75 (Q3)** | **88,42%** | Término da zona interquartil (IQR = 14,01 p.p.) |
+| **P90 (90%)** | **93,31%** | Municípios com absorção praticamente total da margem |
+| **P99 (99%)** | **100,00%** | 11 municípios onde Bolsonaro teve saldo NOMINAL NEGATIVO |
 
 ```
-       DISTRIBUIÇÃO TEÓRICA NATURAL VS. DADO EMPÍRICO OBSERVADO
-       
-Prob.
-  ▲               Curva Gaussiana Normal (Esperada)
-  │                      ╭─────────╮
-  │                    ╭─╯         ╰─╮
-  │                  ╭─╯             ╰─╮
-  │             ╭────╯                 ╰────╮
-  ├─────────────┼───────────────┼───────────┼─────────────▶ Taxa Marginal (α)
-  │            30%             50%         70%
-  │
-  │               Distribuição Observada na Bahia (Pico Sistêmico)
-  │                                           ███ (80% a 85%)
-  │                                           ███
-  │                                           ███ [413 de 417 Cidades]
-  │  █ (Nova Ibiá / Caldeirão)                ███
-  └──┴────────────────────────────────────────┴───────────▶ Taxa Marginal (α)
-    10%                                      82%
+                 COMPARAÇÃO DE DISTRIBUIÇÕES: TEÓRICA VS. OBSERVADA
+                 
+  Faixa de Trânsito  | Modelo Teórico Gaussiano | Observado na Bahia (Real)
+  -------------------|--------------------------|------------------------------------
+  [ 0% a 20% [       |    1,8% das cidades      |   0,5% (Apenas Nova Ibiá e Caldeirão)
+  [ 20% a 40% [      |   22,4% das cidades      |   0,2% (Apenas Sítio do Mato)
+  [ 40% a 50% [      |   25,8% das cidades      |   0,2% (Apenas Mansidão)
+  ===================================================================================
+  [ 50% a 70% [      |   38,2% das cidades      |  11,8% (49 municípios)
+  [ 70% a 90% [      |   11,6% das cidades      |  73,4% (306 municípios - PICO SISTÊMICO)
+  [ 90% a 100% [     |    0,2% das cidades      |  13,9% (58 municípios)
 ```
 
 ---

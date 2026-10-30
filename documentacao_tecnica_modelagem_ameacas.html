@@ -13,6 +13,9 @@
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
+  <!-- Plotly.js para Gráficos Forenses Interativos -->
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
   <!-- KaTeX para Renderização Matemática Precisa -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
@@ -59,14 +62,14 @@
 
     /* Container Central */
     .container {
-      max-width: 1200px;
+      max-width: 1220px;
       margin: 0 auto;
       padding: 0 24px;
     }
 
     /* Header e Barra de Navegação */
     header {
-      background: rgba(11, 15, 25, 0.92);
+      background: rgba(11, 15, 25, 0.94);
       backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border-color);
       position: sticky;
@@ -152,9 +155,9 @@
 
     /* Hero do Documento */
     .hero-section {
-      padding: 40px 0 24px;
+      padding: 38px 0 24px;
       border-bottom: 1px solid var(--border-color);
-      margin-bottom: 36px;
+      margin-bottom: 34px;
     }
 
     .doc-badges {
@@ -194,7 +197,7 @@
     .doc-description {
       font-size: 15px;
       color: var(--text-muted);
-      max-width: 950px;
+      max-width: 980px;
       line-height: 1.6;
     }
 
@@ -220,7 +223,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 16px;
-      margin-bottom: 36px;
+      margin-bottom: 34px;
     }
 
     .kpi-card {
@@ -311,7 +314,7 @@
       text-decoration: none;
       transition: color 0.15s ease;
       display: block;
-      padding: 4px 8px;
+      padding: 5px 8px;
       border-radius: 6px;
       line-height: 1.4;
     }
@@ -362,7 +365,7 @@
       font-size: 16.5px;
       font-weight: 700;
       color: #e2e8f0;
-      margin: 22px 0 10px;
+      margin: 24px 0 10px;
     }
 
     p {
@@ -412,21 +415,233 @@
       color: #f3e8ff;
     }
 
-    /* Diagramas ASCII e Blocos de Código */
-    .ascii-box {
-      background: #040711;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 18px 20px;
-      font-family: var(--font-mono);
-      font-size: 12.5px;
-      color: #38bdf8;
-      overflow-x: auto;
-      line-height: 1.45;
-      margin: 18px 0;
-      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
+    /* Diagrama de Pipeline Responsivo (Flexbox/CSS) */
+    .pipeline-wrapper {
+      margin: 24px 0;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 22px;
     }
 
+    .pipeline-title {
+      font-family: var(--font-heading);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pipeline-container {
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pipeline-card {
+      flex: 1;
+      min-width: 170px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 14px 12px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .pipeline-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+
+    .pipeline-card.pipeline-target {
+      border: 2px solid #f43f5e;
+      background: linear-gradient(135deg, rgba(30, 20, 30, 0.95), rgba(45, 15, 25, 0.95));
+      box-shadow: 0 0 20px rgba(244, 63, 94, 0.25);
+    }
+
+    .target-badge {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #f43f5e;
+      color: #ffffff;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 10px;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(244, 63, 94, 0.5);
+    }
+
+    .step-num {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .step-icon {
+      font-size: 20px;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .step-title {
+      font-family: var(--font-heading);
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
+    .step-desc {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .pipeline-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, 0.25);
+      font-size: 14px;
+      padding: 0 4px;
+    }
+
+    @media (max-width: 900px) {
+      .pipeline-arrow { display: none; }
+      .pipeline-card { min-width: 100%; margin-bottom: 10px; }
+    }
+
+    /* Container do Gráfico Interativo */
+    .chart-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px;
+      margin: 20px 0;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .chart-title-main {
+      font-family: var(--font-heading);
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chart-legend-badge {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 11.5px;
+    }
+
+    .badge-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot-hist { width: 10px; height: 10px; background: #38bdf8; border-radius: 2px; }
+    .dot-kde { width: 14px; height: 3px; background: #06b6d4; border-radius: 2px; }
+    .dot-normal { width: 14px; height: 3px; background: #f59e0b; border-radius: 2px; border-top: 1px dashed #f59e0b; }
+
+    /* Dilema do Desenvolvedor (Grid Moderno) */
+    .dilemma-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .dilemma-card {
+      border-radius: 14px;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .dilemma-a {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.6));
+      border-color: rgba(56, 189, 248, 0.3);
+    }
+
+    .dilemma-b {
+      background: linear-gradient(135deg, rgba(30, 27, 75, 0.7), rgba(15, 23, 42, 0.9));
+      border-color: rgba(168, 85, 247, 0.3);
+    }
+
+    .dilemma-badge {
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+    }
+
+    .dilemma-a .dilemma-badge { color: #38bdf8; }
+    .dilemma-b .dilemma-badge { color: #c084fc; }
+
+    .dilemma-card h4 {
+      font-family: var(--font-heading);
+      font-size: 16px;
+      color: #ffffff;
+      margin-bottom: 12px;
+    }
+
+    .dilemma-section {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+
+    .dilemma-subtitle {
+      font-weight: 700;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+    }
+
+    .dilemma-subtitle.pros { color: #10b981; }
+    .dilemma-subtitle.cons { color: #f43f5e; }
+
+    /* Bloco de Código C */
     pre code {
       font-family: var(--font-mono);
       font-size: 12.5px;
@@ -558,7 +773,7 @@
       </p>
       <div class="doc-meta">
         <span><i class="fa-regular fa-calendar-check"></i> Data: 30 de Outubro de 2026</span>
-        <span><i class="fa-solid fa-code-branch"></i> Versão: 2.4 (Revisão Pericial com Estudo de Caso LEM)</span>
+        <span><i class="fa-solid fa-code-branch"></i> Versão: 2.5 (Gráficos Forenses Interativos Plotly &amp; Pipeline Responsivo)</span>
         <span><i class="fa-solid fa-globe"></i> Universo Amostral: 417 Municípios da Bahia (Censo Completo)</span>
       </div>
     </section>
@@ -580,7 +795,7 @@
           <i class="fa-solid fa-arrow-trend-up" style="color: #10b981;"></i>
         </div>
         <div class="kpi-val" style="color: #10b981;">80,58%</div>
-        <div class="kpi-sub">Mediana em 81,82% (Pico em 82%)</div>
+        <div class="kpi-sub">Mediana em 81,82% (Pico em 81,8% - 82,5%)</div>
       </div>
 
       <div class="kpi-card">
@@ -613,7 +828,7 @@
         <ul class="toc-list">
           <li><a href="#sumario-executivo">Sumário Executivo</a></li>
           <li><a href="#secao-1">1. O Ciclo Computacional do Voto</a></li>
-          <li><a href="#secao-2">2. A Quebra da Curva de Gauss</a></li>
+          <li><a href="#secao-2">2. A Quebra da Curva de Gauss (Gráfico)</a></li>
           <li><a href="#secao-3">3. O Paradoxo de LEM</a></li>
           <li><a href="#secao-4">4. Estudo dos Outliers Inversos</a></li>
           <li><a href="#secao-5">5. A Perspectiva do Desenvolvedor</a></li>
@@ -639,12 +854,12 @@
             <h2>Sumário Executivo</h2>
           </div>
           <p>
-            Este relatório estabelece um marco pericial aprofundado a partir da ótica de um <strong>analista de sistemas sênior</strong>, dissecando as hipóteses de comportamento eleitoral versus hipóteses de manipulação algorítmica no segundo turno presidencial:
+            Este relatório estabelece um marco pericial aprofundado a partir da ótica técnica, dissecando as hipóteses de comportamento eleitoral versus hipóteses de manipulação algorítmica no segundo turno presidencial:
           </p>
 
           <div class="callout callout-cyan">
             <strong>1. A Mecânica de Intercepção em Software:</strong> Como um vetor de código operaria exatamente entre o evento físico de teclado (<code>keypress</code>) e a matriz serializada no Registro Digital do Voto (RDV), manipulando estritamente a "massa em trânsito" (eleitores de 3ª via, abstenção revertida, nulos e brancos) sem alterar o total físico de votantes.<br><br>
-            <strong>2. A Ausência de Distribuição Estatística Natural (A Quebra da Curva de Gauss):**</strong> Em nenhum sistema biológico ou social natural 413 de 417 municípios (99,04%), espalhados por 560 mil km² de diversidade socioeconômica extrema, convergem para uma taxa quase idêntica de trânsito (~80% a 85% para um único lado).<br><br>
+            <strong>2. A Ausência de Distribuição Estatística Natural (A Quebra da Curva de Gauss):</strong> Em nenhum sistema biológico ou social natural 413 de 417 municípios (99,04%), espalhados por 560 mil km² de diversidade socioeconômica extrema, convergem para uma taxa quase idêntica de trânsito (~80% a 85% para um único lado).<br><br>
             <strong>3. O Descarte da Conectividade como Causa Primária &amp; O Paradoxo de LEM:</strong> A infraestrutura digital não explica a anomalia sistêmica. Municípios com altíssima conectividade no agronegócio (Luís Eduardo Magalhães, onde Bolsonaro venceu com 60,2% no 1T e 61,6% no 2T) apresentaram o mesmo trânsito de 79,3% pró-Lula, enquanto cidades desconectadas no interior profundo registraram os extremos opostos (Nova Ibiá com 10,1% e Caldeirão Grande com 10,7%).
           </div>
         </article>
@@ -659,16 +874,56 @@
             A auditoria forense de sistemas informatizados exige a distinção rigorosa entre a <strong>camada de transmissão</strong> e a <strong>camada de captura e consolidação interna</strong>.
           </p>
 
-          <div class="ascii-box">
-                   PIPELINE DE CAPTURA E CONSOLIDAÇÃO DO VOTO NO DISPOSITIVO
-                   
- [ Teclado Físico ] ──▶ [ Driver Input ] ──▶ [ Dispatcher Votação ] ──▶ [ Buffer RDV ] ──▶ [ Assinatura Cripto ]
- (Interrupção IRQ)      (tty / evdev)         (Lógica da Aplicação)     (RAM Volátil)      (RSA-2048 / SHA-512)
-                                                        │
-                                              ═════════════════════
-                                              PONTO DE INTERCEPÇÃO
-                                              DA HIPÓTESE "LÁZARO"
-                                              ═════════════════════
+          <!-- Diagrama de Pipeline Responsivo (Nunca desalinha) -->
+          <div class="pipeline-wrapper">
+            <div class="pipeline-title">
+              <i class="fa-solid fa-diagram-project"></i> Pipeline de Captura e Consolidação do Voto no Dispositivo
+            </div>
+            <div class="pipeline-container">
+              <div class="pipeline-card">
+                <div class="step-num">Etapa 1</div>
+                <div class="step-icon"><i class="fa-solid fa-keyboard"></i></div>
+                <div class="step-title">Teclado Físico</div>
+                <div class="step-desc">Pressionamento da tecla CONFIRMA. Disparo de interrupção de hardware (IRQ).</div>
+              </div>
+
+              <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+              <div class="pipeline-card">
+                <div class="step-num">Etapa 2</div>
+                <div class="step-icon"><i class="fa-solid fa-microchip"></i></div>
+                <div class="step-title">Driver de Input</div>
+                <div class="step-desc">Tratamento pelo kernel Linux embarcado (/dev/tty ou evdev).</div>
+              </div>
+
+              <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+              <div class="pipeline-card pipeline-target">
+                <div class="target-badge">⚠️ PONTO DE INTERCEPÇÃO</div>
+                <div class="step-num" style="color: #fb7185;">Etapa 3</div>
+                <div class="step-icon" style="color: #f43f5e;"><i class="fa-solid fa-gears"></i></div>
+                <div class="step-title" style="color: #fb7185;">Dispatcher de Votação</div>
+                <div class="step-desc">Lógica em memória volátil (RAM). Swap seletivo de votos de trânsito pré-gravação.</div>
+              </div>
+
+              <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+              <div class="pipeline-card">
+                <div class="step-num">Etapa 4</div>
+                <div class="step-icon"><i class="fa-solid fa-shuffle"></i></div>
+                <div class="step-title">Buffer do RDV</div>
+                <div class="step-desc">Registro Digital do Voto. Embaralhador pseudoaleatório (PRNG de sigilo).</div>
+              </div>
+
+              <div class="pipeline-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+              <div class="pipeline-card">
+                <div class="step-num">Etapa 5</div>
+                <div class="step-icon"><i class="fa-solid fa-file-signature"></i></div>
+                <div class="step-title">Assinatura &amp; Flash</div>
+                <div class="step-desc">Assinatura RSA-2048 / SHA-512 e gravação definitiva na memória flash lacrada.</div>
+              </div>
+            </div>
           </div>
 
           <h3>1.1. O Ponto Exato de Injeção: O Dispatcher de Votação</h3>
@@ -722,7 +977,7 @@ void persist_vote(VoteRecord* vote, SectionContext* ctx) {
 }</code></pre>
         </article>
 
-        <!-- Seção 2 -->
+        <!-- Seção 2 com Gráfico Plotly Interativo -->
         <article id="secao-2" class="section-block">
           <div class="section-heading">
             <span class="num">2</span>
@@ -735,25 +990,26 @@ void persist_vote(VoteRecord* vote, SectionContext* ctx) {
             $$f(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x - \mu}{\sigma}\right)^2}$$
           </p>
 
-          <div class="ascii-box">
-       DISTRIBUIÇÃO TEÓRICA NATURAL VS. DADO EMPÍRICO OBSERVADO NA BAHIA
-       
-Prob.
-  ▲               Curva Gaussiana Normal (Esperada em Sociedades Livres)
-  │                      ╭─────────╮
-  │                    ╭─╯         ╰─╮
-  │                  ╭─╯             ╰─╮
-  │             ╭────╯                 ╰────╮
-  ├─────────────┼───────────────┼───────────┼─────────────▶ Taxa Marginal (α)
-  │            30%             50%         70%
-  │
-  │               Distribuição Observada na Bahia (Pico Sistêmico Rígido)
-  │                                           ███ (80% a 85%)
-  │                                           ███
-  │                                           ███ [413 de 417 Cidades]
-  │  █ (Nova Ibiá / Caldeirão)                ███
-  └──┴────────────────────────────────────────┴───────────▶ Taxa Marginal (α)
-    10%                                      82%
+          <!-- GRÁFICO FORENSE INTERATIVO COM PLOTLY -->
+          <div class="chart-box">
+            <div class="chart-header">
+              <div class="chart-title-main">
+                <i class="fa-solid fa-chart-line" style="color: #38bdf8;"></i>
+                Distribuição Empírica Real vs. Curva Normal Teórica (Bahia 2026 - N = 417 Cidades)
+              </div>
+              <div class="chart-legend-badge">
+                <span class="badge-item"><span class="dot-hist"></span> Histograma Real</span>
+                <span class="badge-item"><span class="dot-kde"></span> Curva Observada (Pico 82%)</span>
+                <span class="badge-item"><span class="dot-normal"></span> Gaussiana Teórica Normal</span>
+              </div>
+            </div>
+
+            <div id="chart-distribuicao" style="width: 100%; height: 460px;"></div>
+            
+            <div style="font-size: 11.5px; color: var(--text-dim); margin-top: 8px; display: flex; justify-content: space-between; flex-wrap: wrap;">
+              <span>• Eixo X: Taxa Marginal de Absorção de Votos Pró-Lula no 2º Turno (%)</span>
+              <span>• Eixo Y: Número de Municípios por Faixa de 2,5 p.p.</span>
+            </div>
           </div>
 
           <h3>2.1. O Colapso da Variância em 413 Municípios</h3>
@@ -789,7 +1045,7 @@ Prob.
                 <tr><td>P01 (1%)</td><td>50,62%</td><td>Ponto de corte dos 4 outliers isolados</td></tr>
                 <tr><td>P10 (10%)</td><td>67,94%</td><td>90% dos municípios da Bahia tiveram mais de 68% de trânsito</td></tr>
                 <tr><td><strong>P25 (Q1)</strong></td><td><strong>74,41%</strong></td><td>Início da zona de saturação massiva</td></tr>
-                <tr><td><strong>P50 (Mediana)</strong></td><td><strong>81,82%</strong></td><td>Centro de gravidade matemático estadual</td></tr>
+                <tr><td><strong>P50 (Mediana)</strong></td><td><strong>81,82%</strong></td><td>Centro de gravidade matemático estadual (Pico em 81,8% - 82,5%)</td></tr>
                 <tr><td><strong>P75 (Q3)</strong></td><td><strong>88,42%</strong></td><td>Fim da zona interquartil (IQR = 14,0 p.p.)</td></tr>
                 <tr><td>P90 (90%)</td><td>93,31%</td><td>Cidades com captura quase total de votos livres</td></tr>
                 <tr><td>P99 (99%)</td><td>100,00%</td><td>11 cidades onde Bolsonaro teve saldo NOMINAL NEGATIVO</td></tr>
@@ -923,7 +1179,7 @@ Prob.
           </ul>
         </article>
 
-        <!-- Seção 5 -->
+        <!-- Seção 5 com Grid Moderno do Dilema -->
         <article id="secao-5" class="section-block">
           <div class="section-heading">
             <span class="num">5</span>
@@ -933,26 +1189,37 @@ Prob.
             Se assumirmos a hipótese de um código invasor projetado para atuar sobre os dados em trânsito, como um desenvolvedor experiente identificaria a falha de engenharia desse código?
           </p>
 
-          <div class="ascii-box">
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    O DILEMA DE DESIGN DO ENGENHEIRO DO MALWARE          │
-├───────────────────────────────────┬─────────────────────────────────────┤
-│ ESCOLHA A: O Código Global Simples│ ESCOLHA B: O Código Contextual      │
-│ (Regra rígida: swap de trânsito)  │ (Tabelas de exceção por município)  │
-│                                   │                                     │
-│ Vantagem: Binário pequeno (10 KB) │ Vantagem: Ajusta-se à curva local   │
-│ Risco: Gera invariância de 80% em │ Risco: Tabela gigante de parâmetros │
-│ cidades opostas (como em LEM)     │ detectável em qualquer diff binário │
-└───────────────────────────────────┴─────────────────────────────────────┘
+          <!-- Grid Comparativo do Dilema de Design -->
+          <div class="dilemma-grid">
+            <div class="dilemma-card dilemma-a">
+              <div class="dilemma-badge"><i class="fa-solid fa-code"></i> Escolha A: O Código Global Simples</div>
+              <h4>Regra Uniforme de Swap sobre a Margem</h4>
+              <div class="dilemma-section">
+                <div class="dilemma-subtitle pros"><i class="fa-solid fa-circle-check"></i> Vantagem para o Malware:</div>
+                <p>Binário extremamente compacto (&lt; 10 KB). Nenhuma tabela estática de parâmetros que chame atenção em análises de desmontagem.</p>
+              </div>
+              <div class="dilemma-section">
+                <div class="dilemma-subtitle cons"><i class="fa-solid fa-triangle-exclamation"></i> Assinatura Forense / Falha Fatal:</div>
+                <p>Invariância cega: impõe a mesma taxa de ~80% de absorção em cidades sociologicamente antagônicas. <strong>É exatamente a anomalia verificada em Luís Eduardo Magalhães</strong> (Bolsonaro venceu com 61,6%, mas Lula capturou 79,3% dos novos votos).</p>
+              </div>
+            </div>
+
+            <div class="dilemma-card dilemma-b">
+              <div class="dilemma-badge"><i class="fa-solid fa-table-list"></i> Escolha B: O Código Contextual Granular</div>
+              <h4>Tabelas de Limites e Metas por Município</h4>
+              <div class="dilemma-section">
+                <div class="dilemma-subtitle pros"><i class="fa-solid fa-circle-check"></i> Vantagem para o Malware:</div>
+                <p>Ajusta as quotas de migração à curva sociológica histórica de cada município, evitando contrastes absurdos em redutos consolidados.</p>
+              </div>
+              <div class="dilemma-section">
+                <div class="dilemma-subtitle cons"><i class="fa-solid fa-triangle-exclamation"></i> Assinatura Forense / Falha Fatal:</div>
+                <p>Exige uma tabela embutida com parâmetros de 5.570 municípios. Qualquer análise de <em>diff</em> de compilação oficial ou inspeção de strings no firmware revelaria imediatamente os dados espúrios.</p>
+              </div>
+            </div>
           </div>
 
           <p>
-            <strong>1. A Assinatura do Modelo A (Global Simples):</strong>
-            Se o desenvolvedor malicioso optou por uma regra genérica de injeção sobre a margem para manter o binário compacto, o código aplica a mesma taxa de absorção onde Lula vence e onde Lula perde.
-            <strong>É exatamente isso que os dados de Luís Eduardo Magalhães exibem:</strong> uma cidade de perfil oposto que inexplicavelmente obedeceu à mesma taxa marginal de 79,3% observada em Salvador.
-          </p>
-          <p>
-            <strong>2. A Assinatura do Modelo B (Contextual / Granular):</strong>
+            <strong>Conclusão Técnica sobre o Dilema:</strong><br>
             Se o desenvolvedor tentou incluir exceções, por que Nova Ibiá e Caldeirão Grande foram permitidas com 10%, mas Luís Eduardo Magalhães foi forçada em 79,3%?
             Isso sugere que ou o código não existiu e a dinâmica foi puramente humana, ou, se existiu, o algoritmo operou com falhas crassas de parametrização em municípios polo.
           </p>
@@ -1014,9 +1281,192 @@ Prob.
     </div>
   </footer>
 
+  <!-- Script de Renderização do Gráfico Plotly e KaTeX -->
   <script>
-    // Inicialização do renderizador KaTeX
+    // Dados dos 417 municípios
+    const transitsData = [10.09, 10.73, 37.76, 46.94, 50.51, 51.23, 51.34, 52.9, 53.08, 53.16, 54.55, 57.06, 57.73, 58.3, 58.52, 59.02, 59.57, 59.58, 59.59, 59.65, 60.23, 61.11, 61.6, 62.4, 62.67, 62.68, 62.72, 62.89, 62.93, 64.24, 64.24, 65.75, 65.85, 65.94, 66.03, 66.19, 66.33, 66.53, 66.62, 66.67, 67.47, 67.84, 68.0, 68.22, 68.56, 68.65, 69.02, 69.07, 69.15, 69.39, 69.43, 69.46, 69.78, 69.88, 69.99, 70.15, 70.21, 70.33, 70.42, 70.5, 70.51, 70.53, 70.64, 70.67, 70.73, 70.75, 70.77, 70.79, 70.8, 70.85, 70.98, 71.04, 71.06, 71.13, 71.16, 71.18, 71.25, 71.29, 71.32, 71.55, 71.59, 71.82, 71.91, 71.92, 72.03, 72.15, 72.18, 72.4, 72.51, 72.75, 72.89, 73.01, 73.01, 73.03, 73.05, 73.11, 73.11, 73.55, 73.73, 73.77, 73.82, 73.87, 73.93, 74.24, 74.41, 74.49, 74.63, 74.68, 74.77, 74.79, 74.83, 75.0, 75.06, 75.18, 75.33, 75.48, 75.49, 75.5, 75.52, 75.65, 75.75, 75.81, 75.87, 75.87, 76.09, 76.31, 76.36, 76.42, 76.52, 76.56, 76.62, 76.7, 76.77, 76.79, 76.85, 76.88, 76.92, 77.0, 77.07, 77.17, 77.23, 77.28, 77.35, 77.38, 77.55, 77.67, 77.74, 77.91, 78.03, 78.12, 78.17, 78.48, 78.5, 78.51, 78.63, 78.67, 78.77, 78.77, 79.04, 79.28, 79.3, 79.31, 79.32, 79.33, 79.35, 79.4, 79.55, 79.63, 79.76, 79.8, 79.85, 79.89, 79.91, 79.91, 79.96, 80.0, 80.0, 80.03, 80.19, 80.21, 80.29, 80.57, 80.58, 80.65, 80.65, 80.7, 80.71, 80.73, 80.73, 80.76, 80.84, 80.85, 80.87, 80.89, 80.96, 81.14, 81.2, 81.32, 81.33, 81.33, 81.35, 81.36, 81.38, 81.52, 81.54, 81.74, 81.74, 81.78, 81.82, 81.91, 81.94, 81.94, 82.02, 82.14, 82.17, 82.18, 82.21, 82.23, 82.27, 82.39, 82.42, 82.55, 82.61, 82.63, 82.9, 83.03, 83.07, 83.15, 83.15, 83.16, 83.18, 83.18, 83.21, 83.27, 83.33, 83.38, 83.4, 83.53, 83.54, 83.61, 83.69, 83.74, 83.74, 83.83, 83.95, 83.98, 84.09, 84.11, 84.17, 84.19, 84.2, 84.34, 84.35, 84.36, 84.39, 84.39, 84.4, 84.42, 84.59, 84.68, 84.69, 84.78, 84.81, 84.85, 84.89, 84.99, 85.0, 85.07, 85.07, 85.08, 85.14, 85.31, 85.32, 85.43, 85.46, 85.47, 85.47, 85.47, 85.5, 85.54, 85.6, 85.66, 85.7, 85.82, 85.82, 86.0, 86.02, 86.25, 86.27, 86.53, 86.56, 86.79, 86.83, 86.92, 87.12, 87.23, 87.25, 87.27, 87.28, 87.28, 87.62, 87.69, 87.82, 87.86, 87.94, 87.97, 87.99, 88.0, 88.01, 88.06, 88.17, 88.27, 88.42, 88.51, 88.51, 88.51, 88.52, 88.58, 88.58, 88.66, 88.9, 88.9, 88.93, 89.02, 89.06, 89.16, 89.22, 89.29, 89.4, 89.5, 89.53, 89.61, 89.71, 89.78, 89.91, 89.91, 89.95, 90.04, 90.13, 90.18, 90.2, 90.28, 90.32, 90.55, 90.55, 90.65, 90.77, 90.78, 90.92, 90.96, 91.19, 91.23, 91.24, 91.25, 91.26, 91.28, 91.28, 91.51, 91.58, 91.6, 91.72, 91.75, 91.76, 91.88, 91.94, 91.95, 92.07, 92.19, 92.39, 92.53, 92.61, 92.7, 92.74, 93.17, 93.27, 93.38, 93.71, 93.8, 93.89, 94.21, 94.24, 94.4, 94.47, 94.51, 94.51, 94.89, 95.06, 95.09, 95.6, 95.79, 95.88, 96.1, 96.49, 96.6, 97.29, 97.38, 97.85, 97.96, 98.03, 98.24, 98.25, 98.34, 98.49, 98.69, 99.86, 99.89, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0];
+    const xsData = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 23.0, 24.0, 25.0, 26.0, 27.0, 28.0, 29.0, 30.0, 31.0, 32.0, 33.0, 34.0, 35.0, 36.0, 37.0, 38.0, 39.0, 40.0, 41.0, 42.0, 43.0, 44.0, 45.0, 46.0, 47.0, 48.0, 49.0, 50.0, 51.0, 52.0, 53.0, 54.0, 55.0, 56.0, 57.0, 58.0, 59.0, 60.0, 61.0, 62.0, 63.0, 64.0, 65.0, 66.0, 67.0, 68.0, 69.0, 70.0, 71.0, 72.0, 73.0, 74.0, 75.0, 76.0, 77.0, 78.0, 79.0, 80.0, 81.0, 82.0, 83.0, 84.0, 85.0, 86.0, 87.0, 88.0, 89.0, 90.0, 91.0, 92.0, 93.0, 94.0, 95.0, 96.0, 97.0, 98.0, 99.0, 100.0];
+    const theorYData = [0.11, 0.13, 0.17, 0.2, 0.25, 0.31, 0.38, 0.46, 0.55, 0.66, 0.79, 0.94, 1.12, 1.32, 1.56, 1.82, 2.12, 2.47, 2.85, 3.28, 3.75, 4.28, 4.86, 5.49, 6.17, 6.91, 7.71, 8.56, 9.46, 10.41, 11.4, 12.43, 13.5, 14.59, 15.7, 16.82, 17.94, 19.05, 20.13, 21.19, 22.2, 23.16, 24.05, 24.87, 25.59, 26.23, 26.76, 27.18, 27.48, 27.66, 27.73, 27.66, 27.48, 27.18, 26.76, 26.23, 25.59, 24.87, 24.05, 23.16, 22.2, 21.19, 20.13, 19.05, 17.94, 16.82, 15.7, 14.59, 13.5, 12.43, 11.4, 10.41, 9.46, 8.56, 7.71, 6.91, 6.17, 5.49, 4.86, 4.28, 3.75, 3.28, 2.85, 2.47, 2.12, 1.82, 1.56, 1.32, 1.12, 0.94, 0.79, 0.66, 0.55, 0.46, 0.38, 0.31, 0.25, 0.2, 0.17, 0.13, 0.11];
+    const kdeYData = [0.0, 0.0, 0.01, 0.03, 0.06, 0.12, 0.22, 0.34, 0.49, 0.61, 0.68, 0.67, 0.59, 0.46, 0.32, 0.2, 0.11, 0.05, 0.02, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.02, 0.05, 0.09, 0.15, 0.22, 0.29, 0.33, 0.35, 0.32, 0.28, 0.23, 0.21, 0.23, 0.3, 0.43, 0.62, 0.87, 1.18, 1.53, 1.9, 2.24, 2.51, 2.7, 2.88, 3.12, 3.49, 4.01, 4.62, 5.23, 5.78, 6.25, 6.71, 7.26, 8.07, 9.29, 11.01, 13.28, 15.96, 18.79, 21.44, 23.64, 25.27, 26.46, 27.47, 28.56, 29.94, 31.69, 33.76, 36.02, 38.21, 40.04, 41.25, 41.65, 41.24, 40.15, 38.63, 36.92, 35.13, 33.21, 31.03, 28.46, 25.54, 22.46, 19.51, 16.93, 14.87, 13.26, 11.91, 10.53, 8.97];
+
+    function renderDistributionChart() {
+      if (typeof Plotly === 'undefined') {
+        setTimeout(renderDistributionChart, 200);
+        return;
+      }
+
+      // Trace 1: Histograma Real
+      const traceHist = {
+        x: transitsData,
+        type: 'histogram',
+        name: 'Histograma Real (417 Cidades)',
+        xbins: { start: 0, end: 100, size: 2.5 },
+        marker: {
+          color: 'rgba(56, 189, 248, 0.45)',
+          line: { color: '#38bdf8', width: 1.2 }
+        },
+        opacity: 0.8,
+        hovertemplate: 'Faixa: %{x}%<br>Nº de Municípios: %{y}<extra></extra>'
+      };
+
+      // Trace 2: Curva de Densidade Observada (KDE)
+      const traceKDE = {
+        x: xsData,
+        y: kdeYData,
+        mode: 'lines',
+        name: 'Curva Real da Bahia (Pico em 81,8% - 82,5%)',
+        line: { color: '#06b6d4', width: 3.5 },
+        hovertemplate: 'Trânsito: %{x}%<br>Densidade KDE: %{y:.1f}<extra></extra>'
+      };
+
+      // Trace 3: Curva Gaussiana Teórica Normal (Média 50%, Desvio 15%)
+      const traceNormal = {
+        x: xsData,
+        y: theorYData,
+        mode: 'lines',
+        name: 'Gaussiana Teórica Normal (Média 50%, Desvio 15%)',
+        line: { color: '#f59e0b', width: 2.5, dash: 'dash' },
+        hovertemplate: 'Trânsito: %{x}%<br>Expectativa Gaussiana: %{y:.1f}<extra></extra>'
+      };
+
+      const layout = {
+        plot_bgcolor: 'rgba(0, 0, 0, 0)',
+        paper_bgcolor: 'rgba(0, 0, 0, 0)',
+        font: { family: "'Inter', sans-serif", color: '#f8fafc', size: 12 },
+        margin: { l: 50, r: 30, t: 30, b: 60 },
+        legend: {
+          orientation: 'h',
+          x: 0,
+          y: 1.15,
+          font: { size: 11, color: '#94a3b8' },
+          bgcolor: 'rgba(0, 0, 0, 0)'
+        },
+        xaxis: {
+          title: { text: 'Taxa Marginal de Absorção Pró-Lula no 2º Turno (%)', font: { size: 12, color: '#94a3b8' } },
+          range: [0, 105],
+          dtick: 10,
+          gridcolor: 'rgba(255, 255, 255, 0.06)',
+          zerolinecolor: 'rgba(255, 255, 255, 0.15)',
+          tickfont: { color: '#94a3b8' }
+        },
+        yaxis: {
+          title: { text: 'Número de Municípios (N = 417)', font: { size: 12, color: '#94a3b8' } },
+          gridcolor: 'rgba(255, 255, 255, 0.06)',
+          zerolinecolor: 'rgba(255, 255, 255, 0.15)',
+          tickfont: { color: '#94a3b8' },
+          range: [0, 52]
+        },
+        shapes: [
+          // Faixa Interquartil (IQR: 74.41% a 88.42%)
+          {
+            type: 'rect',
+            x0: 74.41,
+            x1: 88.42,
+            y0: 0,
+            y1: 52,
+            fillcolor: 'rgba(168, 85, 247, 0.12)',
+            line: { color: 'rgba(168, 85, 247, 0.4)', width: 1, dash: 'dot' },
+            layer: 'below'
+          },
+          // Linha Ponto Neutro (50%)
+          {
+            type: 'line',
+            x0: 50,
+            x1: 50,
+            y0: 0,
+            y1: 46,
+            line: { color: '#f43f5e', width: 2, dash: 'dot' }
+          },
+          // Linha LEM (79.3%)
+          {
+            type: 'line',
+            x0: 79.30,
+            x1: 79.30,
+            y0: 0,
+            y1: 44,
+            line: { color: '#f59e0b', width: 2, dash: 'dashdot' }
+          },
+          // Linha Mediana Estadual (81.82%)
+          {
+            type: 'line',
+            x0: 81.82,
+            x1: 81.82,
+            y0: 0,
+            y1: 49,
+            line: { color: '#10b981', width: 2.5 }
+          }
+        ],
+        annotations: [
+          {
+            x: 50,
+            y: 45,
+            text: 'Ponto Neutro (50%)',
+            showarrow: false,
+            font: { color: '#f43f5e', size: 10.5, weight: 700 },
+            xanchor: 'right',
+            xshift: -6
+          },
+          {
+            x: 79.30,
+            y: 42,
+            text: 'LEM (79,3%)',
+            showarrow: false,
+            font: { color: '#fbbf24', size: 10.5, weight: 700 },
+            xanchor: 'right',
+            xshift: -6
+          },
+          {
+            x: 81.82,
+            y: 48,
+            text: 'Mediana: 81,8%',
+            showarrow: false,
+            font: { color: '#10b981', size: 11, weight: 800 },
+            xanchor: 'left',
+            xshift: 6
+          },
+          {
+            x: 81.4,
+            y: 28,
+            text: 'Zona IQR (50% das Cidades: 74,4% a 88,4%)',
+            showarrow: false,
+            font: { color: '#c084fc', size: 10.5 }
+          },
+          {
+            x: 10.4,
+            y: 8,
+            text: '← Outliers Reais:<br>Nova Ibiá (10,1%)<br>Caldeirão (10,7%)',
+            showarrow: true,
+            arrowhead: 2,
+            arrowsize: 1,
+            arrowwidth: 1.5,
+            arrowcolor: '#fb7185',
+            ax: 60,
+            ay: -35,
+            font: { color: '#fb7185', size: 10.5, weight: 600 }
+          },
+          {
+            x: 28,
+            y: 18,
+            text: '← Vazio Estatístico:<br>Apenas 4 cidades &lt; 50%',
+            showarrow: false,
+            font: { color: '#94a3b8', size: 10.5, style: 'italic' }
+          }
+        ]
+      };
+
+      const config = {
+        responsive: true,
+        displayModeBar: false
+      };
+
+      Plotly.newPlot('chart-distribuicao', [traceHist, traceKDE, traceNormal], layout, config);
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
+      // 1. Renderiza o gráfico Plotly
+      renderDistributionChart();
+
+      // 2. Renderiza fórmulas matemáticas KaTeX
       if (typeof renderMathInElement === 'function') {
         renderMathInElement(document.body, {
           delimiters: [
@@ -1025,6 +1475,12 @@ Prob.
           ],
           throwOnError: false
         });
+      }
+    });
+
+    window.addEventListener('resize', function() {
+      if (typeof Plotly !== 'undefined') {
+        Plotly.Plots.resize('chart-distribuicao');
       }
     });
   </script>
